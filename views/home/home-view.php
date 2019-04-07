@@ -64,7 +64,7 @@
               <p class="card-text"><b><i>Relatório de <br> Não Conformidade</i></b></p>
               <p class="card-text">Responsável por um texto que serve de apoio para identificar espaçamento correto e tamanho de descriçao.</p>
               <br>
-              <a href="<?=HOME_URI?>/controllers/rnc-controller.php" class="btn btn-warning">GERAR</a> 
+              <a href="<?=HOME_URI?>/rnc/"><button type="button" class="btn btn-warning">GERAR</button></a> 
               <button type="button" class="btn btn-warning">CONSULTAR</button>
             </div>
            </div>

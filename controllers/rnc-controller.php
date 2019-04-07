@@ -1,11 +1,6 @@
 <?php
-/**
- * home - Controller de exemplo
- *
- * @package TutsupMVC
- * @since 0.1
- */
-class Rnc extends MainController
+
+class RncController extends MainController
 {
 
 	/**
@@ -13,7 +8,7 @@ class Rnc extends MainController
 	 */
     public function index() {
 		// Título da página
-		$this->title = 'rnc-gerar';
+		$this->title = 'Gerar RNC';
 		
 			
 		/** Carrega os arquivos do view **/
