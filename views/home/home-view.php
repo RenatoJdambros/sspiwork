@@ -29,7 +29,7 @@
     </div>
   </div>
     
-    
+   
     
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <a class="navbar-brand" href="#">HOME</a>
@@ -64,7 +64,7 @@
               <p class="card-text"><b><i>Relatório de <br> Não Conformidade</i></b></p>
               <p class="card-text">Responsável por um texto que serve de apoio para identificar espaçamento correto e tamanho de descriçao.</p>
               <br>
-              <button type="button" class="btn btn-warning">GERAR </button>
+              <a href="<?=HOME_URI?>/controllers/rnc-controller.php" class="btn btn-warning">GERAR</a> 
               <button type="button" class="btn btn-warning">CONSULTAR</button>
             </div>
            </div>
@@ -87,4 +87,5 @@
         </div> <!--endcol2 -->
     </div> <!--endrow -->
   </div>
+</div>
 </div>
