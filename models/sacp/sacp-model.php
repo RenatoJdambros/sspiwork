@@ -1,5 +1,5 @@
 <?php
-class RncModel extends MainModel
+class SacpModel extends MainModel
 {
 
 	public function __construct( $db = false, $controller = null ) {
