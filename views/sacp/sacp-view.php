@@ -3,13 +3,17 @@ if (!defined('ABSPATH')) exit;
 ?>
 
 <!-- page content -->
-<div class="container">
-    <div class="row">
+
+<div class="row-fuid">
+    <div class="shadow p-4 mb-4 bg-white rounded">
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
+                <button type="button" class="btn btn-secondary"
+                    onclick="window.location='<?= HOME_URI ?>/home/'">Voltar</button>
                 <a href="<?= HOME_URI ?>/sacp/inserir">
                     <button type="button" class="btn btn-primary">GERAR SACP</button>
                 </a>
+                <hr>
             </div>
             <div class="x_content">
                 <br>
@@ -27,9 +31,11 @@ if (!defined('ABSPATH')) exit;
 
                     </tbody>
                 </table>
+                <hr>
             </div>
         </div>
     </div>
 </div>
-</div>
+
+
 <!-- /page content -->
