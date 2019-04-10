@@ -11,7 +11,7 @@
               <p class="card-text"><b><i>Relatório de <br> Não Conformidade</i></b></p>
               <p class="card-text">Responsável por um texto que serve de apoio para identificar espaçamento correto e tamanho de descriçao.</p>
               <br>
-              <a href="<?=HOME_URI?>/rnc/" style="margin-left: 7.5%;"><button type="button" class="btn btn-warning">SELECIONAR</button></a> 
+              <a href="<?=HOME_URI?>/rnc/" style="margin-left: 8.5%;"><button type="button" class="btn btn-warning">SELECIONAR</button></a> 
             </div>
            </div>
           </div>
@@ -26,7 +26,7 @@
               <p class="card-text"><b><i>Solicitação de Ação Corretiva ou Preventiva (e mudanças no SGI)</i></b></p>
               <p class="card-text">Responsável por um texto que serve de apoio para identificar espaçamento correto e tamanho de descriçao.</p>
               <br>
-              <a href="<?=HOME_URI?>/sacp/" style="margin-left: 7.5%;"><button type="button" class="btn btn-primary">SELECIONAR</button></a> 
+              <a href="<?=HOME_URI?>/sacp/" style="margin-left: 8.5%;"><button type="button" class="btn btn-primary">SELECIONAR</button></a> 
              </div>
           </div>
         </div> <!--endcol2 -->

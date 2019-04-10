@@ -247,6 +247,11 @@
       .underlineHover:hover:after{
         width: 100%;
       }
+
+      .container-peixe {
+        width: 1060px;
+        height: 90px;
+      }
       
       
       

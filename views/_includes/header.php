@@ -42,7 +42,8 @@
     <link href="<?=HOME_URI?>/views/_vendors/starrr/dist/starrr.css" rel="stylesheet">
     <!-- bootstrap-daterangepicker -->
     <link href="<?=HOME_URI?>/views/_vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet"> 
- 
+    <link href="<?=HOME_URI?>/views/_css/style.css" rel="stylesheet"> 
+
     <!-- Dropzone.js -->
     <link href="<?=HOME_URI?>/views/_vendors/dropzone/dist/dropzone.css" rel="stylesheet"> 
     
