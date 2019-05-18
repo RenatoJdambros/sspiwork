@@ -4,8 +4,10 @@ if (!defined('ABSPATH')) exit;
 
 <!-- page content -->
 
-<div class="row-fuid">
-    <div class="shadow p-4 mb-4 bg-white rounded">
+<div class="container-fluid">
+<div class="shadow bg-white rounded">
+<div class="container-fluid">
+    <br>
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
                 <button type="button" class="btn btn-secondary"

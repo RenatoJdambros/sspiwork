@@ -5458,8 +5458,8 @@ button.close {
 
 .modal-body {
   position: relative;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
+  -ms-flex: 1 1 1 1;
+  flex: 1 1 1 1;
   padding: 1rem;
 }
 
