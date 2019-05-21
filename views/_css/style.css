@@ -68,6 +68,14 @@
   border-top-width: 0px;
 }
 
+#bordasAcao{  
+  border:solid 2px;
+  border-color:rgb(174, 188, 199);
+  border-radius:1px;
+ 
+ 
+}
+
 #bordasSACP{  
   border:solid 2px;
   border-color:rgb(0,110,255);

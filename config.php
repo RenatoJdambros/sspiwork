@@ -19,7 +19,7 @@ define('HOSTNAME', '');
 define('DB_NAME', '');
 
 // Usuário do DB
-define('DB_USER', '');
+define('DB_USER', 'root');
 
 // Senha do DB
 define('DB_PASSWORD', '');
