@@ -13,13 +13,13 @@ define('UP_ABSPATH', ABSPATH . '/views/_uploads');
 define('HOME_URI', 'http://localhost/sspiwork');
 
 // Nome do host da base de dados
-define('HOSTNAME', '');
+define('HOSTNAME', 'localhost');
 
 // Nome do DB
-define('DB_NAME', '');
+define('DB_NAME', 'edelbra');
 
 // Usuário do DB
-define('DB_USER', '');
+define('DB_USER', 'root');
 
 // Senha do DB
 define('DB_PASSWORD', '');
