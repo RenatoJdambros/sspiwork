@@ -13,7 +13,7 @@ define('UP_ABSPATH', ABSPATH . '/views/_uploads');
 define('HOME_URI', 'http://localhost/sspiwork');
 
 // Nome do host da base de dados
-define('HOSTNAME', '127.0.0.1');
+define('HOSTNAME', 'localhost');
 
 // Nome do DB
 define('DB_NAME', 'edelbra');

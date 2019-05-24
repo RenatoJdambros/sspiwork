@@ -298,20 +298,21 @@ class UserLogin
 	 * @param array $user_permissions As permissões do usuário
 	 * @final
 	 */
-	final protected function check_permissions( 
-		$required = 'any', 
-		$user_permissions = array('any')
-	) {
-		if ( ! is_array( $user_permissions ) ) {
+	final public function check_permissions($menu='any', $required='any', $user_permissions = array('any')) 
+	{
+		if (! is_array($user_permissions)) {
 			return;
 		}
 
-		// Se o usuário não tiver permissão
-		if ( ! in_array( $required, $user_permissions ) ) {
-			// Retorna falso
-			return false;
-		} else {
+		if (in_array('any', $user_permissions)) {
 			return true;
 		}
+
+		if (array_key_exists($menu, $user_permissions)) {
+			if (in_array($required, $user_permissions[$menu])) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

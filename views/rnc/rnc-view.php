@@ -24,13 +24,15 @@ if (!defined('ABSPATH')) exit;
                             <tr>
                                 <th>ID</th>
                                 <th>Nome</th>
-                                <th>Envolvidos</th>
+                                <th>Origem</th>
+                                <th>Destino</th>
                                 <th>Status</th>
+                                <th>Número O.P.</th>
+                                <th>SACP</th>
                                 <th class="no-export"></th>
                             </tr>
                         </thead>
                         <tbody>
-
                         </tbody>
                     </table>
                     <hr>
@@ -42,3 +44,6 @@ if (!defined('ABSPATH')) exit;
 </div>
 </div>
 <!-- /page content -->
+<script>
+    var controlador = 'rnc';
+</script>
