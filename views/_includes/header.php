@@ -97,7 +97,10 @@
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav">
             <li class="nav-item">
-            <a class="nav-link" data-toggle="modal" href="#myModal">Informações</a>
+              <a class="nav-link" data-toggle="modal" href="#myModal">Informações</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="modal" href="<?=HOME_URI?>/login/sair/">Sair</a>
             </li>
           </ul>
           <a class="navbar-brand" href="#"></a>  

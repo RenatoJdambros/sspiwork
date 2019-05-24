@@ -79,7 +79,13 @@ class RncModel extends MainModel
                 return $data;
             }]
         );
-    } // end formatar colunas
+	} // end formatar colunas
+	
+
+	public function hashTest() 
+	{
+		return $this->controller->phpass->HashPassword(12345);
+	}
 
 
     public function listarUsuarios() 

@@ -108,7 +108,7 @@ class UserLogin
 		extract( $userdata );
 		
 		// Verifica se existe um usuário e senha
-		if ( ! isset( $user ) || ! isset( $user_password ) ) {
+		if ( ! isset( $email ) || ! isset( $password ) ) {
 			$this->logged_in = false;
 			$this->login_error = null;
 		
@@ -119,10 +119,7 @@ class UserLogin
 		}
 		
 		// Verifica se o usuário existe na base de dados
-		$query = $this->db->query( 
-			'SELECT * FROM usuarios WHERE email = ? LIMIT 1', 
-			array( $user ) 
-		);
+		$query = $this->db->query('SELECT * FROM usuarios WHERE email = ? LIMIT 1', [$email]);
 		
 		// Verifica a consulta
 		if ( ! $query ) {
@@ -139,12 +136,12 @@ class UserLogin
 		$fetch = $query->fetch(PDO::FETCH_ASSOC);
 		
 		// Obtém o ID do usuário
-		$user_id = (int) $fetch['user_id'];
+		$user_id = (int) $fetch['id'];
 		
 		// Verifica se o ID existe
 		if ( empty( $user_id ) ){
 			$this->logged_in = false;
-			$this->login_error = 'User do not exists.';
+			$this->login_error = 'Usuário inválido.';
 		
 			// Desconfigura qualquer sessão que possa existir sobre o usuário
 			$this->logout();
@@ -153,9 +150,9 @@ class UserLogin
 		}
 		
 		// Confere se a senha enviada pelo usuário bate com o hash do BD
-		if ( $this->phpass->CheckPassword( $user_password, $fetch['user_password'] ) ) {
+		if ($password == $fetch['senha']) {
 			
-			// Se for uma sessão, verifica se a sessão bate com a sessão do BD
+			/* // Se for uma sessão, verifica se a sessão bate com a sessão do BD
 			if ( session_id() != $fetch['user_session_id'] && ! $post ) { 
 				$this->logged_in = false;
 				$this->login_error = 'Wrong session ID.';
@@ -164,7 +161,7 @@ class UserLogin
 				$this->logout();
 			
 				return;
-			}
+			} */
 			
 			// Se for um post
 			if ( $post ) {
@@ -176,20 +173,28 @@ class UserLogin
 				$_SESSION['userdata'] = $fetch;
 				
 				// Atualiza a senha
-				$_SESSION['userdata']['user_password'] = $user_password;
+				$_SESSION['userdata']['password'] = $password;
 				
 				// Atualiza o ID da sessão
 				$_SESSION['userdata']['user_session_id'] = $session_id;
 				
 				// Atualiza o ID da sessão na base de dados
 				$query = $this->db->query(
-					'UPDATE usuarios SET user_session_id = ? WHERE user_id = ?',
+					'UPDATE usuarios SET user_session_id = ? WHERE id = ?',
 					array( $session_id, $user_id )
 				);
 			}
 				
-			// Obtém um array com as permissões de usuário
-			$_SESSION['userdata']['user_permissions'] = unserialize( $fetch['user_permissions'] );
+			// Permissões
+			$query = $this->db->query('SELECT * FROM tipos_usuario ORDER BY nome ASC');
+			$tipos_usuarios = $query->fetchAll(PDO::FETCH_ASSOC);
+
+			foreach ($tipos_usuarios as $key => $tipo_usuario) {
+				if ($fetch['tipo_usuario'] == $tipo_usuario['id']) {
+					$_SESSION['userdata']['user_permissions'] = json_decode($tipo_usuario['permissoes'], true);
+					break;
+				}
+			}
 
 			// Configura a propriedade dizendo que o usuário está logado
 			$this->logged_in = true;
@@ -217,7 +222,7 @@ class UserLogin
 			$this->logged_in = false;
 			
 			// A senha não bateu
-			$this->login_error = 'Password does not match.';
+			$this->login_error = 'Senha inválida.';
 		
 			// Remove tudo
 			$this->logout();

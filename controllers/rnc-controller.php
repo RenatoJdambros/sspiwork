@@ -8,7 +8,7 @@ class RncController extends MainController
         $this->title = "RNC's";
         
         // Verifica se o usuário está logado
-        /* if (!$this->logged_in) {
+        if (!$this->logged_in) {
             $this->logout(true);
             return;
         }
@@ -17,8 +17,8 @@ class RncController extends MainController
         if (!$this->check_permissions('rnc', 'visualizar', $this->userdata['user_permissions'])) {
             require_once ABSPATH . '/includes/403.php';
             return;
-        } */
-		
+		}
+			
 		/** Carrega os arquivos do view **/
         require ABSPATH . '/views/_includes/header.php';
         require ABSPATH . '/views/rnc/rnc-view.php';
@@ -37,7 +37,7 @@ class RncController extends MainController
 		$this->title = "Gerar RNC's";
         
         // Verifica se o usuário está logado
-        /* if (!$this->logged_in) {
+        if (!$this->logged_in) {
             $this->logout(true);
             return;
         }
@@ -46,7 +46,7 @@ class RncController extends MainController
         if (!$this->check_permissions('rnc', 'inserir', $this->userdata['user_permissions'])) {
             require_once ABSPATH . '/includes/403.php';
             return;
-        } */
+        }
 
         $parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
         $modelo = $this->load_model('rnc/rnc-model');
@@ -72,7 +72,7 @@ class RncController extends MainController
 		$this->title = 'Editar RNC';
 
 		// Verifica se o usuário está logado
-		/* if (!$this->logged_in) {
+		if (!$this->logged_in) {
 			$this->logout(true);
 			return;
 		}
@@ -81,7 +81,7 @@ class RncController extends MainController
 		if (!$this->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) {
 			require_once ABSPATH . '/includes/403.php';
 			return;
-		} */
+		}
 
 		$modelo = $this->load_model('rnc/rnc-model');
 		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
@@ -107,7 +107,7 @@ class RncController extends MainController
 		$this->title = 'Deletar RNC';
 
 		// Verifica se o usuário está logado
-		/* if (!$this->logged_in) {
+		if (!$this->logged_in) {
 			$this->logout(true);
 			return;
 		}
@@ -116,7 +116,7 @@ class RncController extends MainController
 		if (!$this->check_permissions('rnc', 'excluir', $this->userdata['user_permissions'])) {
 			require_once ABSPATH . '/includes/403.php';
 			return;
-		} */
+		}
 		
 		$this->modal_message = MainModel::modalMessage('Excluir RNC', 'Tem certeza que deseja apagar esta RNC?', '<button type="submit" onclick="window.location=\''.$_SERVER['REQUEST_URI']. 'confirma/'.'\'" class="btn btn-success">Excluir</button>');
 	

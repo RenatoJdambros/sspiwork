@@ -32,11 +32,14 @@
           <br>
       
           <!-- Login Form -->
-          <!-- <form action="<?=HOME_URI?>/login/" method="post" name="frm-login" id="frm-login"> -->
-          <form action="<?=HOME_URI?>/home/" method="post" name="frm-login" id="frm-login">
+          <form action="<?=HOME_URI?>/login/" method="post" name="frm-login" id="frm-login">
               <input type="hidden" name="verify" value="on">
-            <input type="text" id="login" class="fadeIn second" name="login" placeholder="Usuário">
-            <input type="text" id="password" class="fadeIn third" name="login" placeholder="Senha">
+              <div>
+                <input type="text" name="userdata[email]" class="form-control" placeholder="E-mail" required />
+              </div>
+              <div>
+                <input type="password" name="userdata[password]" class="form-control" placeholder="Senha" required />
+              </div>
             <p></p>
             <input type="submit" class="fadeIn fourth" value="Log In">
           </form>

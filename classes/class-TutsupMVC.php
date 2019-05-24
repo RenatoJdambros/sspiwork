@@ -66,11 +66,11 @@ class TutsupMVC
 		if ( ! $this->controlador ) {
 			
 			// Adiciona o controlador padrão
-			require_once ABSPATH . '/controllers/login-controller.php';
+			require_once ABSPATH . '/controllers/home-controller.php';
 			
 			// Cria o objeto do controlador "home-controller.php"
 			// Este controlador deverá ter uma classe chamada HomeController
-			$this->controlador = new LoginController();
+			$this->controlador = new HomeController();
 			
 			// Executa o método index()
 			$this->controlador->index();
