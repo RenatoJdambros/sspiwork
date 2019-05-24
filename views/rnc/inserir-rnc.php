@@ -27,23 +27,9 @@ if (!defined('ABSPATH')) exit;
     <label for="selectSetor">Setor:</label>
       <select id="selectSetor" name="setorOrigem" class="form-control custom-select" required>
         <option disabled hidden selected>Setor do solicitante</option>
-        <option value="almoxarifado">Almoxarifado</option>
-        <option>Atendimento</option>
-        <option>Administrativo</option>
-        <option>Controladoria</option>
-        <option>Financeiro</option>
-        <option>Logística</option>
-        <option>Produção</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
+        <?php foreach ($setores as $key => $setor) {
+          echo "<option>" . $setor['nome'] . "</option>";
+        } ?>
       </select>
     </div>
     <!---->

@@ -17,8 +17,11 @@ class RncController extends MainController
 
     public function inserir() {
 		// Título da página
-		$this->title = "Gerar RNC's";
-		
+        $this->title = "Gerar RNC's";
+        
+        $modelo=$this->load_model('rnc/rnc-model');
+        
+        $setores = $modelo->listarSetores();
 			
 		/** Carrega os arquivos do view **/
         require ABSPATH . '/views/_includes/header.php';

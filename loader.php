@@ -25,4 +25,3 @@ require_once ABSPATH . '/functions/global-functions.php';
 
 // Carrega a aplicação
 $tutsup_mvc = new TutsupMVC();
-

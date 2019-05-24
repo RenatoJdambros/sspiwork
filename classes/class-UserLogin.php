@@ -120,7 +120,7 @@ class UserLogin
 		
 		// Verifica se o usuário existe na base de dados
 		$query = $this->db->query( 
-			'SELECT * FROM users WHERE user = ? LIMIT 1', 
+			'SELECT * FROM usuarios WHERE email = ? LIMIT 1', 
 			array( $user ) 
 		);
 		
@@ -183,7 +183,7 @@ class UserLogin
 				
 				// Atualiza o ID da sessão na base de dados
 				$query = $this->db->query(
-					'UPDATE users SET user_session_id = ? WHERE user_id = ?',
+					'UPDATE usuarios SET user_session_id = ? WHERE user_id = ?',
 					array( $session_id, $user_id )
 				);
 			}
