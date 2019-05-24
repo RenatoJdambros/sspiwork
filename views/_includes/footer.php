@@ -138,6 +138,18 @@
 
   <script src="<?=HOME_URI?>/views/_js/scripts.js"></script>
   
-  
+  <!---P NOTIFY ALERT--->
+  <? if (isset($this->modal_notification['title'])) { ?>   
+    <script type='text/javascript'>
+      $(document).ready(function() {
+        new PNotify({
+            title: '<?=$this->modal_notification['title']?>',
+            text:  '<?=$this->modal_notification['text']?>',
+            type:  '<?=$this->modal_notification['type']?>',
+            styling: 'bootstrap3'
+        })
+      });
+    </script>
+  <? } ?>
   </body>
 </html>

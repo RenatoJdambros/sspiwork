@@ -86,9 +86,15 @@ class RncController extends MainController
 		$modelo = $this->load_model('rnc/rnc-model');
 		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
 		
+		
+		$dadosRNC = $modelo->consultaRNC($id[0]);
+		extract($dadosRNC);
+		/* echo '<pre style=font-size:14;>';
+		print_r($userDestino);
+		echo '<br><br>';
+		die(); */
 		// Carrega o método para editar uma RNC
-		$retorno = $modelo->editarRNC($id);
-
+		$retorno = $modelo->editarRNC($id[0]);
 		
 		if ($retorno == 'success') {
 			$this->modal_notification=MainModel::openNotification('Sucesso', 'RNC atualizada com sucesso.', 'success');
@@ -97,7 +103,7 @@ class RncController extends MainController
 		}
 
 		require ABSPATH . '/views/_includes/header.php';
-		require ABSPATH . '/views/rnc/editar-usuario-view.php';
+		require ABSPATH . '/views/rnc/editar-rnc.php';
 		require ABSPATH . '/views/_includes/footer.php';
 	}
 

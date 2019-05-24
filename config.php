@@ -30,6 +30,9 @@ define('DB_CHARSET', 'utf8');
 // Se você estiver desenvolvendo, modifique o valor para true
 define('DEBUG', true);
 
+// Coloca o Timezone como São Paulo
+date_default_timezone_set('America/Sao_Paulo');
+
 /**
  * Não edite daqui em diante
  */

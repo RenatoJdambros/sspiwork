@@ -17,8 +17,8 @@ if (!defined('ABSPATH')) exit;
   <input type="hidden" name="inserirRNC" value="1" />
   <div class="container-fluid backgroundR"> 
   <div class="form-group col-md-6">
-    <label for="nomeRNC" data-toggle="tooltip" title="Obrigatório">Nome da RNC: <span style="color: red;">*</span></label>
-    <input type="text" class="form-control" id="nomeRNC" name="nome" placeholder="ex: Extintor fora de lugar no almoxarifado" required>
+    <label for="nomeRNC" data-toggle="tooltip" title="Obrigatório">Nome da RNC:</label>
+    <input type="text" class="form-control" id="nomeRNC" name="nome" value="<?= $rnc['nome'] ?>" placeholder="ex: Extintor fora de lugar no almoxarifado" required>
   </div>
 <br>
 <h5>ORIGEM
@@ -29,21 +29,21 @@ if (!defined('ABSPATH')) exit;
 <!--Corpo do formulário-->
 <div class="form-row">
   <div class="form-group col-md-4">
-    <label for="selectUserOrigem" data-toggle="tooltip" title="Obrigatório">Usuário de Origem: <span style="color: red;">*</span></label>
+    <label for="selectUserOrigem" data-toggle="tooltip" title="Obrigatório">Usuário de Origem:</label>
       <select id="selectUserOrigem" name="id_origem" class="form-control custom-select" required>
-        <option value="<?= $this->userdata['id'] ?>" selected><?= $this->userdata['setor'] . " - " . $this->userdata['nome']?></option>
+        <option value="<?= $userOrigem['id'] ?>" selected><?= $userOrigem['setor'] . " - " . $userOrigem['nome']?></option>
       </select>
     </div>
     <!---->
     <div class="form-group col-md-2">
       <label for="numeroOP">Número O.P:</label>
-        <input type="number" class="form-control" id="numeroOP" name="numero_op" placeholder="ex: 20182">
+        <input value="<?= $rnc['numero_op'] ?>" type="text" class="form-control" id="numero_op" placeholder="ex: 20182">
     </div>
     </div><!--fim da linha 1-->
     <!---->          
     <div class="form-group">
-      <label for="descricao" data-toggle="tooltip" title="Obrigatório">Descrição: <span style="color: red;">*</span></label>
-        <textarea class="form-control rounded-0" id="descricao" name="descricao" rows="4"  placeholder="Descreva a não-conformidade encontrada..." required></textarea>
+      <label for="descricao" data-toggle="tooltip" title="Obrigatório">Descrição:</label>
+        <textarea class="form-control rounded-0" id="descricao" name="descricao" rows="4"  placeholder="Descreva a não-conformidade encontrada..." required><?= $rnc['descricao'] ?></textarea>
     </div> 
     <!-- necessários pois os asrquivos originais do header e footer estão dando conflito-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -90,22 +90,27 @@ if (!defined('ABSPATH')) exit;
 <!--Início form destino-->
   <div class="form-row">
     <div class="form-group col-md-6">
-      <label for="selectUserDestino" data-toggle="tooltip" title="Obrigatório">Usuário de Destino: <span style="color: red;">*</span></label>
+      <label for="selectUserDestino" data-toggle="tooltip" title="Obrigatório">Usuário de Destino:</label>
         <select id="selectUserDestino" name="id_destino" class="form-control custom-select" required>
-          <option hidden disabled selected value>Selecione um usuário</option>
-          <?php foreach ($usuarios as $key => $usuario) {
-            echo "<option value='" . $usuario['id'] . "'>" . $usuario['setor'] . " - " . $usuario['nome'] . "</option>";
-          } ?>
+            <option value="<?= $userDestino['id'] ?>" selected><?= $userDestino['setor'] . " - " . $userDestino['nome']?></option>
         </select>
       </div>
     </div> 
   <hr>
+  <div class="form-group">
+    <label for="justificativa" data-toggle="tooltip" title="Obrigatório">Justificativa: <span style="color: red;">*</span></label>
+      <textarea class="form-control rounded-0" id="justificativa" name="justificativa" rows="4"  placeholder="Descreva a justificativa..." required></textarea>
+  </div>
+  <div class="form-group">
+    <label for="correcao" data-toggle="tooltip" title="Obrigatório">Correção realizada: <span style="color: red;">*</span></label>
+      <textarea class="form-control rounded-0" id="correcao" name="correcao" rows="4"  placeholder="Descreva a correção..." required></textarea>
+  </div>
   <br>
   </div> <!-- Fim form background-->
 </div><!-- Fim div contorno-->
+</form><!-- Fim formulário-->
 <br>
 <button type="button" class="btn btn-secondary" onclick="window.location='<?= HOME_URI ?>/rnc/'">Voltar</button>
-<button type="submit" class="btn btn-warning">Gerar RNC</button>
-</form><!-- Fim formulário-->
+<button type="submit" class="btn btn-warning">Atualizar RNC</button>
 <hr>
 </div><!-- Fim conteúdo página-->

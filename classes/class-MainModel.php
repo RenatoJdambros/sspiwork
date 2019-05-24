@@ -122,4 +122,10 @@ class MainModel
 	
 	} // inverte_data
 
+	public static function openNotification($title, $text, $type)
+	{
+		$notification = array('title'=>$title, 'text'=>$text, 'type'=>$type);
+		return $notification;
+	}
+
 } // MainModel

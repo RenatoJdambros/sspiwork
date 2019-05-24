@@ -35,42 +35,69 @@ class RncModel extends MainModel
             ['dt' => 2, 'db' => 'id_origem', 'formatter' => function($d) 
             {
                 $query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$d]);
-                $result = $query->fetch();
+				$result = $query->fetch();
+				if (empty($result)) {
+					return "Não encontrado";	
+				}
                 return $result['setor'] . " - " . $result['nome'];
             }],
             ['dt' => 3, 'db' => 'id_destino', 'formatter' => function($d) 
             {
                 $query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$d]);
-                $result = $query->fetch();
+				$result = $query->fetch();
+				if (empty($result)) {
+					return "Não encontrado";	
+				}
                 return $result['setor'] . " - " . $result['nome'];
             }],
             ['dt' => 4, 'db' => 'status', 'formatter' => function($d) 
             {
-                $query = $this->db->query('SELECT * FROM status WHERE id = ?', [$d]);
-                $result = $query->fetch();
-                return $result['nome'];
+                if ($d == 1) {
+					return "<span class='label label-primary'>Novo</span>";
+				} elseif ($d == 2) {
+					return "<span class='label label-warning'>Em progresso</span>";
+				} elseif ($d == 3) {
+					return "<span class='label label-success'>Finalizado</span>";
+				} elseif ($d == 4) {
+					return "<span class='label label-default'>Expirado</span>";
+				}
             }],
 			['dt' => 5, 'db' => 'numero_op'],
 			['dt' => 6, 'db' => 'sacp'],
-            ['dt' => 7, 'db' => 'id', 'formatter' => function($d) 
+			['dt' => 7, 'db' => 'data_gerada', 'formatter' => function($d) 
+            {
+				$data = new DateTime($d);
+				return $data->format('d/m/Y H:i:s');
+            }],
+			['dt' => 8, 'db' => 'data_finalizada', 'formatter' => function($d) 
+            {
+                $data = new DateTime($d);
+				return $data->format('d/m/Y H:i:s');
+            }],
+            ['dt' => 9, 'db' => 'id', 'formatter' => function($d) 
             {
                 ob_start(); ?>
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
                         <ul class="dropdown-menu">
-                            <?php if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { ?>
+							<?php //if ($this->controller->check_permissions('sacp', 'inserir', $this->userdata['user_permissions'])) { ?>
+                                <li>
+                                    <a href="<?= HOME_URI ?>/sacp/gerarSACPdeRNC/<?= $d ?>"><i class="fa fa-edit"></i> Gerar SACP</a>
+                                </li>
+                            <?php //} ?>
+                            <?php //if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/rnc/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
                                 </li>
-                            <?php } ?>
-                            <?php if ($this->controller->check_permissions('rnc', 'excluir', $this->userdata['user_permissions'])) { ?>
+                            <?php //} ?>
+                            <?php //if ($this->controller->check_permissions('rnc', 'excluir', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/rnc/deletar/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
                                     <div style="display:none">
                                         <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
                                     </div>
                                 </li>
-                            <?php } ?>
+                            <?php //} ?>
                         </ul>
                     </div>
                 <?php
@@ -80,20 +107,29 @@ class RncModel extends MainModel
             }]
         );
 	} // end formatar colunas
-	
-
-	public function hashTest() 
-	{
-		return $this->controller->phpass->HashPassword(12345);
-	}
 
 
     public function listarUsuarios() 
 	{
-		$query = $this->db->query('SELECT * FROM usuarios ORDER BY id DESC');
-		return $query->fetchAll();
+		$query = $this->db->query('SELECT * FROM usuarios WHERE id != ? ORDER BY setor ASC', [$this->userdata['id']]);
+		return $query->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+	
+	
+	public function consultaRNC($id) 
+	{
+		$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$id]);
+		$rnc = $query->fetch(PDO::FETCH_ASSOC);
+
+		$query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$rnc['id_origem']]);
+		$userOrigem = $query->fetch(PDO::FETCH_ASSOC);
+
+		$query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$rnc['id_destino']]);
+		$userDestino = $query->fetch(PDO::FETCH_ASSOC);
+
+		return array('rnc' => $rnc, 'userOrigem' => $userOrigem, 'userDestino' => $userDestino);
+	}
+
     
     public function inserirRNC() 
 	{
@@ -116,6 +152,19 @@ class RncModel extends MainModel
 
 		/* Remove o campo inserirRNC para não gerar problema com o PDO */
 		unset($_POST['inserirRNC']);
+
+		// Checa se o campo numero_op está vazio, caso esteja, seta pra null
+		if (empty($_POST['numero_op'])) {
+			$_POST['numero_op'] = null;
+		}
+
+		// Cria a data atual para ser gravada no banco de dados
+		$dataGerada = new DateTime('now');
+		$dataGerada = $dataGerada->format('Y-m-d H:i:s');
+
+		// Salva na $_POST e deleta a variavel desnecessária
+		$_POST['data_gerada'] = $dataGerada;
+		unset($dataGerada);
 
 		/* query */
 		$query = $this->db->insert('rnc', $_POST);
