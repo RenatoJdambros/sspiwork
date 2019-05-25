@@ -45,7 +45,7 @@ class UserLogin
 	 * Configura as propriedades $logged_in e $login_error. Também
 	 * configura o array do usuário em $userdata
 	 */
-	public function check_userlogin () {
+	public function check_userlogin() {
 	
 		// Verifica se existe uma sessão com a chave userdata
 		// Tem que ser um array e não pode ser HTTP POST
@@ -108,7 +108,7 @@ class UserLogin
 		extract( $userdata );
 		
 		// Verifica se existe um usuário e senha
-		if ( ! isset( $email ) || ! isset( $password ) ) {
+		if ( ! isset( $usuario ) || ! isset( $password ) ) {
 			$this->logged_in = false;
 			$this->login_error = null;
 		
@@ -119,7 +119,7 @@ class UserLogin
 		}
 		
 		// Verifica se o usuário existe na base de dados
-		$query = $this->db->query('SELECT * FROM usuarios WHERE email = ? LIMIT 1', [$email]);
+		$query = $this->db->query('SELECT * FROM usuarios WHERE usuario = ? LIMIT 1', [$usuario]);
 		
 		// Verifica a consulta
 		if ( ! $query ) {
@@ -141,7 +141,7 @@ class UserLogin
 		// Verifica se o ID existe
 		if ( empty( $user_id ) ){
 			$this->logged_in = false;
-			$this->login_error = 'Usuário inválido.';
+			$this->login_error = 'Usuário e/ou senha inválido(s).';
 		
 			// Desconfigura qualquer sessão que possa existir sobre o usuário
 			$this->logout();
@@ -222,7 +222,7 @@ class UserLogin
 			$this->logged_in = false;
 			
 			// A senha não bateu
-			$this->login_error = 'Senha inválida.';
+			$this->login_error = 'Usuário e/ou senha inválido(s).';
 		
 			// Remove tudo
 			$this->logout();
@@ -260,17 +260,37 @@ class UserLogin
 	 */
 	protected function goto_login() {
 		// Verifica se a URL da HOME está configurada
-		if ( defined( 'HOME_URI' ) ) {
+		if (defined('HOME_URI')) {
 			// Configura a URL de login
 			$login_uri  = HOME_URI . '/login/';
 			
-			// A página em que o usuário estava
-			$_SESSION['goto_url'] = urlencode( $_SERVER['REQUEST_URI'] );
+			
+			//verifica se o usuário veio do /sair para não gravar redirecionamento
+			
+			$url_redir=explode('/', $_SERVER['REQUEST_URI']);
+			
+			if (empty($url_redir)) {
+				$_SESSION['goto_url'] = urlencode(HOME_URI.'/home/');
+			} else {
+				if (array_search('sair', $url_redir)) {
+					
+					// A página em que o usuário estava
+					$_SESSION['goto_url'] = urlencode(HOME_URI.'/home/');
+					
+				} else {
+					
+					if (isset($_REQUEST['REQUEST']) && $_SERVER['REQUEST']) {
+						$_SESSION['goto_url'] = urlencode($_SERVER['REQUEST']);
+					}
+					
+				}
+			}
 			
 			// Redireciona
 			echo '<meta http-equiv="Refresh" content="0; url=' . $login_uri . '">';
 			echo '<script type="text/javascript">window.location.href = "' . $login_uri . '";</script>';
 			// header('location: ' . $login_uri);
+			
 		}
 		
 		return;

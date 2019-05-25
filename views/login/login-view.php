@@ -35,7 +35,7 @@
           <form action="<?=HOME_URI?>/login/" method="post" name="frm-login" id="frm-login">
               <input type="hidden" name="verify" value="on">
               <div>
-                <input type="text" name="userdata[email]" class="form-control" placeholder="E-mail" required />
+                <input type="text" name="userdata[usuario]" class="form-control" placeholder="E-mail" required />
               </div>
               <div>
                 <input type="password" name="userdata[password]" class="form-control" placeholder="Senha" required />

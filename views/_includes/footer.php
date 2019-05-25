@@ -139,7 +139,7 @@
   <script src="<?=HOME_URI?>/views/_js/scripts.js"></script>
   
   <!---P NOTIFY ALERT--->
-  <? if (isset($this->modal_notification['title'])) { ?>   
+  <?php if (isset($this->modal_notification['title'])) { ?>   
     <script type='text/javascript'>
       $(document).ready(function() {
         new PNotify({
@@ -150,6 +150,6 @@
         })
       });
     </script>
-  <? } ?>
+  <?php } ?>
   </body>
 </html>

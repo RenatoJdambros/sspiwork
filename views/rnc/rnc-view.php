@@ -21,7 +21,6 @@ if (!defined('ABSPATH')) exit;
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Nome</th>
                                         <th>Origem</th>
                                         <th>Destino</th>
                                         <th>Status</th>

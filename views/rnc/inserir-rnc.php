@@ -16,10 +16,6 @@ if (!defined('ABSPATH')) exit;
 <form method="post">
   <input type="hidden" name="inserirRNC" value="1" />
   <div class="container-fluid backgroundR"> 
-  <div class="form-group col-md-6">
-    <label for="nomeRNC" data-toggle="tooltip" title="Obrigatório">Nome da RNC: <span style="color: red;">*</span></label>
-    <input type="text" class="form-control" id="nomeRNC" name="nome" placeholder="ex: Extintor fora de lugar no almoxarifado" required>
-  </div>
 <br>
 <h5>ORIGEM
   <span style="margin: 0 5px;">|</span>
@@ -94,7 +90,7 @@ if (!defined('ABSPATH')) exit;
         <select id="selectUserDestino" name="id_destino" class="form-control custom-select" required>
           <option hidden disabled selected value>Selecione um usuário</option>
           <?php foreach ($usuarios as $key => $usuario) {
-            echo "<option value='" . $usuario['id'] . "'>" . $usuario['setor'] . " - " . $usuario['nome'] . "</option>";
+            echo "<option value='" . $usuario['id'] . "'>" . $usuario['nomeSetor'] . " - " . $usuario['nome'] . "</option>";
           } ?>
         </select>
       </div>

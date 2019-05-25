@@ -14,12 +14,8 @@ if (!defined('ABSPATH')) exit;
     </div>
 <!--Cabeça do formulário-->
 <form method="post">
-  <input type="hidden" name="inserirRNC" value="1" />
+  <input type="hidden" name="editarRNC" value="1" />
   <div class="container-fluid backgroundR"> 
-  <div class="form-group col-md-6">
-    <label for="nomeRNC" data-toggle="tooltip" title="Obrigatório">Nome da RNC:</label>
-    <input type="text" class="form-control" id="nomeRNC" name="nome" value="<?= $rnc['nome'] ?>" placeholder="ex: Extintor fora de lugar no almoxarifado" required>
-  </div>
 <br>
 <h5>ORIGEM
   <span style="margin: 0 5px;">|</span>
@@ -43,7 +39,7 @@ if (!defined('ABSPATH')) exit;
     <!---->          
     <div class="form-group">
       <label for="descricao" data-toggle="tooltip" title="Obrigatório">Descrição:</label>
-        <textarea class="form-control rounded-0" id="descricao" name="descricao" rows="4"  placeholder="Descreva a não-conformidade encontrada..." required><?= $rnc['descricao'] ?></textarea>
+        <textarea class="form-control rounded-0" id="descricao" name="descricao" rows="4"  placeholder="Descreva a não-conformidade encontrada..." required <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>><?= $rnc['descricao'] ?></textarea>
     </div> 
     <!-- necessários pois os asrquivos originais do header e footer estão dando conflito-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -99,18 +95,19 @@ if (!defined('ABSPATH')) exit;
   <hr>
   <div class="form-group">
     <label for="justificativa" data-toggle="tooltip" title="Obrigatório">Justificativa: <span style="color: red;">*</span></label>
-      <textarea class="form-control rounded-0" id="justificativa" name="justificativa" rows="4"  placeholder="Descreva a justificativa..." required></textarea>
+      <textarea class="form-control rounded-0" id="justificativa" name="justificativa" rows="4"  placeholder="Descreva a justificativa..." required <?php if($this->userdata['id'] == $userOrigem['id']) echo "disabled" ?>></textarea>
   </div>
   <div class="form-group">
     <label for="correcao" data-toggle="tooltip" title="Obrigatório">Correção realizada: <span style="color: red;">*</span></label>
-      <textarea class="form-control rounded-0" id="correcao" name="correcao" rows="4"  placeholder="Descreva a correção..." required></textarea>
+      <textarea class="form-control rounded-0" id="correcao" name="correcao" rows="4"  placeholder="Descreva a correção..." required <?php if($this->userdata['id'] == $userOrigem['id']) echo "disabled" ?>></textarea>
   </div>
   <br>
   </div> <!-- Fim form background-->
 </div><!-- Fim div contorno-->
-</form><!-- Fim formulário-->
 <br>
 <button type="button" class="btn btn-secondary" onclick="window.location='<?= HOME_URI ?>/rnc/'">Voltar</button>
 <button type="submit" class="btn btn-warning">Atualizar RNC</button>
+<button type="submit" class="btn btn-primary float-right">Finalizar RNC</button>
+</form><!-- Fim formulário-->
 <hr>
 </div><!-- Fim conteúdo página-->

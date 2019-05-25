@@ -51,7 +51,7 @@ class RncController extends MainController
         $parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
         $modelo = $this->load_model('rnc/rnc-model');
 
-        $usuarios = $modelo->listarUsuarios();
+		$usuarios = $modelo->listarUsuarios();
         $retorno = $modelo->inserirRNC();
 
         if ($retorno == 'success') {
@@ -88,11 +88,14 @@ class RncController extends MainController
 		
 		
 		$dadosRNC = $modelo->consultaRNC($id[0]);
+
 		extract($dadosRNC);
-		/* echo '<pre style=font-size:14;>';
-		print_r($userDestino);
-		echo '<br><br>';
-		die(); */
+
+		if (empty($rnc)) {
+			require_once ABSPATH . '/includes/404.php';
+			return;
+		}
+
 		// Carrega o método para editar uma RNC
 		$retorno = $modelo->editarRNC($id[0]);
 		

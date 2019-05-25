@@ -98,6 +98,9 @@
           <li class="nav-item">
             <a class="nav-link" data-toggle="modal" href="#myModal"><i class="fa fa-info-circle"> Informações</i></a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="modal" href="<?=HOME_URI?>/usuarios/"><i class="fa fa-user"> Usuários</i></a>
+          </li>
         </ul>
         <ul class="navbar-nav">
           <li class="nav-item">

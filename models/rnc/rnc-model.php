@@ -31,8 +31,7 @@ class RncModel extends MainModel
     {
         return array(
             ['dt' => 0, 'db' => 'id'],
-            ['dt' => 1, 'db' => 'nome'],
-            ['dt' => 2, 'db' => 'id_origem', 'formatter' => function($d) 
+            ['dt' => 1, 'db' => 'id_origem', 'formatter' => function($d) 
             {
                 $query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$d]);
 				$result = $query->fetch();
@@ -41,7 +40,7 @@ class RncModel extends MainModel
 				}
                 return $result['setor'] . " - " . $result['nome'];
             }],
-            ['dt' => 3, 'db' => 'id_destino', 'formatter' => function($d) 
+            ['dt' => 2, 'db' => 'id_destino', 'formatter' => function($d) 
             {
                 $query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$d]);
 				$result = $query->fetch();
@@ -50,7 +49,7 @@ class RncModel extends MainModel
 				}
                 return $result['setor'] . " - " . $result['nome'];
             }],
-            ['dt' => 4, 'db' => 'status', 'formatter' => function($d) 
+            ['dt' => 3, 'db' => 'status', 'formatter' => function($d) 
             {
                 if ($d == 1) {
 					return "<span class='label label-primary'>Novo</span>";
@@ -62,19 +61,25 @@ class RncModel extends MainModel
 					return "<span class='label label-default'>Expirado</span>";
 				}
             }],
-			['dt' => 5, 'db' => 'numero_op'],
-			['dt' => 6, 'db' => 'sacp'],
-			['dt' => 7, 'db' => 'data_gerada', 'formatter' => function($d) 
+			['dt' => 4, 'db' => 'numero_op'],
+			['dt' => 5, 'db' => 'sacp'],
+			['dt' => 6, 'db' => 'data_gerada', 'formatter' => function($d) 
             {
-				$data = new DateTime($d);
-				return $data->format('d/m/Y H:i:s');
+				if ($d !== null) {
+					$data = new DateTime($d);
+					return $data->format('d/m/Y H:i:s');
+				}
+				return "";
             }],
-			['dt' => 8, 'db' => 'data_finalizada', 'formatter' => function($d) 
+			['dt' => 7, 'db' => 'data_finalizada', 'formatter' => function($d) 
             {
-                $data = new DateTime($d);
-				return $data->format('d/m/Y H:i:s');
+				if ($d !== null) {
+					$data = new DateTime($d);
+					return $data->format('d/m/Y H:i:s');
+				}
+				return "";
             }],
-            ['dt' => 9, 'db' => 'id', 'formatter' => function($d) 
+            ['dt' => 8, 'db' => 'id', 'formatter' => function($d) 
             {
                 ob_start(); ?>
                     <div class="btn-group">
@@ -111,8 +116,20 @@ class RncModel extends MainModel
 
     public function listarUsuarios() 
 	{
-		$query = $this->db->query('SELECT * FROM usuarios WHERE id != ? ORDER BY setor ASC', [$this->userdata['id']]);
-		return $query->fetchAll(PDO::FETCH_ASSOC);
+		$query = $this->db->query('SELECT * FROM usuarios WHERE id != ?', [$this->userdata['id']]);
+		$usuarios = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach ($usuarios as $key => $usuario) {
+			$query = $this->db->query('SELECT * FROM setores WHERE id = ?', [$usuario['setor']]);
+			$result = $query->fetch(PDO::FETCH_ASSOC);
+			$usuarios[$key]['nomeSetor'] = $result['nome'];
+		}
+
+		usort($usuarios, function($a, $b) {
+			return $a['nomeSetor'] <=> $b['nomeSetor'];
+		});
+
+		return $usuarios;
     }
 	
 	
@@ -177,32 +194,26 @@ class RncModel extends MainModel
 	} // inserir
 
 	
-	public function editarRNC($user_id) 
+	public function editarRNC($id) 
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		editar_usuario. */
-		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['editar_usuario'])) {
+		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['editarRNC'])) {
 			return;
 		}
 
-		/* Checa se o tipo_usuario é 1(admin) e libera apenas para admin */
-		if ($_POST['tipo_usuario'] == 1 && $this->userdata['tipo_usuario'] != 1) {
-			return 'Sem permissão para editar usuário administrador';
-		}
-
 		/* Remove o campo insere_usuario para não gerar problema com o PDO */
-		unset($_POST['editar_usuario']);
+		unset($_POST['editarRNC']);
 
-		/* Se a senha tiver sido alterada, configura, 
-		caso não, da unset para não alterar a senha atual no BD */
-		if (isset($_POST['senha']) && !empty($_POST['senha'])) {
-			$_POST['senha'] = $this->controller->phpass->hashPassword($_POST['senha']);
-		} else {
-			unset($_POST['senha']);
+		// Checa se o campo numero_op está vazio, caso esteja, seta pra null
+		if (empty($_POST['numero_op'])) {
+			$_POST['numero_op'] = null;
 		}
+
+
 
 		/* Atualiza os dados */
-		$query = $this->db->update('ut_usuarios', 'id', $user_id[0], $_POST);
+		$query = $this->db->update('ut_usuarios', 'id', $id[0], $_POST);
 		
 		/* Verifica a consulta */
 		if ($query) {
