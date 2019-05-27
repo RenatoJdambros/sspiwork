@@ -43,7 +43,7 @@ if (! defined('ABSPATH')) exit;
                         </div>
                             <div style="text-align: left;">
                                 <h5 class="text-primary"><b>SACP</b></h5>
-                                <p class="card-text"><b><i>Solicitação de Ação Corretiva ou Preventiva (e mudanças no
+                                <p class="card-text"><b><i>Solicitação de Ação Corretiva ou <br>Preventiva (e mudanças no
                                             SGI)</i></b></p>
                                 <p class="card-text">Responsável por um texto que serve de apoio para identificar
                                     espaçamento correto e tamanho de descriçao.</p>
