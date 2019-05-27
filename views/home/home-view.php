@@ -1,3 +1,6 @@
+<?
+if (! defined('ABSPATH')) exit;
+?>
 <div class="container-fluid">
 <div class="shadow bg-white rounded">
 <div class="container-fluid">

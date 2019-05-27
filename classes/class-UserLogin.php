@@ -45,7 +45,7 @@ class UserLogin
 	 * Configura as propriedades $logged_in e $login_error. Também
 	 * configura o array do usuário em $userdata
 	 */
-	public function check_userlogin () {
+	public function check_userlogin() {
 	
 		// Verifica se existe uma sessão com a chave userdata
 		// Tem que ser um array e não pode ser HTTP POST
@@ -108,7 +108,7 @@ class UserLogin
 		extract( $userdata );
 		
 		// Verifica se existe um usuário e senha
-		if ( ! isset( $user ) || ! isset( $user_password ) ) {
+		if ( ! isset( $usuario ) || ! isset( $password ) ) {
 			$this->logged_in = false;
 			$this->login_error = null;
 		
@@ -119,10 +119,7 @@ class UserLogin
 		}
 		
 		// Verifica se o usuário existe na base de dados
-		$query = $this->db->query( 
-			'SELECT * FROM users WHERE user = ? LIMIT 1', 
-			array( $user ) 
-		);
+		$query = $this->db->query('SELECT * FROM usuarios WHERE usuario = ? LIMIT 1', [$usuario]);
 		
 		// Verifica a consulta
 		if ( ! $query ) {
@@ -139,12 +136,12 @@ class UserLogin
 		$fetch = $query->fetch(PDO::FETCH_ASSOC);
 		
 		// Obtém o ID do usuário
-		$user_id = (int) $fetch['user_id'];
+		$user_id = (int) $fetch['id'];
 		
 		// Verifica se o ID existe
 		if ( empty( $user_id ) ){
 			$this->logged_in = false;
-			$this->login_error = 'User do not exists.';
+			$this->login_error = 'Usuário e/ou senha inválido(s).';
 		
 			// Desconfigura qualquer sessão que possa existir sobre o usuário
 			$this->logout();
@@ -153,18 +150,7 @@ class UserLogin
 		}
 		
 		// Confere se a senha enviada pelo usuário bate com o hash do BD
-		if ( $this->phpass->CheckPassword( $user_password, $fetch['user_password'] ) ) {
-			
-			// Se for uma sessão, verifica se a sessão bate com a sessão do BD
-			if ( session_id() != $fetch['user_session_id'] && ! $post ) { 
-				$this->logged_in = false;
-				$this->login_error = 'Wrong session ID.';
-				
-				// Desconfigura qualquer sessão que possa existir sobre o usuário
-				$this->logout();
-			
-				return;
-			}
+		if ($this->phpass->checkPassword($password, $fetch['senha'])) {
 			
 			// Se for um post
 			if ( $post ) {
@@ -176,20 +162,28 @@ class UserLogin
 				$_SESSION['userdata'] = $fetch;
 				
 				// Atualiza a senha
-				$_SESSION['userdata']['user_password'] = $user_password;
+				$_SESSION['userdata']['password'] = $password;
 				
 				// Atualiza o ID da sessão
 				$_SESSION['userdata']['user_session_id'] = $session_id;
 				
 				// Atualiza o ID da sessão na base de dados
 				$query = $this->db->query(
-					'UPDATE users SET user_session_id = ? WHERE user_id = ?',
+					'UPDATE usuarios SET user_session_id = ? WHERE id = ?',
 					array( $session_id, $user_id )
 				);
 			}
 				
-			// Obtém um array com as permissões de usuário
-			$_SESSION['userdata']['user_permissions'] = unserialize( $fetch['user_permissions'] );
+			// Permissões
+			$query = $this->db->query('SELECT * FROM tipos_usuario ORDER BY nome ASC');
+			$tipos_usuarios = $query->fetchAll(PDO::FETCH_ASSOC);
+
+			foreach ($tipos_usuarios as $key => $tipo_usuario) {
+				if ($fetch['tipo_usuario'] == $tipo_usuario['id']) {
+					$_SESSION['userdata']['user_permissions'] = json_decode($tipo_usuario['permissoes'], true);
+					break;
+				}
+			}
 
 			// Configura a propriedade dizendo que o usuário está logado
 			$this->logged_in = true;
@@ -217,7 +211,7 @@ class UserLogin
 			$this->logged_in = false;
 			
 			// A senha não bateu
-			$this->login_error = 'Password does not match.';
+			$this->login_error = 'Usuário e/ou senha inválido(s).';
 		
 			// Remove tudo
 			$this->logout();
@@ -255,17 +249,37 @@ class UserLogin
 	 */
 	protected function goto_login() {
 		// Verifica se a URL da HOME está configurada
-		if ( defined( 'HOME_URI' ) ) {
+		if (defined('HOME_URI')) {
 			// Configura a URL de login
 			$login_uri  = HOME_URI . '/login/';
 			
-			// A página em que o usuário estava
-			$_SESSION['goto_url'] = urlencode( $_SERVER['REQUEST_URI'] );
+			
+			//verifica se o usuário veio do /sair para não gravar redirecionamento
+			
+			$url_redir=explode('/', $_SERVER['REQUEST_URI']);
+			
+			if (empty($url_redir)) {
+				$_SESSION['goto_url'] = urlencode(HOME_URI.'/home/');
+			} else {
+				if (array_search('sair', $url_redir)) {
+					
+					// A página em que o usuário estava
+					$_SESSION['goto_url'] = urlencode(HOME_URI.'/home/');
+					
+				} else {
+					
+					if (isset($_REQUEST['REQUEST']) && $_SERVER['REQUEST']) {
+						$_SESSION['goto_url'] = urlencode($_SERVER['REQUEST']);
+					}
+					
+				}
+			}
 			
 			// Redireciona
 			echo '<meta http-equiv="Refresh" content="0; url=' . $login_uri . '">';
 			echo '<script type="text/javascript">window.location.href = "' . $login_uri . '";</script>';
 			// header('location: ' . $login_uri);
+			
 		}
 		
 		return;
@@ -298,20 +312,21 @@ class UserLogin
 	 * @param array $user_permissions As permissões do usuário
 	 * @final
 	 */
-	final protected function check_permissions( 
-		$required = 'any', 
-		$user_permissions = array('any')
-	) {
-		if ( ! is_array( $user_permissions ) ) {
+	final public function check_permissions($menu='any', $required='any', $user_permissions = array('any')) 
+	{
+		if (! is_array($user_permissions)) {
 			return;
 		}
 
-		// Se o usuário não tiver permissão
-		if ( ! in_array( $required, $user_permissions ) ) {
-			// Retorna falso
-			return false;
-		} else {
+		if (in_array('any', $user_permissions)) {
 			return true;
 		}
+
+		if (array_key_exists($menu, $user_permissions)) {
+			if (in_array($required, $user_permissions[$menu])) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

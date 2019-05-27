@@ -26,80 +26,10 @@ background-image: linear-gradient(to bottom, transparent, rgba(100,50,20,.40));"
 <br>
 
 
-<h5>ORIGEM
-<span style="margin: 0 5px;">|</span>
-<small class="font-weight-light">Informações do emitente da RNC</small></h5>
-<hr>
-<?php
-$arrayTeste = array(
-  array(
-    "Cavar",
-    'Com a pá',
-    'Renato Jacques Dambros - TI',
-    '25/12/2019',
-    'Estoque',
-    'Sim'
-  ),
-  array(
-    "Nadar profundamente e estabelecer novos recordes",
-    'Com os braços abertos, afim de evidenciar as possibilidades de desafios novos e futuro organizacional Com os braços abertos, afim de evidenciar as possibilidades de desafios novos e futuro organizacional',
-    'Luiz Comiram Alfredo de alburquerque - Almoxarifado',
-    '29/11/2019',
-    'Almoxarifado',
-    'Não'
-  ),
-  array(
-    "Nadar profundamente e estabelecer novos recordes",
-    'Com os braços abertos, afim de evidenciar as possibilidades de desafios novos e futuro organizacional Com os braços abertos, afim de evidenciar as possibilidades de desafios novos e futuro organizacional',
-    'Luiz Comiram Alfredo de alburquerque - Almoxarifado',
-    '29/11/2019',
-    'Almoxarifado',
-    'Não'
-)
-)
-?>
-<div class="table-responsive">
-<table id="1" class="table table-bordered">
-  <thead>
-    <tr class="text-secundary" id=bordasAcao style="background-color: #D9E3F0">
-      <th id=bordasAcao width="200">O que fazer</th>
-      <th id=bordasAcao scope="col" width="300">Como fazer</th>
-      <th id=bordasAcao scope="col" width="200">Quem</th>
-      <th id=bordasAcao scope="col" width="100">Quando</th>
-      <th id=bordasAcao scope="col" width="100">Onde</th>
-      <th id=bordasAcao scope="col" width="50">Status</th>
-      <th id=bordasAcao scope="col" width="50">Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php foreach ($arrayTeste as $key => $value) { ?>
-    <tr id=bordasAcao style="background-color: white;" >
-      <td id=bordasAcao><?=$value[0]?></td>
-      <td id=bordasAcao><?=$value[1]?></td>
-      <td id=bordasAcao><?=$value[2]?></td>
-      <td id=bordasAcao><?=$value[3]?></td>
-      <td id=bordasAcao><?=$value[4]?></td>
-      <td id=bordasAcao><?=$value[5]?></td>
-    <td id=bordasAcao><div class="dropdown show">
-  <a class="btn btn-primary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    
-  </a>
-
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
-  </div>
-</div></td>
-    </tr>
-    <?php } ?>
-  </tbody>
-</table>
-</div>
 
 <div class="form-row">
-<div class="form-group col-md-4">
-    <label for="">Setor:</label>
+<div class="form-group col-md-5">
+    <label for="">Setor Solicitante:</label>
       <select id="" class="form-control custom-select">
         <option selected>Setor do solicitante</option>
         <option>Almoxarifado</option>
@@ -122,12 +52,27 @@ $arrayTeste = array(
       </select>
     </div>
 
-    
-
-    <div class="form-group col-md-6">
-    <label for="">Nome:</label>
+    <div class="form-group col-md-5">
+    <label for="">Setor Destino:</label>
       <select id="" class="form-control custom-select">
-        <option selected>Nome do solicitante</option>
+        <option selected>Setor do solicitante</option>
+        <option>Almoxarifado</option>
+        <option>Atendimento</option>
+        <option>Administrativo</option>
+        <option>Controladoria</option>
+        <option>Financeiro</option>
+        <option>Logística</option>
+        <option>Produção</option>
+        <option>...</option>
+        <option>...</option>
+        <option>...</option>
+        <option>...</option>
+        <option>...</option>
+        <option>...</option>
+        <option>...</option>
+        <option>...</option>
+        <option>...</option>
+        <option>...</option>
       </select>
     </div>
     
@@ -136,14 +81,20 @@ $arrayTeste = array(
       <input type="text" class="form-control" id="" placeholder="ex: 20182">
     </div>
     </div>
-          
-   <div class="form-group">
-    <label for="inputAddress">Descrição:</label>
-    <textarea class="form-control rounded-0" id="exampleFormControlTextarea1" rows="4"  placeholder="Descreva a não-conformidade encontrada..."></textarea>
-  </div> 
-  
+    <hr>
 
+    
 
+    <label for="inputAddress">Participantes:</label>
+<select class="js-example-basic-multiple form-group custom-select" name="states[]" style="width: 100%" multiple="multiple" >
+  <option value="AL">AlabamAAAAAAAAAAAAAAAAAAAAAAAAAAAAa</option>
+  <option value="A">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</option>
+  <option value="B">BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</option>
+  <option value="C">CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</option>
+    ...
+  <option value="WY">WyominAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg</option>
+</select>
+<br>
 
   <div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
   aria-hidden="true">
@@ -176,16 +127,68 @@ $arrayTeste = array(
   </div>
 </div>
 
-<div class="text-center">
-  <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#modalSubscriptionForm">Launch
-    Modal Subscription Form</a>
+<hr>
+
+<label for="inputAddress">Origem:</label> <br>
+<div class="container-fluid">
+<div class="form-row">
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="opcao1">
+  <label class="form-check-label" for="inlineRadio1">Relatório de Ação Corretiva</label>
 </div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="opcao2">
+  <label class="form-check-label" for="inlineRadio2">Indicador</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="opcao3">
+  <label class="form-check-label" for="inlineRadio3">Auditoria (int./ext.)</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="opcao4">
+  <label class="form-check-label" for="inlineRadio4">Recebida de cliente</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio5" value="opcao5">
+  <label class="form-check-label" for="inlineRadio5">Ação corretiva</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio6" value="opcao6">
+  <label class="form-check-label" for="inlineRadio6">Riscos</label>
+</div>  
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio7" value="opcao7">
+  <label class="form-check-label" for="inlineRadio7">Oportunidade</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio8" value="opcao8">
+  <label class="form-check-label" for="inlineRadio8">Necessidade de mudança</label>
+</div>
+ <div class="row">
+    <div class="col">
+     
+      <input type="text" class="form-control form-control-sm" placeholder="Outros...">
+    </div>
+        </div>
+        </div>
+         </div>
     
-  
-
-    <br>
 
 
+
+<hr>
+          
+   <div class="form-group">
+    <label for="inputAddress">Descrição:</label>
+    <textarea class="form-control rounded-0" id="exampleFormControlTextarea1" rows="4"  placeholder="Descreva a não-conformidade encontrada..."></textarea>
+  </div> 
+
+<hr>
+<!-- necessários pois os asrquivos originais do header e footer estão dando conflito-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+ 
+ <br>
 
   <div id="accordion">
 <div class="card backgroundRBOX">
@@ -309,55 +312,76 @@ $arrayTeste = array(
 
     <br>
 
-    <h5>DESTINO
+<h5>ORIGEM
 <span style="margin: 0 5px;">|</span>
-<small class="font-weight-light">Informações do destinatário da RNC</small></h5>
+<small class="font-weight-light">Informações do emitente da RNC</small></h5>
 <hr>
-<form>
-  <div class="form-row">
-  <div class="form-group col-md-6">
-    <label for="">Setor:</label>
-      <select id="" class="form-control custom-select">
-        <option selected>Setor do destinatário</option>
-        <option>Almoxarifado</option>
-        <option>Atendimento</option>
-        <option>Administrativo</option>
-        <option>Controladoria</option>
-        <option>Financeiro</option>
-        <option>Logística</option>
-        <option>Produção</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-      </select>
-    </div>
+<?php
+$arrayTeste = array(
+  array(
+    "Cavar",
+    'Com a pá',
+    'Renato Jacques Dambros - TI',
+    '25/12/2019',
+    'Estoque',
+    'Sim'
+  ),
+  array(
+    "Nadar profundamente e estabelecer novos recordes",
+    'Com os braços abertos, afim de evidenciar as possibilidades de desafios novos e futuro organizacional Com os braços abertos, afim de evidenciar as possibilidades de desafios novos e futuro organizacional',
+    'Luiz Comiram Alfredo de alburquerque - Almoxarifado',
+    '29/11/2019',
+    'Almoxarifado',
+    'Não'
+  ),
+  array(
+    "Nadar profundamente e estabelecer novos recordes",
+    'Com os braços abertos, afim de evidenciar as possibilidades de desafios novos e futuro organizacional Com os braços abertos, afim de evidenciar as possibilidades de desafios novos e futuro organizacional',
+    'Luiz Comiram Alfredo de alburquerque - Almoxarifado',
+    '29/11/2019',
+    'Almoxarifado',
+    'Não'
+)
+)
+?>
+<div class="table-responsive">
+<table id="1" class="table table-bordered">
+  <thead>
+    <tr class="text-secundary" id=bordasAcao style="background-color: #D9E3F0">
+      <th id=bordasAcao width="200">O que fazer</th>
+      <th id=bordasAcao scope="col" width="300">Como fazer</th>
+      <th id=bordasAcao scope="col" width="200">Quem</th>
+      <th id=bordasAcao scope="col" width="100">Quando</th>
+      <th id=bordasAcao scope="col" width="100">Onde</th>
+      <th id=bordasAcao scope="col" width="50">Status</th>
+      <th id=bordasAcao scope="col" width="50">Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php foreach ($arrayTeste as $key => $value) { ?>
+    <tr id=bordasAcao style="background-color: white;" >
+      <td id=bordasAcao><?=$value[0]?></td>
+      <td id=bordasAcao><?=$value[1]?></td>
+      <td id=bordasAcao><?=$value[2]?></td>
+      <td id=bordasAcao><?=$value[3]?></td>
+      <td id=bordasAcao><?=$value[4]?></td>
+      <td id=bordasAcao><?=$value[5]?></td>
+    <td id=bordasAcao><div class="dropdown show">
+  <a class="btn btn-primary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    
+  </a>
 
-    <div class="form-group col-md-6">
-    <label for="">Nome:</label>
-      <select id="" class="form-control custom-select">
-        <option selected>Nome do destinatário</option>
-      </select>
-    </div>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+    <a class="dropdown-item" href="#">Action</a>
+    <a class="dropdown-item" href="#">Another action</a>
+    <a class="dropdown-item" href="#">Something else here</a>
   </div>
-    </form>
-
-  <hr>
-
-  <div class="form-group">
-    <label for="inputAddress">Justificativa:</label>
-    <textarea class="form-control rounded-0" id="" rows="4"  placeholder="Descreva a justificativa..."></textarea>
-  </div>
-  <div class="form-group">
-    <label for="inputAddress">Correção realizada:</label>
-    <textarea class="form-control rounded-0" id="" rows="4"  placeholder="Descreva a correção..."></textarea>
-    </div>
+</div></td>
+    </tr>
+    <?php } ?>
+  </tbody>
+</table>
+</div>
 
 <br>
 
