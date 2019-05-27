@@ -98,9 +98,16 @@
           <li class="nav-item">
             <a class="nav-link" data-toggle="modal" href="#myModal"><i class="fa fa-info-circle"> Informações</i></a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="modal" href="<?=HOME_URI?>/usuarios/"><i class="fa fa-user"> Usuários</i></a>
-          </li>
+          <?php if ($this->check_permissions('usuarios', 'visualizar', $this->userdata['user_permissions'])) { ?>
+            <li class="nav-item">
+              <a class="nav-link" style="margin-left:23.5em;" data-toggle="modal" href="<?=HOME_URI?>/usuarios/"><i class="fa fa-user"> Usuários</i></a>
+            </li>
+          <?php } ?>
+          <?php if ($this->check_permissions('configuracoes', 'visualizar', $this->userdata['user_permissions'])) { ?>
+            <li class="nav-item">
+              <a class="nav-link" href="<?=HOME_URI?>/home/" ><i class="fa fa-cog"> Config</i></a>
+            </li>
+          <?php } ?>
         </ul>
         <ul class="navbar-nav">
           <li class="nav-item">
