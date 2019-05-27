@@ -33,21 +33,31 @@ class RncModel extends MainModel
             ['dt' => 0, 'db' => 'id'],
             ['dt' => 1, 'db' => 'id_origem', 'formatter' => function($d) 
             {
-                $query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$d]);
+                $query = $this->db->query('SELECT nome, setor FROM usuarios WHERE id = ?', [$d]);
 				$result = $query->fetch();
+				
 				if (empty($result)) {
 					return "Não encontrado";	
 				}
-                return $result['setor'] . " - " . $result['nome'];
+
+				$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$result['setor']]);
+				$setor = $query->fetch();
+
+                return $setor['nome'] . " - " . $result['nome'];
             }],
             ['dt' => 2, 'db' => 'id_destino', 'formatter' => function($d) 
             {
-                $query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$d]);
+                $query = $this->db->query('SELECT nome, setor FROM usuarios WHERE id = ?', [$d]);
 				$result = $query->fetch();
+
 				if (empty($result)) {
 					return "Não encontrado";	
 				}
-                return $result['setor'] . " - " . $result['nome'];
+
+                $query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$result['setor']]);
+				$setor = $query->fetch();
+
+                return $setor['nome'] . " - " . $result['nome'];
             }],
             ['dt' => 3, 'db' => 'status', 'formatter' => function($d) 
             {
