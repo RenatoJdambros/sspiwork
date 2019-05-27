@@ -24,13 +24,17 @@ if (! defined('ABSPATH')) exit;
             <form class="form-horizontal form-label-left" method="post">
               <input type="hidden" name="editarUsuario" value="1" />
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Nome Completo</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nome" data-toggle="tooltip" title="Obrigatório">
+                  Nome Completo<span style="color: red;">*</span>
+                </label>
                 <div class="col-md-9 col-sm-9 col-xs-12">
-                  <input type="text" class="form-control" name="nome" value="<?= $usuario['nome'] ?>" placeholder="Nome Completo" required>
+                  <input type="text" class="form-control" id="nome" name="nome" value="<?= $usuario['nome'] ?>" placeholder="Nome Completo" required>
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Setor</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="setor" data-toggle="tooltip" title="Obrigatório">
+                  Setor<span style="color: red;">*</span>
+                </label>
                 <div class="col-md-9 col-sm-9 col-xs-12">
                   <select name="setor" id="setor" class="form-control custom-select" required>
                   <option hidden disabled selected value>Selecione um setor</option>
@@ -45,27 +49,35 @@ if (! defined('ABSPATH')) exit;
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">E-mail</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email" data-toggle="tooltip" title="Obrigatório">
+                  E-mail<span style="color: red;">*</span>
+                </label>
                 <div class="col-md-9 col-sm-9 col-xs-12">
-                  <input type="email" class="form-control" name="email" value="<?= $usuario['email'] ?>" placeholder="usuario@edelbra.com.br" required>
+                  <input type="email" class="form-control" id="email" name="email" value="<?= $usuario['email'] ?>" placeholder="usuario@edelbra.com.br" required>
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Usuário</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="usuario" data-toggle="tooltip" title="Obrigatório">
+                  Usuário<span style="color: red;">*</span>
+                </label>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                  <input type="text" class="form-control" name="usuario" value="<?= $usuario['usuario'] ?>" placeholder="usuario.edelbra" required>
+                  <input type="text" class="form-control" id="usuario" name="usuario" value="<?= $usuario['usuario'] ?>" placeholder="usuario.edelbra" required>
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Senha</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="senha" data-toggle="tooltip" title="Obrigatório">
+                  Senha
+                </label>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                  <input type="text" class="form-control" name="senha" placeholder="Senha">
+                  <input type="text" class="form-control" id="senha" name="senha" placeholder="Senha">
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tipo de Usuário</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tipo_usuario" data-toggle="tooltip" title="Obrigatório">
+                  Tipo de Usuário<span style="color: red;">*</span>
+                </label>
                 <div class="col-md-9 col-sm-9 col-xs-12">
-                  <select class="form-control" name="tipo_usuario" required>
+                  <select class="form-control" id="tipo_usuario" name="tipo_usuario" required>
                   <option hidden disabled selected value>Selecione uma opção</option>
                     <?php foreach ($tiposUsuario as $key => $tipo_usuario) {
                         if ($usuario['tipo_usuario'] == $tipo_usuario['id']) {
