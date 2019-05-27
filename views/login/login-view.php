@@ -1,7 +1,7 @@
-<?
+<?php
 if (! defined('ABSPATH')) exit; 
 if ($this->logged_in) {
-	echo '<script type="text/javascript">window.location.href = "' .HOME_URI. '/home/";</script>';
+	echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/home/";</script>';
 }
 ?>
 <!DOCTYPE html>
