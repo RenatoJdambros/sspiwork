@@ -10,15 +10,14 @@ if (!defined('ABSPATH')) exit;
     <br>
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
-                <button type="button" class="btn btn-secondary"
-                    onclick="window.location='<?= HOME_URI ?>/home/'">Voltar</button>
-                <a href="<?= HOME_URI ?>/sacp/inserir">
-                    <button type="button" class="btn btn-primary">GERAR SACP</button>
-                </a>
-                <hr>
+                <?php if ($this->check_permissions('sacp', 'inserir', $this->userdata['user_permissions'])) { ?>
+                    <a href="<?=HOME_URI?>/sacp/inserir">
+                        <button type="submit" class="btn btn-primary">Gerar SACP</button>
+                    </a>
+                <?php } ?>
+            <hr>
             </div>
             <div class="x_content">
-                <br>
                 <table id="sacp" class="table table-striped table-bordered bulk_action server-side">
                     <thead>
                         <tr>

@@ -95,24 +95,24 @@ class RncModel extends MainModel
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
                         <ul class="dropdown-menu">
-							<?php //if ($this->controller->check_permissions('sacp', 'inserir', $this->userdata['user_permissions'])) { ?>
+							<?php if ($this->controller->check_permissions('sacp', 'inserir', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/sacp/gerarSACPdeRNC/<?= $d ?>"><i class="fa fa-edit"></i> Gerar SACP</a>
                                 </li>
-                            <?php //} ?>
-                            <?php //if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { ?>
+                            <?php } ?>
+                            <?php if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/rnc/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
                                 </li>
-                            <?php //} ?>
-                            <?php //if ($this->controller->check_permissions('rnc', 'excluir', $this->userdata['user_permissions'])) { ?>
+                            <?php } ?>
+                            <?php if ($this->controller->check_permissions('rnc', 'excluir', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/rnc/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
                                     <div style="display:none">
                                         <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
                                     </div>
                                 </li>
-                            <?php //} ?>
+                            <?php } ?>
                         </ul>
                     </div>
                 <?php

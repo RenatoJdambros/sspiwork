@@ -24,7 +24,13 @@
 
 -----------------------------------------------------------
 
-$user_permissions = array(
+    $admin = array(
+
+			"any"
+
+	    );
+
+    $qualidade = array(
 
 			"home" => array(
 				"visualizar"
@@ -42,13 +48,24 @@ $user_permissions = array(
                 "inserir",
                 "editar",
                 "excluir"
-			),
+			)
 
-            "usuarios" => array(
+		);
+
+    $usuarioComum = array(
+
+			"home" => array(
+				"visualizar"
+			),
+		
+			"rnc" => array(
 				"visualizar",
                 "inserir",
-                "editar",
-                "excluir"
+                "editar"
+			),
+
+            "sacp" => array(
+				"visualizar"
 			)
 
 		);
