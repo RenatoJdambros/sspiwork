@@ -137,6 +137,42 @@
   <script src="<?=HOME_URI?>/views/_js/custom.js"></script>
 
   <script src="<?=HOME_URI?>/views/_js/scripts.js"></script>
+
+  <!--  POPUP MODAL -->
+  <? if (isset($this->modal_message['title'])) { ?>
+    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="modal-popup">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">
+              <?=$this->modal_message['title']?>
+            </h4>
+          </div>
+          <div class="modal-body">
+            <p>
+            <?=$this->modal_message['message']?>
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="window.history.back();" data-dismiss="modal">Cancelar</button>
+            <?=$this->modal_message['button']?>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('#modal-popup').modal('show');
+      });
+    </script>
+  <?php } ?>
+
+         <!--  FIM POPUP MODAL -->  
   
   <!---P NOTIFY ALERT--->
   <?php if (isset($this->modal_notification['title'])) { ?>   

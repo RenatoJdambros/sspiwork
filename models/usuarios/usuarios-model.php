@@ -132,6 +132,13 @@ class UsuariosModel extends MainModel
 			return;
 		}
 
+		/* Checa se o usuario existe no banco de dados */
+		$query = $this->db->query('SELECT * FROM usuarios WHERE usuario = ?', [$_POST['usuario']]);
+		$result = $query->fetch();
+		if (!empty($result)) {
+			return 'Usuário já cadastrado';
+		}
+
 		// Configura a senha
 		$_POST['senha'] = $this->controller->phpass->HashPassword($_POST['senha']);
 
@@ -150,55 +157,46 @@ class UsuariosModel extends MainModel
 	} // insere_noticia
 	
 	
-	/**
-	 * Obtém o usuário e atualiza os dados se algo for postado
-	 *
-	 * Obtém apenas uma notícia da base de dados para preencher o formulário de
-	 * edição.
-	 * Configura a propriedade $this->form_data.
-	 *
-	 * @since 0.1
-	 * @access public
-	 */
-	public function update_usuario ($user_id) 
+	public function editarUsuario($id) 
 	{
 		/* 
 		Verifica se algo foi postado e se está vindo do form que tem o campo
-		editar_usuario.
-		
-		Se verdadeiro, atualiza os dados conforme a requisição.
+		editarUsuario.
 		*/
-		if ('POST' == $_SERVER['REQUEST_METHOD'] && ! empty($_POST['editar_usuario'])) {
-			
-			// Remove o campo insere_usuario para não gerar problema com o PDO
-			unset($_POST['editar_usuario']);
-
-			if (isset($_POST['senha']) && !empty($_POST['senha'])) {
-				$_POST['senha'] = $this->controller->phpass->HashPassword($_POST['senha']);
-			} else {
-				unset($_POST['senha']);
-			}
-
-			// Atualiza os dados
-			$query = $this->db->update('ut_usuarios', 'id',$user_id[0],$_POST);
-			
-			// Verifica a consulta
-			if ($query) {
-				return 'success';
-			}
-			return 'error';
-			
+		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['editarUsuario'])) {
+			return;
 		}
+
+		/* Checa se o usuario existe no banco de dados */
+		$query = $this->db->query('SELECT * FROM usuarios WHERE usuario = ?', ['luiz']);
+		$result = $query->fetch();
+		if (!empty($result)) {
+			return 'Usuário já cadastrado';
+		}
+
+		// Remove o campo insere_usuario para não gerar problema com o PDO
+		unset($_POST['editarUsuario']);
+
+		// Se a senha tiver sido preenchida, gera uma nova hash, caso não, 
+		// limpa a váriavel para evitar que seja substituida no banco de dados
+		if (isset($_POST['senha']) && !empty($_POST['senha'])) {
+			$_POST['senha'] = $this->controller->phpass->HashPassword($_POST['senha']);
+		} else {
+			unset($_POST['senha']);
+		}
+
+		// Atualiza os dados
+		$query = $this->db->update('usuarios', 'id', $id[0], $_POST);
+		
+		// Verifica a consulta
+		if ($query) {
+			return 'success';
+		}
+		return 'Falha ao editar no banco de dados';
 	} 
 	
 	
-	/**
-	 * Apaga a notícia
-	 *
-	 * @since 0.1
-	 * @access public
-	 */
-	public function apaga_usuario() 
+	public function deletarUsuario() 
 	{
 		// O segundo parâmetro deverá ser um ID numérico
 		if (! is_numeric(chk_array($this->parametros, 0))) {
@@ -214,13 +212,13 @@ class UsuariosModel extends MainModel
 		$user_id = (int)chk_array($this->parametros, 0);
 		
 		// Executa a consulta
-		$query = $this->db->delete('ut_usuarios','id',$user_id);
+		$query = $this->db->delete('usuarios', 'id', $user_id);
 		
 		// Redireciona para a página de administração de notícias
 		echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/usuarios/">';
 		echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/usuarios/";</script>';
 		
-	} // apaga_noticia
+	}
 
 
 	public function listarSetores() 
@@ -239,34 +237,24 @@ class UsuariosModel extends MainModel
 	}
 
 
-	public function consult_usuario($user_id)
+	public function consultaUsuario($id)
 	{
 		// Faz a consulta para obter o valor
-		$query = $this->db->query(
-			'SELECT * FROM ut_usuarios WHERE id = ? LIMIT 1',
-			$user_id
-		);
+		$query = $this->db->query('SELECT * FROM usuarios WHERE id = ? LIMIT 1', [$id[0]]);
 		
 		// Obtém os dados
-		$fetch_data = $query->fetch();
+		$result = $query->fetch();
 
 		// Se os dados estiverem nulos, não faz nada
-		if (empty($fetch_data)) {
+		if (empty($result)) {
 			return;
-		}
-		
-	 	return $fetch_data;
-		
+		}	
+	 	return $result;
 	}
 	// usuario
 
 
-	public function json($variavel) {
-		return json_encode($variavel);
-	}
-
-
-	public function consultTiposUsuario() 
+	public function consultaTiposUsuario() 
 	{
 		$query = $this->db->query('SELECT * FROM tipos_usuario ORDER BY `id` ASC');
 		

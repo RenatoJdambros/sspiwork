@@ -122,6 +122,14 @@ class MainModel
 	
 	} // inverte_data
 
+
+	public static function modalMessage($title, $message, $button=null)
+	{
+		$modal_array = array('title'=>$title, 'message'=>$message, 'button'=>$button);
+		return $modal_array;
+	}
+
+
 	public static function openNotification($title, $text, $type)
 	{
 		$notification = array('title'=>$title, 'text'=>$text, 'type'=>$type);

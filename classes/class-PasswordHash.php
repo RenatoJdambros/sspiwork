@@ -24,13 +24,14 @@
 # Obviously, since this code is in the public domain, the above are not
 # requirements (there can be none), but merely suggestions.
 #
-class PasswordHash {
+class PasswordHash 
+{
 	var $itoa64;
 	var $iteration_count_log2;
 	var $portable_hashes;
 	var $random_state;
 
-	function PasswordHashs($iteration_count_log2, $portable_hashes = 8)
+	function __construct($iteration_count_log2, $portable_hashes = 8)
 	{
 		$this->itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
@@ -44,6 +45,7 @@ class PasswordHash {
 		if (function_exists('getmypid'))
 			$this->random_state .= getmypid();
 	}
+
 
 	function get_random_bytes($count)
 	{
@@ -68,6 +70,7 @@ class PasswordHash {
 		return $output;
 	}
 
+
 	function encode64($input, $count)
 	{
 		$output = '';
@@ -91,6 +94,7 @@ class PasswordHash {
 		return $output;
 	}
 
+
 	function gensalt_private($input)
 	{
 		$output = '$P$';
@@ -100,6 +104,7 @@ class PasswordHash {
 
 		return $output;
 	}
+
 
 	function crypt_private($password, $setting)
 	{
@@ -146,6 +151,7 @@ class PasswordHash {
 		return $output;
 	}
 
+
 	function gensalt_extended($input)
 	{
 		$count_log2 = min($this->iteration_count_log2 + 8, 24);
@@ -163,6 +169,7 @@ class PasswordHash {
 
 		return $output;
 	}
+
 
 	function gensalt_blowfish($input)
 	{
@@ -205,7 +212,8 @@ class PasswordHash {
 		return $output;
 	}
 
-	function HashPassword($password)
+
+	function hashPassword($password)
 	{
 		$random = '';
 
@@ -240,7 +248,8 @@ class PasswordHash {
 		return '*';
 	}
 
-	function CheckPassword($password, $stored_hash)
+
+	function checkPassword($password, $stored_hash)
 	{
 		$hash = $this->crypt_private($password, $stored_hash);
 		if ($hash[0] == '*')
@@ -248,6 +257,5 @@ class PasswordHash {
 
 		return $hash == $stored_hash;
 	}
+	
 }
-
-?>

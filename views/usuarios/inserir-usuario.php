@@ -24,13 +24,13 @@
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Nome Completo</label>
                 <div class="col-md-9 col-sm-9 col-xs-12">
-                  <input type="text" class="form-control" name="nome" required="required" placeholder="Nome Completo">
+                  <input type="text" class="form-control" name="nome" placeholder="Nome Completo" required>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Setor</label>
                 <div class="col-md-9 col-sm-9 col-xs-12">
-                  <select name="setor" id="setor" class="form-control custom-select">
+                  <select name="setor" id="setor" class="form-control custom-select" required>
                   <option hidden disabled selected value>Selecione um setor</option>
                     <?php foreach ($setores as $key => $setor) {
                       echo "<option value='" . $setor['id'] . "'>" . $setor['nome'] . "</option>";
@@ -41,25 +41,25 @@
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">E-mail</label>
                 <div class="col-md-9 col-sm-9 col-xs-12">
-                  <input type="text" class="form-control telefone" name="telefone" required="required" placeholder="usuario@edelbra.com.br">
+                  <input type="email" class="form-control" name="email" placeholder="usuario@edelbra.com.br" required>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Usuário</label>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                  <input type="text" class="form-control" name="usuário" required="required"  placeholder="usuario.edelbra">
+                  <input type="text" class="form-control" name="usuario"  placeholder="usuario.edelbra" required>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Senha</label>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                  <input type="text" class="form-control" name="senha" required="required"  placeholder="Senha">
+                  <input type="text" class="form-control" name="senha"  placeholder="Senha" required>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Tipo de Usuário</label>
                 <div class="col-md-9 col-sm-9 col-xs-12">
-                  <select class="form-control" name="tipo_usuario" required="required">
+                  <select class="form-control" name="tipo_usuario" required>
                   <option hidden disabled selected value>Selecione uma opção</option>
                     <?php foreach ($tiposUsuario as $key => $tipo_usuario) { ?>                          
                       <option value="<?= $tipo_usuario['id'] ?>"><?= $tipo_usuario['nome'] ?></option>

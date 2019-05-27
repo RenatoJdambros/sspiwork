@@ -25,9 +25,6 @@
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
-            <p class="text-muted font-13 m-b-30">
-              Usuários cadastrados para acesso ao sistema
-            </p>
             <table id="usuarios" class="table table-striped table-bordered bulk_action server-side" style="width: 100%;">
               <thead>
                 <tr>

@@ -150,18 +150,7 @@ class UserLogin
 		}
 		
 		// Confere se a senha enviada pelo usuário bate com o hash do BD
-		if ($password == $fetch['senha']) {
-			
-			/* // Se for uma sessão, verifica se a sessão bate com a sessão do BD
-			if ( session_id() != $fetch['user_session_id'] && ! $post ) { 
-				$this->logged_in = false;
-				$this->login_error = 'Wrong session ID.';
-				
-				// Desconfigura qualquer sessão que possa existir sobre o usuário
-				$this->logout();
-			
-				return;
-			} */
+		if ($this->phpass->checkPassword($password, $fetch['senha'])) {
 			
 			// Se for um post
 			if ( $post ) {
