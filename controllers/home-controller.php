@@ -3,7 +3,7 @@ class HomeController extends MainController
 {
     public function index() {
 		// Título da página
-		$this->title = 'Beasy Beacons - Home';
+		$this->title = 'SSPI - Home';
 		
 		// Verifica se o usuário está logado
 		if (! $this->logged_in) {
