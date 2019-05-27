@@ -2,6 +2,11 @@
 if (!defined('ABSPATH')) exit;
 ?>
 
+<!-- necessários pois os asrquivos originais do header e footer estão dando conflito-->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 
 <div class="container-fluid">
 <span class="border-top-0"><div id=bordasSACP class="shadow bg-white"></span>
@@ -25,6 +30,72 @@ background-image: linear-gradient(to bottom, transparent, rgba(100,50,20,.40));"
 <span style="margin: 0 5px;">|</span>
 <small class="font-weight-light">Informações do emitente da RNC</small></h5>
 <hr>
+<?php
+$arrayTeste = array(
+  array(
+    "Cavar",
+    'Com a pá',
+    'Renato Jacques Dambros - TI',
+    '25/12/2019',
+    'Estoque',
+    'Sim'
+  ),
+  array(
+    "Nadar profundamente e estabelecer novos recordes",
+    'Com os braços abertos, afim de evidenciar as possibilidades de desafios novos e futuro organizacional Com os braços abertos, afim de evidenciar as possibilidades de desafios novos e futuro organizacional',
+    'Luiz Comiram Alfredo de alburquerque - Almoxarifado',
+    '29/11/2019',
+    'Almoxarifado',
+    'Não'
+  ),
+  array(
+    "Nadar profundamente e estabelecer novos recordes",
+    'Com os braços abertos, afim de evidenciar as possibilidades de desafios novos e futuro organizacional Com os braços abertos, afim de evidenciar as possibilidades de desafios novos e futuro organizacional',
+    'Luiz Comiram Alfredo de alburquerque - Almoxarifado',
+    '29/11/2019',
+    'Almoxarifado',
+    'Não'
+)
+)
+?>
+<div class="table-responsive">
+<table id="1" class="table table-bordered">
+  <thead>
+    <tr class="text-secundary" id=bordasAcao style="background-color: #D9E3F0">
+      <th id=bordasAcao width="200">O que fazer</th>
+      <th id=bordasAcao scope="col" width="300">Como fazer</th>
+      <th id=bordasAcao scope="col" width="200">Quem</th>
+      <th id=bordasAcao scope="col" width="100">Quando</th>
+      <th id=bordasAcao scope="col" width="100">Onde</th>
+      <th id=bordasAcao scope="col" width="50">Status</th>
+      <th id=bordasAcao scope="col" width="50">Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php foreach ($arrayTeste as $key => $value) { ?>
+    <tr id=bordasAcao style="background-color: white;" >
+      <td id=bordasAcao><?=$value[0]?></td>
+      <td id=bordasAcao><?=$value[1]?></td>
+      <td id=bordasAcao><?=$value[2]?></td>
+      <td id=bordasAcao><?=$value[3]?></td>
+      <td id=bordasAcao><?=$value[4]?></td>
+      <td id=bordasAcao><?=$value[5]?></td>
+    <td id=bordasAcao><div class="dropdown show">
+  <a class="btn btn-primary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    
+  </a>
+
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+    <a class="dropdown-item" href="#">Action</a>
+    <a class="dropdown-item" href="#">Another action</a>
+    <a class="dropdown-item" href="#">Something else here</a>
+  </div>
+</div></td>
+    </tr>
+    <?php } ?>
+  </tbody>
+</table>
+</div>
 
 <div class="form-row">
 <div class="form-group col-md-4">
@@ -51,6 +122,8 @@ background-image: linear-gradient(to bottom, transparent, rgba(100,50,20,.40));"
       </select>
     </div>
 
+    
+
     <div class="form-group col-md-6">
     <label for="">Nome:</label>
       <select id="" class="form-control custom-select">
@@ -70,12 +143,43 @@ background-image: linear-gradient(to bottom, transparent, rgba(100,50,20,.40));"
   </div> 
   
 
-<!-- necessários pois os asrquivos originais do header e footer estão dando conflito-->
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 
+  <div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Subscribe</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <i class="fas fa-user prefix grey-text"></i>
+          <input type="text" id="form3" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="form3">Your name</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <i class="fas fa-envelope prefix grey-text"></i>
+          <input type="email" id="form2" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="form2">Your email</label>
+        </div>
+
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button class="btn btn-indigo">Send <i class="fas fa-paper-plane-o ml-1"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center">
+  <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#modalSubscriptionForm">Launch
+    Modal Subscription Form</a>
+</div>
     
   
 
@@ -84,7 +188,7 @@ background-image: linear-gradient(to bottom, transparent, rgba(100,50,20,.40));"
 
 
   <div id="accordion">
-<div class="card  backgroundRBOX">
+<div class="card backgroundRBOX">
   <div class="card-header card">
     <a class="card-link row" data-toggle="collapse" href="#collapseOne">
       Dados de clientes
