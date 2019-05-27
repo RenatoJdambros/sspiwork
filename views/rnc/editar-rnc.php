@@ -27,7 +27,7 @@ if (!defined('ABSPATH')) exit;
   <div class="form-group col-md-4">
     <label for="selectUserOrigem" data-toggle="tooltip" title="Obrigatório">Usuário de Origem:</label>
       <select id="selectUserOrigem" name="id_origem" class="form-control custom-select" required>
-        <option value="<?= $userOrigem['id'] ?>" selected><?= $userOrigem['setor'] . " - " . $userOrigem['nome']?></option>
+        <option value="<?= $userOrigem['id'] ?>" selected><?= $setorOrigem . " - " . $userOrigem['nome']?></option>
       </select>
     </div>
     <!---->
@@ -88,7 +88,7 @@ if (!defined('ABSPATH')) exit;
     <div class="form-group col-md-6">
       <label for="selectUserDestino" data-toggle="tooltip" title="Obrigatório">Usuário de Destino:</label>
         <select id="selectUserDestino" name="id_destino" class="form-control custom-select" required>
-            <option value="<?= $userDestino['id'] ?>" selected><?= $userDestino['setor'] . " - " . $userDestino['nome']?></option>
+            <option value="<?= $userDestino['id'] ?>" selected><?= $setorDestino . " - " . $userDestino['nome']?></option>
         </select>
       </div>
     </div> 

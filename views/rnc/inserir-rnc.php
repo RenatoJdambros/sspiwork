@@ -27,7 +27,7 @@ if (!defined('ABSPATH')) exit;
   <div class="form-group col-md-4">
     <label for="selectUserOrigem" data-toggle="tooltip" title="Obrigatório">Usuário de Origem: <span style="color: red;">*</span></label>
       <select id="selectUserOrigem" name="id_origem" class="form-control custom-select" required>
-        <option value="<?= $this->userdata['id'] ?>" selected><?= $this->userdata['setor'] . " - " . $this->userdata['nome']?></option>
+        <option value="<?= $this->userdata['id'] ?>" selected><?= $setorAtual . " - " . $this->userdata['nome']?></option>
       </select>
     </div>
     <!---->

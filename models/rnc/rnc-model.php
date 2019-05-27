@@ -124,8 +124,18 @@ class RncModel extends MainModel
 	} // end formatar colunas
 
 
+	public function buscaSetor($id)
+	{
+		// Busca o nome do setor do usuário logado
+		$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$id]);
+		$setor = $query->fetch(PDO::FETCH_ASSOC);
+		return $setor['nome'];
+	}
+
+
     public function listarUsuarios() 
 	{
+		// Busca os usuários fora o usuário logado e atribui os nomes dos setores as suas arrays
 		$query = $this->db->query('SELECT * FROM usuarios WHERE id != ?', [$this->userdata['id']]);
 		$usuarios = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -134,7 +144,8 @@ class RncModel extends MainModel
 			$result = $query->fetch(PDO::FETCH_ASSOC);
 			$usuarios[$key]['nomeSetor'] = $result['nome'];
 		}
-
+		
+		// Sorteia a array ordem crescente por setor
 		usort($usuarios, function($a, $b) {
 			return $a['nomeSetor'] <=> $b['nomeSetor'];
 		});
