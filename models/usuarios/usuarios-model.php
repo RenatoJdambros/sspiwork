@@ -168,10 +168,15 @@ class UsuariosModel extends MainModel
 		}
 
 		/* Checa se o usuario existe no banco de dados */
-		$query = $this->db->query('SELECT * FROM usuarios WHERE usuario = ?', ['luiz']);
-		$result = $query->fetch();
-		if (!empty($result)) {
-			return 'Usuário já cadastrado';
+		$query = $this->db->query('SELECT * FROM usuarios WHERE usuario = ?', [$_POST['usuario']]);
+		$checkUsuario = $query->fetch();
+
+		if (!empty($checkUsuario)) {
+			$usuario = $this->consultaUsuario($id);
+			
+			if ($usuario['usuario'] != $checkUsuario['usuario']) {
+				return 'Usuário já cadastrado';
+			}
 		}
 
 		// Remove o campo insere_usuario para não gerar problema com o PDO
