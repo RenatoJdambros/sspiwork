@@ -2,7 +2,6 @@
 
 class RncController extends MainController
 {
-	
     public function index() {
 		// Título da página
         $this->title = "RNC's";
@@ -113,9 +112,9 @@ class RncController extends MainController
 	}
 
 
-    public function deletar($id)
+    public function excluir($id)
 	{
-		$this->title = 'Deletar RNC';
+		$this->title = 'Excluir RNC';
 
 		// Verifica se o usuário está logado
 		if (!$this->logged_in) {
@@ -134,7 +133,7 @@ class RncController extends MainController
 		$modelo = $this->load_model('rnc/rnc-model');
 		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
 
-		$modelo->form_confirma = $modelo->deletarRNC();
+		$modelo->form_confirma = $modelo->excluirRNC();
 		
 		require ABSPATH . '/views/_includes/header.php';
 		//require ABSPATH . '/views/rnc/rnc-view.php';

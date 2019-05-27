@@ -2,7 +2,6 @@
 
 class SacpController extends MainController
 {
-
     public function index() {
 		// Título da página
 		$this->title = "SACP's";
@@ -14,7 +13,7 @@ class SacpController extends MainController
 		}
 
 		// Verifica se o usuário tem permissão
-		if (!$this->check_permissions('home', 'visualizar', $this->userdata['user_permissions'])) {
+		if (!$this->check_permissions('sacp', 'visualizar', $this->userdata['user_permissions'])) {
 			require_once ABSPATH . '/includes/403.php';
 			return;
 		}
@@ -24,7 +23,8 @@ class SacpController extends MainController
         require ABSPATH . '/views/sacp/sacp-view.php';
         require ABSPATH . '/views/_includes/footer.php';
 		
-    } // index
+	} // index
+	
 
     public function inserir() {
 		// Título da página
@@ -37,7 +37,7 @@ class SacpController extends MainController
 		}
 
 		// Verifica se o usuário tem permissão
-		if (!$this->check_permissions('home', 'visualizar', $this->userdata['user_permissions'])) {
+		if (!$this->check_permissions('sacp', 'inserir', $this->userdata['user_permissions'])) {
 			require_once ABSPATH . '/includes/403.php';
 			return;
 		}
@@ -49,6 +49,7 @@ class SacpController extends MainController
         require ABSPATH . '/views/_includes/footer.php';
 		
 	} // index
+
 	
 	public function gerarSACPdeRNC($id) {
 		// Título da página

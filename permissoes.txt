@@ -27,22 +27,30 @@
 $user_permissions = array(
 
 			"home" => array(
-				"visualizar",
-				"inserir",
-				"editar"
-			),
-		
-			"imagens" => array(
 				"visualizar"
 			),
 		
-			"clientes" => array(
+			"rnc" => array(
 				"visualizar",
-				"inserir",
-				"editar",
-				"excluir",
-				"relatorio",
+                "inserir",
+                "editar",
+                "excluir"
+			),
+
+            "sacp" => array(
+				"visualizar",
+                "inserir",
+                "editar",
+                "excluir"
+			),
+
+            "usuarios" => array(
+				"visualizar",
+                "inserir",
+                "editar",
+                "excluir"
 			)
+
 		);
         
 $user_permissions = json_encode($user_permissions);

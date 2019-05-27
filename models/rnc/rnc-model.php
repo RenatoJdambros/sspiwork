@@ -107,7 +107,7 @@ class RncModel extends MainModel
                             <?php //} ?>
                             <?php //if ($this->controller->check_permissions('rnc', 'excluir', $this->userdata['user_permissions'])) { ?>
                                 <li>
-                                    <a href="<?= HOME_URI ?>/rnc/deletar/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
+                                    <a href="<?= HOME_URI ?>/rnc/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
                                     <div style="display:none">
                                         <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
                                     </div>
@@ -244,7 +244,7 @@ class RncModel extends MainModel
 	} // update
 
 
-	public function deletarRNC() 
+	public function excluirRNC() 
 	{
 		// O segundo parâmetro deverá ser um ID numérico
 		if (! is_numeric(chk_array($this->parametros, 0))) {

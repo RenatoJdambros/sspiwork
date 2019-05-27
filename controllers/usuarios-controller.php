@@ -74,6 +74,7 @@ class UsuariosController extends MainController
 		require ABSPATH . '/views/_includes/footer.php';
 	}
 	
+	
 	public function editar($id)
 	{
 		$this->title = 'Editar dados usuário';
@@ -116,10 +117,11 @@ class UsuariosController extends MainController
 		require ABSPATH . '/views/usuarios/editar-usuario.php';
 		require ABSPATH . '/views/_includes/footer.php';
 	}
+
 		
-	public function deletar($id)
+	public function excluir($id)
 	{
-		$this->title = 'Deletar usuário';
+		$this->title = 'Excluir usuário';
 
 		// Verifica se o usuário está logado
 		if (! $this->logged_in) {
@@ -145,19 +147,11 @@ class UsuariosController extends MainController
 		
 		$this->modal_message = MainModel::modalMessage('Excluir Usuário', 'Tem certeza que deseja apagar este usuário?', '<button type="submit" onclick="window.location=\''.$_SERVER['REQUEST_URI']. 'confirma/'.'\'" class="btn btn-success">Excluir</button>');
 	
-		$modelo->form_confirma = $modelo->deletarUsuario();
+		$modelo->form_confirma = $modelo->excluirUsuario();
 		
 		require ABSPATH . '/views/_includes/header.php';
 		//require ABSPATH . '/views/usuarios/usuarios-view.php';
 		require ABSPATH . '/views/_includes/footer.php';
 	}
 
-	public function TesteEmail()
-	{
-		$send_message = new SendMessage('lucaschiarello@yahoo.com.br', 'no-reply@beasy.mobi', 'Usuário Acesso - Beasy', 'usuario-senha');
-		$retorno = $send_message->send();
-
-		echo $retorno;
-		die();
-	}
 } // class UsuariosController

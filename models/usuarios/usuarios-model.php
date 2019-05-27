@@ -91,7 +91,7 @@ class UsuariosModel extends MainModel
                             <?php } ?>
                             <?php if ($this->controller->check_permissions('usuarios', 'excluir', $this->userdata['user_permissions'])) { ?>
                                 <li>
-                                    <a href="<?= HOME_URI ?>/usuarios/deletar/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
+                                    <a href="<?= HOME_URI ?>/usuarios/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
                                     <div style="display:none">
                                         <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
                                     </div>
@@ -201,7 +201,7 @@ class UsuariosModel extends MainModel
 	} 
 	
 	
-	public function deletarUsuario() 
+	public function excluirUsuario() 
 	{
 		// O segundo parâmetro deverá ser um ID numérico
 		if (! is_numeric(chk_array($this->parametros, 0))) {

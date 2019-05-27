@@ -7,10 +7,6 @@
  */
 class LoginController extends MainController
 {
-
-	/**
-	 * Carrega a página "/views/login/index.php"
-	 */
     public function index() {
 		// Título da página
 		$this->title = 'Login SSPI';
