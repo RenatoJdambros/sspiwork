@@ -154,7 +154,14 @@
             </div> <!-- Fim form background-->
     </div><!-- Fim div contorno-->
             <br>
-            <button type="button" class="btn btn-secondary" onclick="window.location='<?= HOME_URI ?>/rnc/'">Voltar</button>
-            <button type="submit" class="btn btn-warning">Gerar RNC</button>
+
+            <button type="button" class="btn btn-secondary" onclick="window.location='<?= HOME_URI ?>/rnc/'">
+                Voltar
+            </button>
+            
+            <button type="submit" class="btn btn-warning">
+                Gerar RNC
+            </button>
+
         </form><!-- end form -->
 </div><!-- Fim conteúdo página-->

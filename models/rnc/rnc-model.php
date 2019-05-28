@@ -105,6 +105,11 @@ class RncModel extends MainModel
                                     <a href="<?= HOME_URI ?>/rnc/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
                                 </li>
                             <?php } ?>
+							<?php if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { ?>
+                                <li>
+                                    <a href="<?= HOME_URI ?>/rnc/finalizar/<?= $d ?>"><i class="fa fa-edit"></i> Finalizar</a>
+                                </li>
+                            <?php } ?>
                             <?php if ($this->controller->check_permissions('rnc', 'excluir', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/rnc/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
@@ -231,10 +236,8 @@ class RncModel extends MainModel
 			$_POST['numero_op'] = null;
 		}
 
-
-
 		/* Atualiza os dados */
-		$query = $this->db->update('ut_usuarios', 'id', $id[0], $_POST);
+		$query = $this->db->update('rnc', 'id', $id[0], $_POST);
 		
 		/* Verifica a consulta */
 		if ($query) {
@@ -260,11 +263,33 @@ class RncModel extends MainModel
 		$user_id = (int)chk_array($this->parametros, 0);
 
 		// Executa a consulta
-		$query = $this->db->delete('ut_usuarios', 'id', $user_id);
+		$query = $this->db->delete('rnc', 'id', $user_id);
 		
 		// Redireciona para a página de administração de notícias
-		echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/usuarios/">';
-		echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/usuarios/";</script>';
+		echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/rnc/">';
+		echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/rnc/";</script>';
 	} // delete
+
+
+	public function finalizarRNC($id) 
+	{
+		/* Verifica se algo foi postado e se está vindo do form que tem o campo
+		editar_usuario. */
+		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['finalizarRNC'])) {
+			return;
+		}
+
+		/* Remove o campo insere_usuario para não gerar problema com o PDO */
+		unset($_POST['finalizarRNC']);
+
+		/* Atualiza os dados */
+		$query = $this->db->update('rnc', 'id', $id[0], $_POST);
+		
+		/* Verifica a consulta */
+		if ($query) {
+			return 'success';
+		}
+		return 'Falha ao finalizar a RNC';
+	}
 
 } // model
