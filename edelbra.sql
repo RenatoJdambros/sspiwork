@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 28-Maio-2019 às 16:41
+-- Generation Time: 28-Maio-2019 às 22:29
 -- Versão do servidor: 10.1.30-MariaDB
 -- PHP Version: 7.0.27
 
@@ -51,7 +51,7 @@ CREATE TABLE `rnc` (
 --
 
 INSERT INTO `rnc` (`id`, `id_origem`, `id_destino`, `descricao`, `justificativa`, `correcao`, `status`, `data_gerada`, `data_finalizada`, `numero_op`, `sacp`, `cliente_nome`, `cliente_obra`, `cliente_telefone`, `cliente_email`) VALUES
-(3, 8, 13, 'eu sou uma RNC BOLADONA', 'justificativa da rnc com id 3', 'correcao da rnc com id 3', 1, '2019-05-27 20:18:14', NULL, 8754, NULL, NULL, NULL, NULL, NULL),
+(3, 8, 13, 'eu sou uma RNC BOLADeaseas', 'justificativa da rnc com id 3', 'correcao da rnc com id 3', 3, '2019-05-27 20:18:14', '2019-05-28 15:45:13', NULL, NULL, '', '', '', ''),
 (4, 8, 13, 'rnc com dados de clientes :D', 'abc', 'def', 1, '2019-05-27 20:44:36', NULL, 16987, NULL, 'nome do cliente', 'nome da obra', 'telefone do cliente', 'email@cliente');
 
 -- --------------------------------------------------------
@@ -135,7 +135,7 @@ CREATE TABLE `usuarios` (
   `usuario` varchar(255) NOT NULL,
   `senha` varchar(255) NOT NULL,
   `tipo_usuario` int(11) DEFAULT NULL,
-  `user_session_id` varchar(255) NOT NULL
+  `user_session_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -143,12 +143,12 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `setor`, `email`, `usuario`, `senha`, `tipo_usuario`, `user_session_id`) VALUES
-(8, 'Luiz Comiran de Lima', 2, 'luizcomiran@gmail.comabcv', 'luizgdi', '$2a$08$5HcWAmaqqqxZL/90FHs25ujMV8cuS66U3Yo8Dbn/KHqg5/W6iO9H.', 1, '2b6ncrkgavru2ip8hss1su8831'),
+(8, 'Luiz Comiran de Lima', 2, 'luizcomiran@gmail.comabcv', 'luizgdi', '$2a$08$5HcWAmaqqqxZL/90FHs25ujMV8cuS66U3Yo8Dbn/KHqg5/W6iO9H.', 1, '8arkauja5dn9ma9pj13rce18l6'),
 (12, 'Administrador', 2, 'admin@admin.admin', 'admin', '$2a$08$5HcWAmaqqqxZL/90FHs25ujMV8cuS66U3Yo8Dbn/KHqg5/W6iO9H.', 1, 's7i6bj37ofpirjg3ufpkasribj'),
 (13, 'Renato Dambros', 6, 'renato@gmail.com', 'renato', '$2a$08$95c6wKefs7LW.M1izf6I6e6v01vlrYko4hC8R2fsrsMeAfBcJDD2G', 1, 'l0caib0b523m0belbrcp9s1oe1'),
 (14, 'Betinho', 3, 'beto@beto', 'betinho', '$2a$08$rfofusvJNmp7fcF1dUDZAOWsxJgr9Y6HoWCAd74D8SJr6mNn1k7sy', 3, ''),
 (15, 'Guilherme', 4, 'guilherme@guilherme', 'guilherme', '$2a$08$uEfO5mEgGcwPiLHnIj0XjegOqdN3S08nn9fZVgQ2NubnvkgpWl2De', 3, ''),
-(16, 'qualidade', 2, 'qualidade@qualidade', 'qualidade', '$2a$08$nyUoEFBeDnwtunqvQkbVSufRNS6g05Rd5fhVHnsbAbwWcWrcLoCvW', 2, '');
+(16, 'qualidade', 2, 'qualidade@qualidade', 'qualidade', '$2a$08$nyUoEFBeDnwtunqvQkbVSufRNS6g05Rd5fhVHnsbAbwWcWrcLoCvW', 2, '072fk4rfppeu0prpije5n067v1');
 
 --
 -- Indexes for dumped tables
@@ -198,7 +198,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `rnc`
 --
 ALTER TABLE `rnc`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `setores`
