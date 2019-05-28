@@ -212,7 +212,7 @@ class RncModel extends MainModel
 			return 'success';
 		}
 		return 'Erro ao inserir RNC no banco de dados';
-	} // inserir
+	} // insert
 
 	
 	public function editarRNC($id) 
@@ -267,4 +267,4 @@ class RncModel extends MainModel
 		echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/usuarios/";</script>';
 	} // delete
 
-}
+} // model

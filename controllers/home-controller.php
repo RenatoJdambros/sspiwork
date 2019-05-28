@@ -6,7 +6,7 @@ class HomeController extends MainController
 		$this->title = 'SSPI - Home';
 		
 		// Verifica se o usuário está logado
-		if (! $this->logged_in) {
+		if (!$this->logged_in) {
 			$this->logout(true);
 			return;
 		}
@@ -18,13 +18,12 @@ class HomeController extends MainController
 		}
 		
 		// Parametros da função
-		$parametros = ( func_num_args() >= 1 ) ? func_get_arg(0) : array();
+		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
 	
-		
 		/** Carrega os arquivos do view **/
         require ABSPATH . '/views/_includes/header.php';
         require ABSPATH . '/views/home/home-view.php';
         require ABSPATH . '/views/_includes/footer.php';
-    } // index
+    }
 	
 } // class HomeController

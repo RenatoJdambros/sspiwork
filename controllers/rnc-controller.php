@@ -2,7 +2,8 @@
 
 class RncController extends MainController
 {
-    public function index() {
+	public function index() 
+	{
 		// Título da página
         $this->title = "RNC's";
         
@@ -25,13 +26,15 @@ class RncController extends MainController
     } // index
 
 
-    public function page() {
+	public function page() 
+	{
         $modelo = $this->load_model('rnc/rnc-model');
         echo $modelo->paginacao();
     }
 
 
-    public function inserir() {
+	public function inserir() 
+	{
 		// Título da página
 		$this->title = "Gerar RNC's";
         
@@ -94,6 +97,7 @@ class RncController extends MainController
 			return;
 		}
 
+		$usuarios = $modelo->listarUsuarios();
 		$setorOrigem = $modelo->buscaSetor($userOrigem['setor']);
 		$setorDestino = $modelo->buscaSetor($userDestino['setor']);
 
@@ -140,4 +144,4 @@ class RncController extends MainController
 		require ABSPATH . '/views/_includes/footer.php';
 	}
 	
-}
+} // class RncController

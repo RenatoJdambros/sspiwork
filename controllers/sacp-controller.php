@@ -2,12 +2,13 @@
 
 class SacpController extends MainController
 {
-    public function index() {
+	public function index() 
+	{
 		// Título da página
 		$this->title = "SACP's";
         
         // Verifica se o usuário está logado
-		if (! $this->logged_in) {
+		if (!$this->logged_in) {
 			$this->logout(true);
 			return;
 		}
@@ -26,7 +27,8 @@ class SacpController extends MainController
 	} // index
 	
 
-    public function inserir() {
+	public function inserir() 
+	{
 		// Título da página
         $this->title = "Gerar SACP's";
         
@@ -51,7 +53,8 @@ class SacpController extends MainController
 	} // index
 
 	
-	public function gerarSACPdeRNC($id) {
+	public function gerarSACPdeRNC($id) 
+	{
 		// Título da página
 		$this->title = "Gerar SACP(RNC)";
         
@@ -85,4 +88,4 @@ class SacpController extends MainController
         require ABSPATH . '/views/_includes/footer.php';
 	} // inserir
 	
-} // class HomeController
+} // class SacpController

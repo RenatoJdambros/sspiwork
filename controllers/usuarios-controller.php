@@ -7,7 +7,7 @@ class UsuariosController extends MainController
 		$this->title = 'Usuários';
 		
 		// Verifica se o usuário está logado
-		if (! $this->logged_in) {
+		if (!$this->logged_in) {
 			$this->logout(true);
 			return;
 		}
@@ -124,7 +124,7 @@ class UsuariosController extends MainController
 		$this->title = 'Excluir usuário';
 
 		// Verifica se o usuário está logado
-		if (! $this->logged_in) {
+		if (!$this->logged_in) {
 			$this->logout(true);
 			return;
 		}

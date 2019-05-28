@@ -1,5 +1,6 @@
-
-<? if (! defined('ABSPATH')) exit; ?>
+<?php 
+  if (! defined('ABSPATH')) exit; 
+?>
 
 <!-- page content -->
 <div class="right_col" role="main">

@@ -2,7 +2,8 @@
 class SacpModel extends MainModel
 {
 
-	public function __construct( $db = false, $controller = null ) {
+	public function __construct( $db = false, $controller = null ) 
+	{
 		// Configura o DB (PDO)
 		$this->db = $db;
 		
