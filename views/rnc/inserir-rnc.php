@@ -58,20 +58,20 @@ if (!defined('ABSPATH')) exit;
       <div class="card-body">
         <div class="form-row">
           <div class="form-group col-md-9">
-            <label >Nome:</label>
-              <input type="text" class="form-control" id="" placeholder="Digite o nome do contato">
+            <label for="cliente_nome">Nome:</label>
+              <input type="text" class="form-control" name="cliente_nome" id="cliente_nome" placeholder="Digite o nome do contato">
           </div>
     <div class="form-group col-md-3">
-      <label >Telefone:</label>
-        <input type="text" class="form-control" id="" placeholder="Telefone para contato">
+      <label for="cliente_telefone">Telefone:</label>
+        <input type="text" class="form-control" name="cliente_telefone" id="cliente_telefone" placeholder="Telefone para contato">
     </div>
     <div class="form-group col-md-8">
-      <label >Nome da obra:</label>
-        <input type="text" class="form-control" id="" placeholder="Digite o nome do solicitante">
+      <label for="cliente_obra">Nome da obra:</label>
+        <input type="text" class="form-control" name="cliente_obra" id="cliente_obra" placeholder="Digite o nome do solicitante">
     </div>
     <div class="form-group col-md-4">
-      <label >E-mail:</label>
-        <input type="email" class="form-control" id="" placeholder="Digite o e-mail do contato">
+      <label for="cliente_email">E-mail:</label>
+        <input type="email" class="form-control" name="cliente_email" id="cliente_email" placeholder="Digite o e-mail do contato">
           </div>    
         </div> 
       </div>
