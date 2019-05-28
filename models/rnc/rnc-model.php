@@ -282,6 +282,14 @@ class RncModel extends MainModel
 		/* Remove o campo insere_usuario para não gerar problema com o PDO */
 		unset($_POST['finalizarRNC']);
 
+		// Cria a data atual para ser gravada no banco de dados
+		$dataFinalizada = new DateTime('now');
+		$dataFinalizada = $dataFinalizada->format('Y-m-d H:i:s');
+
+		// Salva na $_POST e deleta a variavel desnecessária
+		$_POST['data_finalizada'] = $dataFinalizada;
+		unset($dataFinalizada);
+
 		/* Atualiza os dados */
 		$query = $this->db->update('rnc', 'id', $id[0], $_POST);
 		

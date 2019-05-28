@@ -18,6 +18,7 @@
 
         <form method="post"> <!-- form -->
             <input type="hidden" name="editarRNC" value="1" />
+            <input type="hidden" name="status" value="2" />
 
             <div class="container-fluid backgroundR"> 
                 <br>
