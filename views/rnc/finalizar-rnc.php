@@ -17,8 +17,8 @@
         </div>
 
         <form method="post"> <!-- form -->
-            <input type="hidden" name="editarRNC" value="1" />
-            <input type="hidden" name="status" value="2" />
+            <input type="hidden" name="finalizarRNC" value="1" />
+            <input type="hidden" name="status" value="3" />
 
             <div class="container-fluid backgroundR"> 
                 <br>
@@ -39,8 +39,7 @@
                         <label for="selectUserOrigem" data-toggle="tooltip" title="Obrigatório">
                             Usuário de Origem:
                         </label>
-                        <select id="selectUserOrigem" name="id_origem" class="form-control custom-select" required
-                        <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>>
+                        <select id="selectUserOrigem" name="id_origem" class="form-control custom-select" disabled>
                             <option value="<?= $userOrigem['id'] ?>" selected>
                                 <?= $setorOrigem . " - " . $userOrigem['nome']?>
                             </option>
@@ -52,8 +51,7 @@
                             Número O.P:
                         </label>
                         <input value="<?= $rnc['numero_op'] ?>" type="text" class="form-control" 
-                        id="numero_op" placeholder="ex: 20182"
-                        <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>>
+                        id="numero_op" placeholder="ex: 20182" disabled>
                     </div>
 
                 </div> 
@@ -63,8 +61,7 @@
                         Descrição:
                     </label>
                     <textarea class="form-control rounded-0" id="descricao" name="descricao" rows="4"  
-                    placeholder="Descreva a não-conformidade encontrada..." required 
-                    <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>><?= $rnc['descricao'] ?></textarea>
+                    placeholder="Descreva a não-conformidade encontrada..." required disabled><?= $rnc['descricao'] ?></textarea>
                 </div>
 
                 <!-- necessários pois os asrquivos originais do header e footer estão dando conflito-->
@@ -100,8 +97,7 @@
                                             Nome:
                                         </label>
                                         <input type="text" class="form-control" id="cliente_nome" name="cliente_nome"
-                                        placeholder="Digite o nome do contato" value="<?= $rnc['cliente_nome'] ?>"
-                                        <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>>
+                                        placeholder="Digite o nome do contato" value="<?= $rnc['cliente_nome'] ?>" disabled>
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -109,8 +105,7 @@
                                             Telefone:
                                         </label>
                                         <input type="text" class="form-control" id="cliente_telefone" name="cliente_telefone"
-                                        placeholder="Telefone para contato" value="<?= $rnc['cliente_telefone'] ?>"
-                                        <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>>
+                                        placeholder="Telefone para contato" value="<?= $rnc['cliente_telefone'] ?>" disabled>
                                     </div>
 
                                     <div class="form-group col-md-8">
@@ -118,8 +113,7 @@
                                             Nome da obra:
                                         </label>
                                         <input type="text" class="form-control" id="cliente_obra" name="cliente_obra"
-                                        placeholder="Digite o nome do solicitante" value="<?= $rnc['cliente_obra'] ?>"
-                                        <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>>
+                                        placeholder="Digite o nome do solicitante" value="<?= $rnc['cliente_obra'] ?>" disabled>
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -127,8 +121,7 @@
                                             E-mail:
                                         </label>
                                         <input type="email" class="form-control" id="cliente_email" name="cliente_email"
-                                        placeholder="Digite o e-mail do contato" value="<?= $rnc['cliente_email'] ?>"
-                                        <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>>
+                                        placeholder="Digite o e-mail do contato" value="<?= $rnc['cliente_email'] ?>" disabled>
                                     </div>
 
                                 </div> <!-- end form-row -->
@@ -153,17 +146,10 @@
                         <label for="selectUserDestino" data-toggle="tooltip" title="Obrigatório">
                             Usuário de Destino:
                         </label>
-                        <select id="selectUserDestino" name="id_destino" class="form-control custom-select" required
-                            <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>>
-                            <?php foreach ($usuarios as $key => $usuario) {
-                                if ($usuario['id'] == $userDestino['id']) {
-                                    echo "<option value='" . $usuario['id'] . "' selected>" . $usuario['nomeSetor'] 
-                                    . " - " . $usuario['nome'] . "</option>";
-                                } else {
-                                    echo "<option value='" . $usuario['id'] . "'>" . $usuario['nomeSetor'] 
-                                    . " - " . $usuario['nome'] . "</option>";
-                                }
-                            } ?>
+                        <select id="selectUserDestino" name="id_destino" class="form-control custom-select" required disabled>
+                            <option value="<?= $userDestino['id'] ?>" selected>
+                                <?= $setorDestino . " - " . $userDestino['nome']?>
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -176,8 +162,7 @@
                         <span style="color: red;">*</span>
                     </label>
                     <textarea class="form-control rounded-0" id="justificativa" name="justificativa"
-                    rows="4"  placeholder="Descreva a justificativa..." required 
-                    <?php if($this->userdata['id'] == $userOrigem['id']) echo "disabled" ?>><?= $rnc['justificativa'] ?></textarea>
+                    rows="4"  placeholder="Descreva a justificativa..." required disabled><?= $rnc['justificativa'] ?></textarea>
                 </div>
 
                 <div class="form-group">
@@ -186,8 +171,7 @@
                         <span style="color: red;">*</span>
                     </label>
                     <textarea class="form-control rounded-0" id="correcao" name="correcao" 
-                    rows="4" placeholder="Descreva a correção..." required 
-                    <?php if($this->userdata['id'] == $userOrigem['id']) echo "disabled" ?>><?= $rnc['correcao'] ?></textarea>
+                    rows="4" placeholder="Descreva a correção..." required disabled><?= $rnc['correcao'] ?></textarea>
                 </div>
 
                 <br>
@@ -199,10 +183,10 @@
                 Voltar
             </button>
 
-            <button type="submit" class="btn btn-warning">
-                Atualizar RNC
+            <button type="submit" class="btn btn-primary">
+                Finalizar RNC
             </button>
-            
+
             <hr>
         </form><!-- end form -->
 </div><!-- Fim conteúdo página-->

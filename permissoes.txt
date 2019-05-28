@@ -1,0 +1,77 @@
+[user_permissions] => Array
+        (
+            [home] => Array
+                (
+                    [0] => visualizar
+                    [1] => painel
+                    [2] => relatorio
+                )
+
+            [imagens] => Array
+                (
+                    [0] => visualizar
+                )
+
+            [clientes] => Array
+                (
+                    [0] => visualizar
+                    [1] => inserir
+                    [2] => editar
+                    [3] => excluir
+                    [4] => relatorio
+                )
+        )
+
+-----------------------------------------------------------
+
+    $admin = array(
+
+			"any"
+
+	    );
+
+    $qualidade = array(
+
+			"home" => array(
+				"visualizar"
+			),
+		
+			"rnc" => array(
+				"visualizar",
+                "inserir",
+                "editar",
+                "excluir"
+			),
+
+            "sacp" => array(
+				"visualizar",
+                "inserir",
+                "editar",
+                "excluir"
+			)
+
+		);
+
+    $usuarioComum = array(
+
+			"home" => array(
+				"visualizar"
+			),
+		
+			"rnc" => array(
+				"visualizar",
+                "inserir",
+                "editar"
+			),
+
+            "sacp" => array(
+				"visualizar"
+			)
+
+		);
+        
+$user_permissions = json_encode($user_permissions);
+echo '<pre style=font-size:14;>';
+print_r($user_permissions);
+echo '<br><br>';
+die();

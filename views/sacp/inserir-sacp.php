@@ -1,5 +1,5 @@
-<?
-if (!defined('ABSPATH')) exit;
+<?php
+  if (!defined('ABSPATH')) exit;
 ?>
 
 <!-- necessários pois os asrquivos originais do header e footer estão dando conflito-->
@@ -9,48 +9,51 @@ if (!defined('ABSPATH')) exit;
 
 
 <div class="container-fluid">
-<span class="border-top-0"><div id=bordasSACP class="shadow bg-white"></span>
-  <div class="shadow bg-white" >
-  <nav class="navbar navbar-light rounded-top" style="background-color: rgb(0,110,255);
-background-image: linear-gradient(to bottom, transparent, rgba(100,50,20,.40));">  
-      <h3 class="text-center text-white">SACP</h3>
-      <span style="color-text:" class="navbar-text text-white">
-    Solicitação de Ação Corretiva ou Preventiva (Mudanças no SGI)
-  </span>
-    </nav>
-    </div>
+    <div id=bordasSACP class="shadow bg-white">
+        <div class="shadow bg-white" >
+            <nav class="navbar navbar-light rounded-top" style="background-color: rgb(0,110,255);
+            background-image: linear-gradient(to bottom, transparent, rgba(100,50,20,.40));">  
+                <h3 class="text-center text-white">
+                    SACP
+                </h3>
+                <span style="color-text:" class="navbar-text text-white">
+                    Solicitação de Ação Corretiva ou Preventiva (Mudanças no SGI)
+                </span>
+            </nav>
+        </div>
 
-<form>
-<div class="container-fluid backgroundS"> 
+        <form method="post"> <!-- form -->
+            <input type="hidden" name="inserirSACP" value="1" />
 
-<br>
-
-
-
-<div class="form-row">
-<div class="form-group col-md-5">
-    <label for="">Setor Solicitante:</label>
-      <select id="" class="form-control custom-select">
-        <option selected>Setor do solicitante</option>
-        <option>Almoxarifado</option>
-        <option>Atendimento</option>
-        <option>Administrativo</option>
-        <option>Controladoria</option>
-        <option>Financeiro</option>
-        <option>Logística</option>
-        <option>Produção</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-      </select>
-    </div>
+            <div class="container-fluid backgroundS"> 
+                <br>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="">
+                            Setor Solicitante:
+                        </label>
+                        <select id="" class="form-control custom-select">
+                            <option selected>Setor do solicitante</option>
+                            <option>Almoxarifado</option>
+                            <option>Atendimento</option>
+                            <option>Administrativo</option>
+                            <option>Controladoria</option>
+                            <option>Financeiro</option>
+                            <option>Logística</option>
+                            <option>Produção</option>
+                            <option>...</option>
+                            <option>...</option>
+                            <option>...</option>
+                            <option>...</option>
+                            <option>...</option>
+                            <option>...</option>
+                            <option>...</option>
+                            <option>...</option>
+                            <option>...</option>
+                            <option>...</option>
+                        </select>
+                    </div>
 
     <div class="form-group col-md-5">
     <label for="">Setor Destino:</label>

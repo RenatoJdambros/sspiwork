@@ -95,24 +95,29 @@ class RncModel extends MainModel
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
                         <ul class="dropdown-menu">
-							<?php //if ($this->controller->check_permissions('sacp', 'inserir', $this->userdata['user_permissions'])) { ?>
+							<?php if ($this->controller->check_permissions('sacp', 'inserir', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/sacp/gerarSACPdeRNC/<?= $d ?>"><i class="fa fa-edit"></i> Gerar SACP</a>
                                 </li>
-                            <?php //} ?>
-                            <?php //if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { ?>
+                            <?php } ?>
+                            <?php if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/rnc/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
                                 </li>
-                            <?php //} ?>
-                            <?php //if ($this->controller->check_permissions('rnc', 'excluir', $this->userdata['user_permissions'])) { ?>
+                            <?php } ?>
+							<?php if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { ?>
                                 <li>
-                                    <a href="<?= HOME_URI ?>/rnc/deletar/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
+                                    <a href="<?= HOME_URI ?>/rnc/finalizar/<?= $d ?>"><i class="fa fa-edit"></i> Finalizar</a>
+                                </li>
+                            <?php } ?>
+                            <?php if ($this->controller->check_permissions('rnc', 'excluir', $this->userdata['user_permissions'])) { ?>
+                                <li>
+                                    <a href="<?= HOME_URI ?>/rnc/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
                                     <div style="display:none">
                                         <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
                                     </div>
                                 </li>
-                            <?php //} ?>
+                            <?php } ?>
                         </ul>
                     </div>
                 <?php
@@ -124,8 +129,18 @@ class RncModel extends MainModel
 	} // end formatar colunas
 
 
+	public function buscaSetor($id)
+	{
+		// Busca o nome do setor do usuário logado
+		$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$id]);
+		$setor = $query->fetch(PDO::FETCH_ASSOC);
+		return $setor['nome'];
+	}
+
+
     public function listarUsuarios() 
 	{
+		// Busca os usuários fora o usuário logado e atribui os nomes dos setores as suas arrays
 		$query = $this->db->query('SELECT * FROM usuarios WHERE id != ?', [$this->userdata['id']]);
 		$usuarios = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -134,7 +149,8 @@ class RncModel extends MainModel
 			$result = $query->fetch(PDO::FETCH_ASSOC);
 			$usuarios[$key]['nomeSetor'] = $result['nome'];
 		}
-
+		
+		// Sorteia a array ordem crescente por setor
 		usort($usuarios, function($a, $b) {
 			return $a['nomeSetor'] <=> $b['nomeSetor'];
 		});
@@ -201,7 +217,7 @@ class RncModel extends MainModel
 			return 'success';
 		}
 		return 'Erro ao inserir RNC no banco de dados';
-	} // inserir
+	} // insert
 
 	
 	public function editarRNC($id) 
@@ -220,10 +236,8 @@ class RncModel extends MainModel
 			$_POST['numero_op'] = null;
 		}
 
-
-
 		/* Atualiza os dados */
-		$query = $this->db->update('ut_usuarios', 'id', $id[0], $_POST);
+		$query = $this->db->update('rnc', 'id', $id[0], $_POST);
 		
 		/* Verifica a consulta */
 		if ($query) {
@@ -233,7 +247,7 @@ class RncModel extends MainModel
 	} // update
 
 
-	public function deletarRNC() 
+	public function excluirRNC() 
 	{
 		// O segundo parâmetro deverá ser um ID numérico
 		if (! is_numeric(chk_array($this->parametros, 0))) {
@@ -249,11 +263,41 @@ class RncModel extends MainModel
 		$user_id = (int)chk_array($this->parametros, 0);
 
 		// Executa a consulta
-		$query = $this->db->delete('ut_usuarios', 'id', $user_id);
+		$query = $this->db->delete('rnc', 'id', $user_id);
 		
 		// Redireciona para a página de administração de notícias
-		echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/usuarios/">';
-		echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/usuarios/";</script>';
+		echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/rnc/">';
+		echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/rnc/";</script>';
 	} // delete
 
-}
+
+	public function finalizarRNC($id) 
+	{
+		/* Verifica se algo foi postado e se está vindo do form que tem o campo
+		editar_usuario. */
+		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['finalizarRNC'])) {
+			return;
+		}
+
+		/* Remove o campo insere_usuario para não gerar problema com o PDO */
+		unset($_POST['finalizarRNC']);
+
+		// Cria a data atual para ser gravada no banco de dados
+		$dataFinalizada = new DateTime('now');
+		$dataFinalizada = $dataFinalizada->format('Y-m-d H:i:s');
+
+		// Salva na $_POST e deleta a variavel desnecessária
+		$_POST['data_finalizada'] = $dataFinalizada;
+		unset($dataFinalizada);
+
+		/* Atualiza os dados */
+		$query = $this->db->update('rnc', 'id', $id[0], $_POST);
+		
+		/* Verifica a consulta */
+		if ($query) {
+			return 'success';
+		}
+		return 'Falha ao finalizar a RNC';
+	}
+
+} // model
