@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 28-Maio-2019 às 16:18
+-- Generation Time: 28-Maio-2019 às 16:25
 -- Versão do servidor: 10.1.30-MariaDB
 -- PHP Version: 7.0.27
 
@@ -143,9 +143,12 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `setor`, `email`, `usuario`, `senha`, `tipo_usuario`, `user_session_id`) VALUES
-(8, 'Luiz Comiran de Lima', 1, 'luizcomiran@gmail.comabcv', 'luizgdi', '$2a$08$5HcWAmaqqqxZL/90FHs25ujMV8cuS66U3Yo8Dbn/KHqg5/W6iO9H.', 1, 'j3n7vqk4qsp1j6nuo8dmprltt2'),
-(12, 'Administrador', 1, 'admin@admin.admin', 'admin', '$2a$08$5HcWAmaqqqxZL/90FHs25ujMV8cuS66U3Yo8Dbn/KHqg5/W6iO9H.', 1, 's7i6bj37ofpirjg3ufpkasribj'),
-(13, 'Renato Dambros', 6, 'renato@gmail.com', 'renato', '$2a$08$95c6wKefs7LW.M1izf6I6e6v01vlrYko4hC8R2fsrsMeAfBcJDD2G', 2, 'l0caib0b523m0belbrcp9s1oe1');
+(8, 'Luiz Comiran de Lima', 2, 'luizcomiran@gmail.comabcv', 'luizgdi', '$2a$08$5HcWAmaqqqxZL/90FHs25ujMV8cuS66U3Yo8Dbn/KHqg5/W6iO9H.', 1, 'j3n7vqk4qsp1j6nuo8dmprltt2'),
+(12, 'Administrador', 2, 'admin@admin.admin', 'admin', '$2a$08$5HcWAmaqqqxZL/90FHs25ujMV8cuS66U3Yo8Dbn/KHqg5/W6iO9H.', 1, 's7i6bj37ofpirjg3ufpkasribj'),
+(13, 'Renato Dambros', 6, 'renato@gmail.com', 'renato', '$2a$08$95c6wKefs7LW.M1izf6I6e6v01vlrYko4hC8R2fsrsMeAfBcJDD2G', 1, 'l0caib0b523m0belbrcp9s1oe1'),
+(14, 'Betinho', 3, 'beto@beto', 'betinho', '$2a$08$rfofusvJNmp7fcF1dUDZAOWsxJgr9Y6HoWCAd74D8SJr6mNn1k7sy', 3, ''),
+(15, 'Guilherme', 4, 'guilherme@guilherme', 'guilherme', '$2a$08$uEfO5mEgGcwPiLHnIj0XjegOqdN3S08nn9fZVgQ2NubnvkgpWl2De', 3, ''),
+(16, 'qualidade', 2, 'qualidade@qualidade', 'qualidade', '$2a$08$nyUoEFBeDnwtunqvQkbVSufRNS6g05Rd5fhVHnsbAbwWcWrcLoCvW', 2, '');
 
 --
 -- Indexes for dumped tables
@@ -219,7 +222,7 @@ ALTER TABLE `tipos_usuario`
 -- AUTO_INCREMENT for table `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables
