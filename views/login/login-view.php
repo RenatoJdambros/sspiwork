@@ -30,8 +30,8 @@
 
                 <!-- Icon -->
                 <div class="fadeIn first" style="margin: 2.5em 0 1em 0;">
-                    <img src="<?= HOME_URI ?>/views/_images/logofull.png" alt="SSPI" style="max-width: 200px;  max-height:200px;  
-                    width: auto; height: auto; margin-left:1em;">
+                    <img src="<?= HOME_URI ?>/views/_images/logofull.png" alt="SSPI" style="max-width: 200px;  
+                    max-height:200px; width: auto; height: auto; margin-left:1em;">
                 </div>
 
                 <!-- Login Form -->
@@ -40,11 +40,13 @@
 
 
                     <div class="form-group col-md-6">
-                        <input type="text" name="userdata[usuario]" class="form-control" placeholder="Usuário" required />
+                        <input type="text" name="userdata[usuario]" class="form-control" 
+                        placeholder="Usuário" required />
                     </div>
 
                     <div class="form-group col-md-6">
-                        <input type="password" name="userdata[password]" class="form-control" placeholder="Senha" required />
+                        <input type="password" name="userdata[password]" class="form-control" 
+                        placeholder="Senha" required />
                     </div>
 
 

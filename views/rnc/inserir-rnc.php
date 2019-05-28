@@ -5,8 +5,9 @@
 <div class="container-fluid">
     <div id=bordasRNC class="shadow bg-white">
         <div class="shadow bg-white">
-            <nav class="navbar navbar-light text-center " style="border-radius: 50px 8px 8px 0px; background-color: #FFD700;
-                        background-image: linear-gradient(to bottom, transparent, rgba(100,50,20,.40));;">   
+            <nav class="navbar navbar-light text-center " style="border-radius: 50px 8px 8px 0px; 
+            background-color: #FFD700; background-image: linear-gradient(to bottom, transparent, 
+            rgba(100,50,20,.40));;">   
                 <h3 style="margin-left: 20px; " class="text-center">
                     RNC
                 </h3>
@@ -40,7 +41,9 @@
                             <span style="color: red;">*</span>
                         </label>
                         <select id="selectUserOrigem" name="id_origem" class="form-control custom-select" required>
-                            <option value="<?= $this->userdata['id'] ?>" selected><?= $setorAtual . " - " . $this->userdata['nome']?></option>
+                            <option value="<?= $this->userdata['id'] ?>" selected>
+                                <?= $setorAtual . " - " . $this->userdata['nome']?>
+                            </option>
                         </select>
                     </div>
 
@@ -58,7 +61,8 @@
                         Descrição: 
                         <span style="color: red;">*</span>
                     </label>
-                    <textarea class="form-control rounded-0" id="descricao" name="descricao" rows="4"  placeholder="Descreva a não-conformidade encontrada..." required></textarea>
+                    <textarea class="form-control rounded-0" id="descricao" name="descricao" rows="4" 
+                    placeholder="Descreva a não-conformidade encontrada..." required></textarea>
                 </div> 
 
                 <!-- necessários pois os asrquivos originais do header e footer estão dando conflito-->
@@ -85,28 +89,32 @@
                                         <label for="cliente_nome">
                                             Nome:
                                         </label>
-                                        <input type="text" class="form-control" name="cliente_nome" id="cliente_nome" placeholder="Digite o nome do contato">
+                                        <input type="text" class="form-control" name="cliente_nome" id="cliente_nome" 
+                                        placeholder="Digite o nome do contato">
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label for="cliente_telefone">
                                             Telefone:
                                         </label>
-                                        <input type="text" class="form-control" name="cliente_telefone" id="cliente_telefone" placeholder="Telefone para contato">
+                                        <input type="text" class="form-control" name="cliente_telefone" id="cliente_telefone" 
+                                        placeholder="Telefone para contato">
                                     </div>
 
                                     <div class="form-group col-md-8">
                                         <label for="cliente_obra">
                                             Nome da obra:
                                         </label>
-                                        <input type="text" class="form-control" name="cliente_obra" id="cliente_obra" placeholder="Digite o nome do solicitante">
+                                        <input type="text" class="form-control" name="cliente_obra" id="cliente_obra" 
+                                        placeholder="Digite o nome do solicitante">
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label for="cliente_email">
                                             E-mail:
                                         </label>
-                                        <input type="email" class="form-control" name="cliente_email" id="cliente_email" placeholder="Digite o e-mail do contato">
+                                        <input type="email" class="form-control" name="cliente_email" id="cliente_email" 
+                                        placeholder="Digite o e-mail do contato">
                                     </div> 
 
                                 </div> <!-- end form-row -->
@@ -135,7 +143,8 @@
                         <select id="selectUserDestino" name="id_destino" class="form-control custom-select" required>
                             <option hidden disabled selected value>Selecione um usuário</option>
                             <?php foreach ($usuarios as $key => $usuario) {
-                                echo "<option value='" . $usuario['id'] . "'>" . $usuario['nomeSetor'] . " - " . $usuario['nome'] . "</option>";
+                                echo "<option value='" . $usuario['id'] . "'>" . $usuario['nomeSetor'] 
+                                . " - " . $usuario['nome'] . "</option>";
                             } ?>
                         </select>
                     </div>

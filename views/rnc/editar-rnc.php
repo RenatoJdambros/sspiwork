@@ -5,8 +5,8 @@
 <div class="container-fluid">
     <div id=bordasRNC class="shadow bg-white">
         <div class="shadow bg-white">
-            <nav class="navbar navbar-light text-center " style="border-radius: 50px 8px 8px 0px; background-color: #FFD700;
-                        background-image: linear-gradient(to bottom, transparent, rgba(100,50,20,.40));;">   
+            <nav class="navbar navbar-light text-center " style="border-radius: 50px 8px 8px 0px; 
+            background-color: #FFD700; background-image: linear-gradient(to bottom, transparent, rgba(100,50,20,.40));;"> 
                 <h3 style="margin-left: 20px; " class="text-center">
                     RNC
                 </h3>
@@ -40,7 +40,9 @@
                         </label>
                         <select id="selectUserOrigem" name="id_origem" class="form-control custom-select" required
                         <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>>
-                            <option value="<?= $userOrigem['id'] ?>" selected><?= $setorOrigem . " - " . $userOrigem['nome']?></option>
+                            <option value="<?= $userOrigem['id'] ?>" selected>
+                                <?= $setorOrigem . " - " . $userOrigem['nome']?>
+                            </option>
                         </select>
                     </div>
 
@@ -48,7 +50,8 @@
                         <label for="numeroOP">
                             Número O.P:
                         </label>
-                        <input value="<?= $rnc['numero_op'] ?>" type="text" class="form-control" id="numero_op" placeholder="ex: 20182"
+                        <input value="<?= $rnc['numero_op'] ?>" type="text" class="form-control" 
+                        id="numero_op" placeholder="ex: 20182"
                         <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>>
                     </div>
 
@@ -153,9 +156,11 @@
                             <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>>
                             <?php foreach ($usuarios as $key => $usuario) {
                                 if ($usuario['id'] == $userDestino['id']) {
-                                    echo "<option value='" . $usuario['id'] . "' selected>" . $usuario['nomeSetor'] . " - " . $usuario['nome'] . "</option>";
+                                    echo "<option value='" . $usuario['id'] . "' selected>" . $usuario['nomeSetor'] 
+                                    . " - " . $usuario['nome'] . "</option>";
                                 } else {
-                                    echo "<option value='" . $usuario['id'] . "'>" . $usuario['nomeSetor'] . " - " . $usuario['nome'] . "</option>";
+                                    echo "<option value='" . $usuario['id'] . "'>" . $usuario['nomeSetor'] 
+                                    . " - " . $usuario['nome'] . "</option>";
                                 }
                             } ?>
                         </select>
@@ -171,7 +176,9 @@
                     </label>
                     <textarea class="form-control rounded-0" id="justificativa" name="justificativa"
                     rows="4"  placeholder="Descreva a justificativa..." required 
-                    <?php if($this->userdata['id'] == $userOrigem['id']) echo "disabled" ?>><?= $rnc['justificativa'] ?></textarea>
+                    <?php if($this->userdata['id'] == $userOrigem['id']) echo "disabled" ?>
+                        ><?= $rnc['justificativa'] ?>
+                    </textarea>
                 </div>
 
                 <div class="form-group">
@@ -181,7 +188,9 @@
                     </label>
                     <textarea class="form-control rounded-0" id="correcao" name="correcao" 
                     rows="4" placeholder="Descreva a correção..." required 
-                    <?php if($this->userdata['id'] == $userOrigem['id']) echo "disabled" ?>><?= $rnc['correcao'] ?></textarea>
+                    <?php if($this->userdata['id'] == $userOrigem['id']) echo "disabled" ?>
+                        ><?= $rnc['correcao'] ?>
+                    </textarea>
                 </div>
 
                 <br>
