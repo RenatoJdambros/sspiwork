@@ -33,51 +33,28 @@
                         <label for="">
                             Setor Solicitante:
                         </label>
-                        <select id="" class="form-control custom-select">
-                            <option selected>Setor do solicitante</option>
-                            <option>Almoxarifado</option>
-                            <option>Atendimento</option>
-                            <option>Administrativo</option>
-                            <option>Controladoria</option>
-                            <option>Financeiro</option>
-                            <option>Logística</option>
-                            <option>Produção</option>
-                            <option>...</option>
-                            <option>...</option>
-                            <option>...</option>
-                            <option>...</option>
-                            <option>...</option>
-                            <option>...</option>
-                            <option>...</option>
-                            <option>...</option>
-                            <option>...</option>
-                            <option>...</option>
+                        <select id="" name="setorSolicitante" class="form-control custom-select">
+                            <option hidden disabled selected value>Selecione o setor solicitante</option>
+                            <?php foreach ($setores as $key => $setor) {
+                                echo "<option value='" . $setor['id'] . "'>" . $setor['nome'] . "</option>";
+                            } ?>
                         </select>
                     </div>
 
     <div class="form-group col-md-5">
-    <label for="">Setor Destino:</label>
-      <select id="" class="form-control custom-select">
-        <option selected>Setor do solicitante</option>
-        <option>Almoxarifado</option>
-        <option>Atendimento</option>
-        <option>Administrativo</option>
-        <option>Controladoria</option>
-        <option>Financeiro</option>
-        <option>Logística</option>
-        <option>Produção</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-        <option>...</option>
-      </select>
+        <label for="">Setor Destino:</label>
+        <select id="" name="setorDestino" class="form-control custom-select">
+            <option hidden disabled selected value>Selecione o setor destino</option>
+            <?php foreach ($setores as $key => $setor) {
+                echo "<option value='" . $setor['id'] . "'>" . $setor['nome'] . "</option>";
+            } ?>
+        </select>
     </div>
+
+    <!-- validacao futura -->
+    <?php /* if (empty($_POST['setorSolicitante']) && empty($_POST['setorDestino'])) { 
+        echo "<button type='submit' class='btn btn-primary'>OK</button>";
+    } else { */ ?>
     
    <div class="form-group col-md-2">
       <label for="">Número O.P:</label>
@@ -401,5 +378,4 @@ $arrayTeste = array(
 </div>
 </div>
 </div>
-
 <!-- /page content -->

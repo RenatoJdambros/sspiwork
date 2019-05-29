@@ -124,12 +124,12 @@ class SacpModel extends MainModel
 	} // end formatar colunas
 
 
-	public function buscaSetor($id)
+	public function listaSetores()
 	{
-		// Busca o nome do setor do usuário logado
-		$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$id]);
-		$setor = $query->fetch(PDO::FETCH_ASSOC);
-		return $setor['nome'];
+		// Busca os setores
+		$query = $this->db->query('SELECT id, nome FROM setores ORDER BY nome ASC');
+		$setores = $query->fetchAll(PDO::FETCH_ASSOC);
+		return $setores;
 	}
 
 
