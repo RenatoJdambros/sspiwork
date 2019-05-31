@@ -54,7 +54,7 @@ class SacpController extends MainController
         $modelo = $this->load_model('sacp/sacp-model');
 
 		$setores = $modelo->listaSetores();
-		$setorSolicitante = $modelo->buscarSetor();
+		//$setorSolicitante = $modelo->buscarSetor();
         $retorno = $modelo->inserirSACP();
 
         if ($retorno == 'success') {

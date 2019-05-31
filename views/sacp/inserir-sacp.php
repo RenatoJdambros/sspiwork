@@ -2,17 +2,11 @@
   if (!defined('ABSPATH')) exit;
 ?>
 
-<!-- necessários pois os asrquivos originais do header e footer estão dando conflito-->
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-
 <div class="container-fluid">
     <div id=bordasSACP class="shadow bg-white">
         <div class="shadow bg-white" >
-            <nav class="navbar navbar-light rounded-top" style="background-color: rgb(0,110,255);
-            background-image: linear-gradient(to bottom, transparent, rgba(100,50,20,.40));">  
+            <nav class="navbar navbar-inverse rounded-top" style="background-color: #337AB7;
+            ">  
                 <h3 class="text-center text-white">
                     SACP
                 </h3>

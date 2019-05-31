@@ -85,39 +85,42 @@
 <body>  
    
     
-    <nav class="navbar navbar-expand-sm navbar-dark justify-content-center" style="background-color: rgb(108,117,125);">
-      <a class="navbar-brand" href="<?=HOME_URI?>/home/"><img src="<?= HOME_URI ?>/views/_images/LogoEdelbra.png" width="155" height="40"></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="collapsibleNavbar">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="modal" href="<?=HOME_URI?>/home/"><i class="fa fa-home"> Home</i></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="modal" href="#myModal"><i class="fa fa-info-circle"> Informações</i></a>
-          </li>
-          <?php if ($this->check_permissions('usuarios', 'visualizar', $this->userdata['user_permissions'])) { ?>
-            <li class="nav-item">
-              <a class="nav-link" style="margin-left:23.5em;" data-toggle="modal" href="<?=HOME_URI?>/usuarios/"><i class="fa fa-user"> Usuários</i></a>
-            </li>
-          <?php } ?>
-          <?php if ($this->check_permissions('configuracoes', 'visualizar', $this->userdata['user_permissions'])) { ?>
-            <li class="nav-item">
-              <a class="nav-link" href="<?=HOME_URI?>/home/" ><i class="fa fa-cog"> Config</i></a>
-            </li>
-          <?php } ?>
-        </ul>
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="<?=HOME_URI?>/login/sair/" ><i class="fa fa-sign-out"> Sair</i></a>
-          </li>
-        </ul>
-      </div>
-    </nav> 
-      
-    <div id=bordasFRONT class="cabecalho" >
+    <nav class="navbar navbar-inverse" style="border-color: rgb(108,117,125); background-color: rgb(108,117,125);">
+  <div class="container-fluid">
+  <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+         </button>
+        <a class="navbar-brand" href="<?=HOME_URI?>/home/"><img src="<?= HOME_URI ?>/views/_images/LogoEdelbra.png" width="155" height="40"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li>
+            <a href="<?=HOME_URI?>/home/"> <i class="glyphicon glyphicon-home"></i> Home</a>
+        </li>
+        <li>
+            <a data-toggle="modal" href="#myModal"> <i class="glyphicon glyphicon-info-sign"></i> Informações</a>
+        </li>
+        <?php if ($this->check_permissions('usuarios', 'visualizar', $this->userdata['user_permissions'])) { ?>
+        <li>
+            <a data-toggle="modal" href="<?=HOME_URI?>/usuarios/"> <i class="glyphicon glyphicon-user"></i> Usuários</a>
+        </li>
+        <?php } ?>
+        <?php if ($this->check_permissions('configuracoes', 'visualizar', $this->userdata['user_permissions'])) { ?>
+        <li>
+            <a href="<?=HOME_URI?>/home/"> <i class="glyphicon glyphicon-console"></i> Configurações</a>
+        </li>
+        <?php } ?>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li><a href="<?=HOME_URI?>/login/sair/"><span class="glyphicon glyphicon-log-in"></span> Sair</a></li>
+    </ul>
+  </div>
+</nav> 
+
+<div id=bordasFRONT class="cabecalho" style="margin-top: -21px; ">
       <div class="container-fluid ">
         <img style="max-width: 200px; position: relative; 
         display: block; margin-left: auto; margin-right: auto;" src="<?=HOME_URI?>/views/_images/logofull.png"/>

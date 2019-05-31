@@ -67,10 +67,6 @@
                     <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>><?= $rnc['descricao'] ?></textarea>
                 </div>
 
-                <!-- necessários pois os asrquivos originais do header e footer estão dando conflito-->
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
                 <!--botão Dados de Clientes-->
                 <div id="accordion">
                     <div class="card backgroundRBOX">
