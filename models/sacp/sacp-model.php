@@ -135,8 +135,8 @@ class SacpModel extends MainModel
 
     public function listarUsuarios() 
 	{
-		// Busca os usuários fora o usuário logado e atribui os nomes dos setores as suas arrays
-		$query = $this->db->query('SELECT * FROM usuarios WHERE id != ?', [$this->userdata['id']]);
+		// Busca os usuários fora o admin
+		$query = $this->db->query('SELECT * FROM usuarios WHERE tipo_usuario != 1');
 		$usuarios = $query->fetchAll(PDO::FETCH_ASSOC);
 
 		foreach ($usuarios as $key => $usuario) {
@@ -203,6 +203,8 @@ class SacpModel extends MainModel
 		// Salva na $_POST e deleta a variavel desnecessária
 		$_POST['data_gerada'] = $dataGerada;
 		unset($dataGerada);
+
+		$_POST['participantes'] = implode(';', $_POST['participantes']);
 
 		/* query */
 		$query = $this->db->insert('sacp', $_POST);

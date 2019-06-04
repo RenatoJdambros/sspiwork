@@ -2,32 +2,30 @@
   if (!defined('ABSPATH')) exit;
 ?>
 
-<div class="container-fluid">
-    <div id=bordasSACP class="shadow bg-white">
-        <div class="shadow bg-white" >
-            <nav class="navbar navbar-inverse rounded-top" style="background-color: #337AB7;
-            ">  
-                <h3 class="text-center text-white">
-                    SACP
-                </h3>
-                <span style="color-text:" class="navbar-text text-white">
-                    Solicitação de Ação Corretiva ou Preventiva (Mudanças no SGI)
-                </span>
-            </nav>
-        </div>
+<hr>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="container-fluid">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button  type="button" class="btn btn-default" onclick="window.location='<?= HOME_URI ?>/sacp/'">
+                    Voltar
+                    </button>
+                    <h3 style="text-align: center; margin-top: -30px; margin-left: 70px">Solicitação de Ação Corretiva ou Preventiva</h3>
+                </div>
 
         <form method="post"> <!-- form -->
             <input type="hidden" name="inserirSACP" value="1" />
 
-            <div class="container-fluid backgroundS"> 
+            <div class="panel-body backgroundS"> 
                 <br>
                 
-                <div class="form-row">
-                    <div class="form-group col-md-5">
-                        <label for="">
+                <div class="form-group row">
+                    <div class="form-group col-xs-5">
+                        <label for="setor_origem">
                             Setor Solicitante:
                         </label>
-                        <select id="" name="setorSolicitante" class="form-control custom-select">
+                        <select id="setor_origem" name="setor_origem" class="form-control custom-select">
                             <option hidden disabled selected value>Selecione o setor solicitante</option>
                             <?php foreach ($setores as $key => $setor) {
                                 echo "<option value='" . $setor['id'] . "'>" . $setor['nome'] . "</option>";
@@ -35,9 +33,9 @@
                         </select>
                     </div>
 
-    <div class="form-group col-md-5">
-        <label for="">Setor Destino:</label>
-        <select id="" name="setorDestino" class="form-control custom-select">
+    <div class="form-group col-xs-5">
+        <label for="setor_destino">Setor Destino:</label>
+        <select id="setor_destino" name="setor_destino" class="form-control custom-select">
             <option hidden disabled selected value>Selecione o setor destino</option>
             <?php foreach ($setores as $key => $setor) {
                 echo "<option value='" . $setor['id'] . "'>" . $setor['nome'] . "</option>";
@@ -50,117 +48,72 @@
         echo "<button type='submit' class='btn btn-primary'>OK</button>";
     } else { */ ?>
     
-   <div class="form-group col-md-2">
-      <label for="">Número O.P:</label>
-      <input type="text" class="form-control" id="" placeholder="ex: 20182">
+   <div class="form-group col-xs-2">
+      <label for="numero_op">Número O.P:</label>
+      <input type="text" class="form-control" id="numero_op" name="numero_op" placeholder="ex: 20182">
     </div>
     </div>
-    <hr>
-
     
+    <label for="participantes">Participantes:</label>
+    <select class="js-example-basic-multiple form-group custom-select" id="participantes" name="participantes[]" style="width: 100%" multiple="multiple" >
+      <?php foreach ($participantes as $key => $participante) { ?>
+        <option value="<?= $participante['id'] ?>"><?= $participante['nomeSetor'] . " - " . $participante['nome'] ?></option>
+      <?php } ?>
+    </select>
 
-    <label for="inputAddress">Participantes:</label>
-<select class="js-example-basic-multiple form-group custom-select" name="states[]" style="width: 100%" multiple="multiple" >
-  <option value="AL">AlabamAAAAAAAAAAAAAAAAAAAAAAAAAAAAa</option>
-  <option value="A">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</option>
-  <option value="B">BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</option>
-  <option value="C">CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</option>
-    ...
-  <option value="WY">WyominAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg</option>
-</select>
 <br>
-
-  <div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Subscribe</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <i class="fas fa-user prefix grey-text"></i>
-          <input type="text" id="form3" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="form3">Your name</label>
-        </div>
-
-        <div class="md-form mb-4">
-          <i class="fas fa-envelope prefix grey-text"></i>
-          <input type="email" id="form2" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="form2">Your email</label>
-        </div>
-
-      </div>
-      <div class="modal-footer d-flex justify-content-center">
-        <button class="btn btn-indigo">Send <i class="fas fa-paper-plane-o ml-1"></i></button>
+<br>
+<h5><b>Origem:</b></h5>
+<div class="container-fluid">
+  <div class="form-group row">
+    <div class="radio-inline">
+      <input class="form-check-input" type="radio" name="origem" id="radio1" value="opcao1">
+      <label class="form-check-label" for="radio1">Relatório de Ação Corretiva</label>
+    </div>
+    <div class="radio-inline">
+      <input class="form-check-input" type="radio" name="origem" id="radio2" value="opcao2">
+      <label class="form-check-label" for="radio2">Indicador</label>
+    </div>
+    <div class="radio-inline">
+      <input class="form-check-input" type="radio" name="origem" id="radio3" value="opcao3">
+      <label class="form-check-label" for="radio3">Auditoria (int./ext.)</label>
+    </div>
+    <div class="radio-inline">
+      <input class="form-check-input" type="radio" name="origem" id="radio4" value="opcao4">
+      <label class="form-check-label" for="radio4">Recebida de cliente</label>
+    </div>
+    <div class="radio-inline">
+      <input class="form-check-input" type="radio" name="origem" id="radio5" value="opcao5">
+      <label class="form-check-label" for="radio5">Ação corretiva</label>
+    </div>
+    <div class="radio-inline">
+      <input class="form-check-input" type="radio" name="origem" id="radio6" value="opcao6">
+      <label class="form-check-label" for="radio6">Riscos</label>
+    </div>  
+    <div class="radio-inline">
+      <input class="form-check-input" type="radio" name="origem" id="radio7" value="opcao7">
+      <label class="form-check-label" for="radio7">Oportunidade</label>
+    </div>
+    <div class="radio-inline">
+      <input class="form-check-input" type="radio" name="origem" id="radio8" value="opcao8">
+      <label class="form-check-label" for="radio8">Necessidade de mudança</label>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <input type="text" class="form-control form-control-sm" name="origem" placeholder="Outros..." onchange="removerCheckbox(this.value)">
       </div>
     </div>
   </div>
 </div>
+    <br>
 
-<hr>
-
-<label for="inputAddress">Origem:</label> <br>
-<div class="container-fluid">
-<div class="form-row">
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="opcao1">
-  <label class="form-check-label" for="inlineRadio1">Relatório de Ação Corretiva</label>
-</div>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="opcao2">
-  <label class="form-check-label" for="inlineRadio2">Indicador</label>
-</div>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="opcao3">
-  <label class="form-check-label" for="inlineRadio3">Auditoria (int./ext.)</label>
-</div>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="opcao4">
-  <label class="form-check-label" for="inlineRadio4">Recebida de cliente</label>
-</div>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio5" value="opcao5">
-  <label class="form-check-label" for="inlineRadio5">Ação corretiva</label>
-</div>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio6" value="opcao6">
-  <label class="form-check-label" for="inlineRadio6">Riscos</label>
-</div>  
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio7" value="opcao7">
-  <label class="form-check-label" for="inlineRadio7">Oportunidade</label>
-</div>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio8" value="opcao8">
-  <label class="form-check-label" for="inlineRadio8">Necessidade de mudança</label>
-</div>
- <div class="row">
-    <div class="col">
-     
-      <input type="text" class="form-control form-control-sm" placeholder="Outros...">
-    </div>
-        </div>
-        </div>
-         </div>
-    
-
-
-
-<hr>
           
    <div class="form-group">
-    <label for="inputAddress">Descrição:</label>
-    <textarea class="form-control rounded-0" id="exampleFormControlTextarea1" rows="4"  placeholder="Descreva a não-conformidade encontrada..."></textarea>
+    <label for="descricao">Descrição:</label>
+    <textarea class="form-control rounded-0" id="descricao" rows="4" name="descricao"  placeholder="Descreva a não-conformidade encontrada..."></textarea>
   </div> 
 
 <hr>
-<!-- necessários pois os asrquivos originais do header e footer estão dando conflito-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
  
  <br>
 
@@ -174,110 +127,7 @@
   </div>
   <div id="collapseOne" class="collapse" data-parent="#accordion">
     <div class="card-body">
-  <!--Div esp-peixe-->
-  <div style="width: 1151px;  height: 438px;" class="row-fuid esp-peixe">
-                        <label for="Ajuste Altura"></label>
 
-                        <!--L1-->
-                        <div style="z-index:8; position:relative" class="row">
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 7.9%; margin-top: 2.4%; width:172px; height: 33px;" id="#" rows="1" placeholder=" 1 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 26%; margin-top: 2.4%;  width:167px; height: 33px;" id="#" rows="1" placeholder=" 1 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 43.6%; margin-top: 2.4%;  width:165px; height: 33px;" id="#" rows="1" placeholder=" 1 -"></textarea>
-                        </div>
-                        <!--endL1-->
-
-                        <!--L2-->
-                        <div style="z-index:7; position:relative" class="row">
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 9.6%; margin-top: 5.7%; width:169px; height: 33px;" id="#" rows="1" placeholder=" 2 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 27.2%; margin-top: 5.7%;  width:170px; height: 33px;" id="#" rows="1" placeholder=" 2 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 44.6%; margin-top: 5.7%;  width:168px; height: 33px;" id="#" rows="1" placeholder=" 2 -"></textarea>
-                        </div>
-                        <!--endL2-->
-
-                        <!--L3-->
-                        <div style="z-index:6; position:relative" class="row">
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 11.3%; margin-top: 9%; width:166px; height: 33px;" id="#" rows="1" placeholder=" 3 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 28.7%; margin-top: 9%;  width:166px; height: 33px;" id="#" rows="1" placeholder=" 3 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 46%; margin-top: 9%;  width:166px; height: 33px;" id="#" rows="1" placeholder=" 3 -"></textarea>
-                        </div>
-                        <!--endL3-->
-
-                        <!--L4-->
-                        <div style="z-index:5; position:relative" class="row">
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 12.9%; margin-top: 12.4%; width:164px; height: 33px;" id="#" rows="1" placeholder=" 4 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 30%; margin-top: 12.4%;  width:163px; height: 33px;" id="#" rows="1" placeholder=" 4 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 47.1%; margin-top: 12.4%;  width:172px; height: 33px;" id="#" rows="1" placeholder=" 4 -"></textarea>
-                        </div>
-                        <!--endL4-->
-
-                        <!--L5-->
-                        <div style="z-index:4; position:relative" class="row">
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 12.9%; margin-top: 17.4%; width:164px; height: 33px;" id="#" rows="1" placeholder=" 1 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 30%; margin-top: 17.4%;  width:163px; height: 33px;" id="#" rows="1" placeholder=" 1 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 47.1%; margin-top: 17.4%;  width:172px; height: 33px;" id="#" rows="1" placeholder=" 1 -"></textarea>
-                        </div>
-                        <!--endL5-->
-
-                        <!--L6-->
-                        <div style="z-index:3; position:relative" class="row">
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 11.3%; margin-top: 20.9%; width:172px; height: 33px;" id="#" rows="1" placeholder=" 2 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 28.7%; margin-top: 20.9%;  width:172px; height: 33px;" id="#" rows="1" placeholder=" 2 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 46%; margin-top: 20.9%;  width:172px; height: 33px;" id="#" rows="1" placeholder=" 2 -"></textarea>
-                        </div>
-                        <!--endL6-->
-
-                        <!--L7-->
-                        <div style="z-index:2; position:relative" class="row">
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 9.6%; margin-top: 24.2%; width:172px; height: 33px;" id="#" rows="1" placeholder=" 3 -"></textarea>
-
-                           <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 27.2%; margin-top: 24.2%;  width:172px; height: 33px;" id="#" rows="1" placeholder=" 3 -"></textarea>
-
-                           <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 44.6%; margin-top: 24.2%;  width:172px; height: 33px;" id="#" rows="1" placeholder=" 3 -"></textarea>
-                        </div>
-                        <!--endL7-->
-
-                        <!--L8-->
-                        <div style="z-index:1; position:relative" class="row">
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 7.9%; margin-top: 27.7%; width:172px; height: 33px;" id="#" rows="1" placeholder=" 4 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 26%; margin-top: 27.7%;  width:172px; height: 33px;" id="#" rows="1" placeholder=" 4 -"></textarea>
-
-                            <textarea class="form-control" style="position:absolute; min-height: 33px; margin-left: 43.6%; margin-top: 27.7%;  width:172px; height: 33px;" id="#" rows="1" placeholder=" 4 -"></textarea>
-                        </div>
-                        <!--endL8-->
-
-                        <!--Descrição-->
-                        <div style="z-index:1; position:relative" class="row">
-                            <textarea class="form-control" style="position:absolute; min-height: 32px; margin-left: 72.4%; margin-top: 2.5%; width:286px; height: 327px;" id="#" rows="1" placeholder="Adicione uma descrição:"></textarea>
-                        </div>
-                        <!--endDescr-->
-
-
-
-
-                    
-            
-            </div>
-            <!--endL8-->
-
-            <!--end esp-peixe-->
-
-
-      </div>
-      </div>
-    </div>
 
 
     
@@ -315,7 +165,7 @@ $arrayTeste = array(
     '29/11/2019',
     'Almoxarifado',
     'Não'
-)
+  )
 )
 ?>
 <div class="table-responsive">

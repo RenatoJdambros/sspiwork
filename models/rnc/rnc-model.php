@@ -20,9 +20,16 @@ class RncModel extends MainModel
 
 	public function paginacao()
     {
-        $columns = $this->formatar_colunas();
-        $page = DataTable::simple($_POST, $this->db->pdo, 'rnc', 'id', $columns);
+		if ($this->userdata['tipo_usuario'] == 3) {
+			$sql = 'SELECT * FROM rnc';
+			$where = $this->userdata['id'] . " IN (id_origem, id_destino)";
 
+			$columns = $this->formatar_colunas();
+			$page = DataTable::complex($_POST, $this->db->pdo, 'rnc', 'id', $columns, $sql, null, $where);
+		} else {
+			$columns = $this->formatar_colunas();
+			$page = DataTable::simple($_POST, $this->db->pdo, 'rnc', 'id', $columns);
+		}
         return json_encode($page);
     }
 
@@ -94,7 +101,7 @@ class RncModel extends MainModel
                 ob_start(); ?>
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-right">
 							<?php if ($this->controller->check_permissions('sacp', 'inserir', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/sacp/gerarSACPdeRNC/<?= $d ?>"><i class="fa fa-edit"></i> Gerar SACP</a>
@@ -105,11 +112,20 @@ class RncModel extends MainModel
                                     <a href="<?= HOME_URI ?>/rnc/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
                                 </li>
                             <?php } ?>
-							<?php if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { ?>
-                                <li>
-                                    <a href="<?= HOME_URI ?>/rnc/finalizar/<?= $d ?>"><i class="fa fa-edit"></i> Finalizar</a>
-                                </li>
-                            <?php } ?>
+							<?php if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { 
+								$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$d]);
+								$rnc = $query->fetch(PDO::FETCH_ASSOC);
+								
+								$query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$rnc['id_destino']]);
+								$userDestino = $query->fetch(PDO::FETCH_ASSOC);
+								
+								if ($this->userdata['id'] == $userDestino['id'] 
+								 || $this->userdata['tipo_usuario'] == 1
+								 || $this->userdata['tipo_usuario'] == 2) { ?>
+									<li>
+										<a href="<?= HOME_URI ?>/rnc/finalizar/<?= $d ?>"><i class="fa fa-edit"></i> Finalizar</a>
+									</li>
+                            <?php } } ?>
                             <?php if ($this->controller->check_permissions('rnc', 'excluir', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/rnc/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
@@ -141,7 +157,7 @@ class RncModel extends MainModel
     public function listarUsuarios() 
 	{
 		// Busca os usuários fora o usuário logado e atribui os nomes dos setores as suas arrays
-		$query = $this->db->query('SELECT * FROM usuarios WHERE id != ?', [$this->userdata['id']]);
+		$query = $this->db->query('SELECT * FROM usuarios WHERE id != ? AND tipo_usuario != 1', [$this->userdata['id']]);
 		$usuarios = $query->fetchAll(PDO::FETCH_ASSOC);
 
 		foreach ($usuarios as $key => $usuario) {

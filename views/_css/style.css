@@ -1,15 +1,10 @@
-#img{
-  float: left;
-  border: transparent thin solid;
-  padding: 0px 20px 20px 20px;
-  
-}
+
 
 .cabecalho {
   padding: 1rem;
-  margin-bottom: 1rem;
-  background-color: #e9ecef;
-  border-radius: 50px 8px 8px 0px;
+  margin-bottom: 0rem;
+  background-color:#F5F5F5;
+    border-radius: 50px 8px 8px 0px;
   }
 
 .esp-peixe {
@@ -84,9 +79,9 @@
   }
 
   #bordasFRONT{  
-    
-    border-color:rgb(108,117,125);
-    border-radius: 0px 0px 150px 150px;
+    border:solid 1px;
+    border-color:rgb(218, 221, 223);
+    border-radius: 0px 0px 80px 80px;
     border-top-width: 0px;
     }
 
@@ -99,8 +94,6 @@
       width: auto;
     }
 
-
- 
 
    
 

@@ -3,49 +3,54 @@
 ?>
 
 <!-- page content -->
-<div class="container-fluid">
-    <div class="shadow bg-white rounded">
+<hr>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="x_panel">
-                    <?php if ($this->check_permissions('rnc', 'inserir', $this->userdata['user_permissions'])) { ?>
-                        <a href="<?=HOME_URI?>/rnc/inserir">
-                            <button type="submit" class="btn btn-warning">Gerar RNC</button>
-                        </a>
-                    <?php } ?>
-                    </div>
-                    <hr>
-                    <div class="x_content">
-                        <table id="rnc" class="table table-striped table-bordered bulk_action server-side" style="width: 100%;">
-
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Origem</th>
-                                    <th>Destino</th>
-                                    <th>Status</th>
-                                    <th>Número O.P.</th>
-                                    <th>SACP</th>
-                                    <th>Data Geração</th>
-                                    <th>Data Finalização</th>
-                                    <th class="no-export"></th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        <button type="button" class="btn btn-default" onclick="window.location='<?= HOME_URI ?>/home/'">
+                            Voltar
+                            </button>
+                            <?php if ($this->check_permissions('rnc', 'inserir', $this->userdata['user_permissions'])) { ?>
+                                <a href="<?=HOME_URI?>/rnc/inserir">
+                                    <button type="submit" class="btn btn-warning">Gerar RNC</button>
+                                </a>
+                            <?php } ?>
                             
-                            </tbody>
+                        </div>
+            <div class="panel-body">                   
+            <br>
+                    <table id="rnc" class="table table-striped table-bordered bulk_action server-side" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Origem</th>
+                                <th>Destino</th>
+                                <th>Status</th>
+                                <th>Número O.P.</th>
+                                <th>SACP</th>
+                                <th>Data Geração</th>
+                                <th>Data Finalização</th>
+                                <th class="no-export"></th>
+                            </tr>
+                        </thead>
 
-                        </table>
-                        <hr>
-                    </div>
+                        <tbody>
+                        
+                        </tbody>
+
+                    </table>
+                
                 </div>
             </div>
         </div>
     </div>
 </div>
+   
+
 <!-- /page content -->
 <script>
     var controlador = 'rnc';
 </script>
+<hr>

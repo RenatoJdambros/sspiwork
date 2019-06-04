@@ -167,6 +167,13 @@ class RncController extends MainController
 		$dadosRNC = $modelo->consultaRNC($id[0]);
 		extract($dadosRNC);
 
+		if ($this->userdata['id'] != $userDestino['id'] 
+		 && $this->userdata['tipo_usuario'] != 1
+		 && $this->userdata['tipo_usuario'] != 2) {
+			require_once ABSPATH . '/includes/403.php';
+			return;
+		}
+
 		if (empty($rnc)) {
 			require_once ABSPATH . '/includes/404.php';
 			return;
