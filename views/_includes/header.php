@@ -98,24 +98,24 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li>
-            <a href="<?=HOME_URI?>/home/"> <i class="glyphicon glyphicon-home"></i> Home</a>
+            <a href="<?=HOME_URI?>/home/"> <i class="fa fa-home"></i> Home</a>
         </li>
         <li>
-            <a data-toggle="modal" href="#myModal"> <i class="glyphicon glyphicon-info-sign"></i> Informações</a>
+            <a data-toggle="modal" href="#myModal"> <i class="fa fa-info-circle"></i> Informações</a>
         </li>
         <?php if ($this->check_permissions('usuarios', 'visualizar', $this->userdata['user_permissions'])) { ?>
         <li>
-            <a data-toggle="modal" href="<?=HOME_URI?>/usuarios/"> <i class="glyphicon glyphicon-user"></i> Usuários</a>
+            <a data-toggle="modal" href="<?=HOME_URI?>/usuarios/"> <i class="fa fa-user"></i> Usuários</a>
         </li>
         <?php } ?>
         <?php if ($this->check_permissions('configuracoes', 'visualizar', $this->userdata['user_permissions'])) { ?>
         <li>
-            <a href="<?=HOME_URI?>/home/"> <i class="glyphicon glyphicon-console"></i> Configurações</a>
+            <a href="<?=HOME_URI?>/home/"> <i class="fa fa-cog"></i> Configurações</a>
         </li>
         <?php } ?>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="<?=HOME_URI?>/login/sair/"><span class="glyphicon glyphicon-log-in"></span> Sair</a></li>
+        <li><a href="<?=HOME_URI?>/login/sair/"><span class="fa fa-sign-out"></span> Sair</a></li>
     </ul>
   </div>
 </nav> 
