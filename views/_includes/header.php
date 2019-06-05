@@ -95,7 +95,7 @@
          </button>
         <a class="navbar-brand" href="<?=HOME_URI?>/home/"><img src="<?= HOME_URI ?>/views/_images/LogoEdelbra.png" width="155" height="40"></a>
     </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
+    <span class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li>
             <a href="<?=HOME_URI?>/home/"> <i class="fa fa-home"></i> Home</a>
@@ -105,11 +105,14 @@
         </li>
     </ul>
     <?php if ($this->userdata['tipo_usuario'] == 1) { ?>
-      <div class="nav navbar-nav navbar-right" style="margin-top:0.5%;">
+      <div class="nav navbar-nav navbar-right" style="margin-top:1%;">
 
-        <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle" type="button"><span class="caret"></span> </button>
+        <span style="color: white;"><?= $this->userdata['nome'] ?></span>
+
+        <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button"><span class="caret"></span> </button>
 
         <ul class="dropdown-menu dropdown-menu-right">
+        
 
           <li>
               <a data-toggle="modal" href="<?=HOME_URI?>/usuarios/">
@@ -137,6 +140,7 @@
       </div>
     <?php } else { ?>
       <ul class="nav navbar-nav navbar-right">
+        <span style="color: white;"><?= $this->userdata['nome'] ?></span>
         <li>
           <a href="<?=HOME_URI?>/login/sair/">
             <span class="fa fa-sign-out"></span>
