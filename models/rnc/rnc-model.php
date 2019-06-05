@@ -253,7 +253,7 @@ class RncModel extends MainModel
 		}
 
 		/* Atualiza os dados */
-		$query = $this->db->update('rnc', 'id', $id[0], $_POST);
+		$query = $this->db->update('rnc', 'id', $id, $_POST);
 		
 		/* Verifica a consulta */
 		if ($query) {
