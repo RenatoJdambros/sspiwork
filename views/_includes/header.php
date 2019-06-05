@@ -103,20 +103,48 @@
         <li>
             <a data-toggle="modal" href="#myModal"> <i class="fa fa-info-circle"></i> Informações</a>
         </li>
-        <?php if ($this->check_permissions('usuarios', 'visualizar', $this->userdata['user_permissions'])) { ?>
-        <li>
-            <a data-toggle="modal" href="<?=HOME_URI?>/usuarios/"> <i class="fa fa-user"></i> Usuários</a>
-        </li>
-        <?php } ?>
-        <?php if ($this->check_permissions('configuracoes', 'visualizar', $this->userdata['user_permissions'])) { ?>
-        <li>
-            <a href="<?=HOME_URI?>/home/"> <i class="fa fa-cog"></i> Configurações</a>
-        </li>
-        <?php } ?>
     </ul>
-    <ul class="nav navbar-nav navbar-right">
-        <li><a href="<?=HOME_URI?>/login/sair/"><span class="fa fa-sign-out"></span> Sair</a></li>
-    </ul>
+    <?php if ($this->userdata['tipo_usuario'] == 1) { ?>
+      <div class="nav navbar-nav navbar-right" style="margin-top:0.5%;">
+
+        <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle" type="button"><span class="caret"></span> </button>
+
+        <ul class="dropdown-menu dropdown-menu-right">
+
+          <li>
+              <a data-toggle="modal" href="<?=HOME_URI?>/usuarios/">
+                <i class="fa fa-user"></i>
+                Usuários
+              </a>
+          </li>
+
+          <li>
+              <a href="<?=HOME_URI?>/home/"> 
+                <i class="fa fa-cog"></i>
+                Configurações
+              </a>
+          </li>
+
+          <li>
+            <a href="<?=HOME_URI?>/login/sair/">
+              <i class="fa fa-sign-out"></i>
+              Sair
+            </a>
+          </li>
+
+        </ul>
+
+      </div>
+    <?php } else { ?>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="<?=HOME_URI?>/login/sair/">
+            <span class="fa fa-sign-out"></span>
+            Sair
+          </a>
+        </li>
+      </ul>
+    <?php } ?>
   </div>
 </nav> 
 
