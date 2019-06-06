@@ -13,12 +13,14 @@
                     </button>
                     <h3 style="text-align: center; margin-top: -30px; margin-left: 70px">Solicitação de Ação Corretiva ou Preventiva</h3>
                 </div>
-                <p style="background: #3173B9; margin-bottom: -18px;">&nbsp;</p>
+                <p align="right" style="position: relative; max-height: 2px; background: #337AB7; margin-right: 35px; margin-top: 0px;">
+                        <span style="margin-top: -18px; background: #337AB7;" class="badge">Editar</span></p>
+
 
         <form method="post"> <!-- form -->
             <input type="hidden" name="editarSACP" value="1" />
 
-            <div class="panel-body backgroundS"> 
+            <div style="position: absolut; margin-top: -12px;" class="panel-body backgroundS"> 
                 <br>
                 
                 <div class="form-group row">
@@ -51,7 +53,7 @@
     
    <div class="form-group col-md-2">
       <label for="numero_op">Número O.P:</label>
-      <input value="<?= $dados['numero_op'] ? $dados['numero_op'] : '' ?>" style="min-width: 20px; max-width: 158px;" type="text" class="form-control" id="numero_op" name="numero_op" >
+      <input style="min-width: 20px; max-width: 178px;" value="<?= $dados['numero_op'] ? $dados['numero_op'] : '' ?>" style="min-width: 20px; max-width: 158px;" type="text" class="form-control" id="numero_op" name="numero_op" >
     </div>
     </div>
     
@@ -136,7 +138,7 @@
   </div>
   <div class="panel-footer">
     <button type="submit" class="btn btn-primary">
-      Gerar SACP
+      Atualizar SACP
     </button>
   </div>
 

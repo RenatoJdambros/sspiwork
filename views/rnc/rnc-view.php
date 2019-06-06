@@ -4,9 +4,10 @@
 
 <!-- page content -->
 <hr>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12 col-sm-12 col-xs-12">
+        
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="container-fluid">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                         <button type="button" class="btn btn-default" onclick="window.location='<?= HOME_URI ?>/home/'">
@@ -17,10 +18,14 @@
                                     <button type="submit" class="btn btn-warning">Gerar RNC</button>
                                 </a>
                             <?php } ?>
-                            
                         </div>
+                        
+                        <p align="right" style="max-height: 2px; background: gray; margin-right: 35px; margin-top: 0px;">
+                        <span style="margin-top: -18px; " class="badge">Painel de Visualização</span></p>
+                        
             <div class="panel-body">                   
             <br>
+            
                     <table id="rnc" class="table table-striped table-bordered bulk_action server-side" style="width: 100%;">
                         <thead>
                             <tr>

@@ -21,46 +21,85 @@
         <link href="<?= HOME_URI ?>/views/_vendors/nprogress/nprogress.css" rel="stylesheet">
         <!-- Animate.css -->
         <link href="<?= HOME_URI ?>/views/_vendors/animate.css/animate.min.css" rel="stylesheet">
+
     </head>
 
-    <body>
-        <!--classe principal-->
-        <div class="container wrapper fadeInDown">
-            <div id="formContent">
+    <body style="background-color: gray;">
 
-                <!-- Icon -->
-                <div class="fadeIn first" style="margin: 2.5em 0 1em 0;">
+    <div class="container-fluid " style="max-width: 360px; max-height: 300px; width: auto;">    
+        
+    <div id="loginbox"> 
+        
+        <div class="row ">                
+            
+        
+        <div class="panel panel-default"  style="margin-top: 70px;">
+            <div class="panel-heading">
+                <div class="panel-title text-center"><!-- Icon -->
+                
                     <img src="<?= HOME_URI ?>/views/_images/logofull.png" alt="SSPI" style="max-width: 200px;  
                     max-height:200px; width: auto; height: auto; margin-left:1em;">
                 </div>
+            </div>     
 
-                <!-- Login Form -->
-                <form action="<?= HOME_URI ?>/login/" method="post" name="frm-login" id="frm-login">
-                    <input type="hidden" name="verify" value="on">
+            <div class="panel-body" >
 
+                    <!-- Login Form -->
+                    <form action="<?= HOME_URI ?>/login/" method="post" name="frm-login" id="frm-login">
+                    <input type="hidden" name="verify" value="on"> 
 
-                    <div class="form-group col-md-6">
-                        <input type="text" name="userdata[usuario]" class="form-control" 
-                        placeholder="Usuário" required />
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input type="text" class="form-control" name="userdata[usuario]" 
+                        placeholder="Usuário" required />                                        
                     </div>
 
-                    <div class="form-group col-md-6">
-                        <input type="password" name="userdata[password]" class="form-control" 
-                        placeholder="Senha" required />
+                    <br>
+
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input id="password" type="password" class="form-control" name="userdata[password]" 
+                        placeholder="senha" required />
+                    </div> 
+
+                    <br>
+
+                    <div class="form-group">
+
+                        <!-- Button -->
+                        <div align="center" >
+                            <button type="submit" class="btn btn-primary">
+                            <i class="glyphicon glyphicon-log-in"></i> Entrar </button>                          
+                        </div>
                     </div>
 
+                </form>     
 
-                    <button type="submit" class="btn btn-primary" style="margin-left:1em;">Entrar</button>
+            </div>                     
+         
+    
+
+<div style="margin-top: -10px;" class="panel-footer">
+   
+  </div>
+  </div>
+  </div>
+  </div> 
+
+
+                 
+
+
                 </form> <!-- end form -->
 
                 <!-- Error Login -->
                 <?php if ($this->login_error) { ?>
-                    <div style="margin-left:1em;">
+                    <div align="center">
                         <?= $this->login_error; ?>
                     </div>
                 <?php } ?>
 
             </div> <!-- end formContent -->
-        </div> <!-- end container -->
+        
     </body>
 </html>

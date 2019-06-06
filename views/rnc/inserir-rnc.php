@@ -6,15 +6,15 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="container-fluid">
-            <p style="background: #F6B05A; margin-bottom: -15px;">&nbsp;</p>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <button style="margin-rigt: 30px;" type="button" class="btn btn-default" onclick="window.location='<?= HOME_URI ?>/rnc/'">
-                        Voltar
-                        </button>
-                        <h4 style="text-align: center; margin-top: -27px;  text-color: #F6B05A; "> <b>Relatório de Não-Conformidade</b></h4>
-                    </div>
-  
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button style="margin-rigt: 30px;" type="button" class="btn btn-default" onclick="window.location='<?= HOME_URI ?>/rnc/'">
+                    Voltar
+                    </button>
+                    <h4 style="text-align: center; margin-top: -27px;  text-color: #F6B05A; "> <b>Relatório de Não-Conformidade</b></h4>
+                </div>
+                <p align="right" style="background: #337AB7; margin-bottom: -18px; margin-right: 35px;">
+                <span style="margin-top: -18px; background-color: #337AB7;" class="badge">Gerar</span></p>
     <div class="panel-body backgroundR">
         <form method="post"> <!-- form -->
             <input type="hidden" name="inserirRNC" value="1" />
@@ -121,23 +121,21 @@
                             } ?>
                         </select>
                         <br>
-                    </div>
-                </div> 
+                                                        </div>
+                                                    </div> 
                                                 </div> <!-- end div panel body -->
                                             <div class="panel-footer">
-                                        <button type="submit" class="btn btn-warning">
+                                        <button type="submit" class="btn btn-primary">
                                         Gerar RNC
                                     </button>
                                 </div>
-                                
                             </div> <!-- Fim div Painel-->
-                            
                         </div> <!-- Fim div container fluid-->
                         <hr>
                     </div> <!-- Fim div col-->
                 </div><!-- Fim div row -->               
             </form><!-- end form -->
-<!-- Fim conteúdo página-->
+            <!-- Fim conteúdo página-->
 
 
 

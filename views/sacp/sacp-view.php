@@ -18,6 +18,8 @@
                                     </a>
                     <?php } ?>
                     </div>
+                    <p align="right" style="max-height: 2px; background: gray; margin-right: 35px; margin-top: 0px;">
+                        <span style="margin-top: -18px; " class="badge">Painel de Visualização</span></p>
             <div class="panel-body">                   
             <br>
                     <table id="sacp" class="table table-striped table-bordered bulk_action server-side" style="width: 100%;">

@@ -73,7 +73,7 @@
         
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
         </div>
         
       </div>
@@ -139,15 +139,18 @@
 
       </div>
     <?php } else { ?>
-      <ul class="nav navbar-nav navbar-right">
-        <span style="color: white;"><?= $this->userdata['nome'] ?></span>
+      <div class="nav navbar-nav navbar-right">
+        <li><p style="margin-top: 14px;">
+          <span style="color: white;"><?= $this->userdata['nome'] ?></span>
+          </p>
+        </li>
         <li>
-          <a href="<?=HOME_URI?>/login/sair/">
-            <span class="fa fa-sign-out"></span>
-            Sair
+            <a href="<?=HOME_URI?>/login/sair/">
+              <span class="fa fa-sign-out"></span>
+              Sair
           </a>
         </li>
-      </ul>
+      </div>
     <?php } ?>
   </div>
 </nav> 

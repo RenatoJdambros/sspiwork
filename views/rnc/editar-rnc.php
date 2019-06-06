@@ -6,13 +6,17 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="container-fluid">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <button type="button" class="btn btn-default" onclick="window.location='<?= HOME_URI ?>/rnc/'">
-                    Voltar
-                    </button>
-                    <h3 style="text-align: center; margin-top: -30px; "> Solicitação de Ação Corretiva ou Preventiva (mudança no SGI)</h3>
-                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <button type="button" class="btn btn-default" onclick="window.location='<?= HOME_URI ?>/rnc/'">
+                        Voltar
+                        </button>
+                        <h3 style="text-align: center; margin-top: -30px; "> Solicitação de Ação Corretiva ou Preventiva (mudança no SGI)</h3>
+                    </div>
+
+                <p align="right" style="background: #F6B05A; margin-bottom: -18px; margin-right: 35px;">
+                <span style="margin-top: -18px; background-color: #F6B05A;" class="badge">Editar</span></p>
+    
     <div class="panel-body backgroundR">
         <form method="post"> <!-- form -->
             <input type="hidden" name="editarRNC" value="1" />

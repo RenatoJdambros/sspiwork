@@ -77,7 +77,7 @@ class UsuariosController extends MainController
 	
 	public function editar($id)
 	{
-		$this->title = 'Editar dados usuário';
+		$this->title = 'Editar Usuário';
 
 		// Verifica se o usuário está logado
 		if (!$this->logged_in) {

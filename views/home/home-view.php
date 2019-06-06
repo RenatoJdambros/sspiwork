@@ -5,7 +5,9 @@
 <div class="container-fluid">
 
 <div class="panel panel-default">
-    <div class="panel-heading">Escolha uma Opção:</div>
+    <div class="panel-heading">Escolha uma Opção</div>
+    <p align="right" style="position: relative; max-height: 2px; 
+    background: #D3D3D3; margin-right: 0px; margin-top: 0px;">&nbsp;</p>
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-6">
@@ -62,6 +64,15 @@
                 </div>
             </div>
         </div>
+        <div class="panel-footer">
+        
+   
+  </div>
+  <p align="right" style="position: relative; max-height: 2px; background: #D3D3D3; margin-top: -22px;">&nbsp;</p>
+  
     </div>
+   
+   
 </div>
+
 <hr>
