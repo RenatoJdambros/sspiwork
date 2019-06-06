@@ -16,7 +16,7 @@
                 <p style="background: #3173B9; margin-bottom: -18px;">&nbsp;</p>
 
         <form method="post"> <!-- form -->
-            <input type="hidden" name="inserirSACP" value="1" />
+            <input type="hidden" name="editarSACP" value="1" />
 
             <div class="panel-body backgroundS"> 
                 <br>
@@ -28,9 +28,9 @@
                         </label>
                         <select id="setor_origem" name="setor_origem" class="form-control custom-select" required>
                             <option hidden disabled selected value> </option>
-                            <?php foreach ($setores as $key => $setor) {
-                                echo "<option value='" . $setor['id'] . "'>" . $setor['nome'] . "</option>";
-                            } ?>
+                            <?php foreach ($setores as $key => $setor) { ?>
+                              <option value="<?= $setor['id'] ?>" <?= $dados['setor_origem'] == $setor['id'] ? 'selected' : '' ?>><?= $setor['nome'] ?></option>
+                            <?php } ?>
                         </select>
                     </div>
 
@@ -38,9 +38,9 @@
         <label for="setor_destino">Setor Destino:</label>
         <select id="setor_destino" name="setor_destino" class="form-control custom-select" required>
             <option hidden disabled selected value> </option>
-            <?php foreach ($setores as $key => $setor) {
-                echo "<option value='" . $setor['id'] . "'>" . $setor['nome'] . "</option>";
-            } ?>
+            <?php foreach ($setores as $key => $setor) { ?>
+              <option value="<?= $setor['id'] ?>" <?= $dados['setor_destino'] == $setor['id'] ? 'selected' : '' ?>><?= $setor['nome'] ?></option>
+            <?php } ?>
         </select>
     </div>
 
@@ -51,7 +51,7 @@
     
    <div class="form-group col-md-2">
       <label for="numero_op">Número O.P:</label>
-      <input style="min-width: 20px; max-width: 158px;" type="text" class="form-control" id="numero_op" name="numero_op" >
+      <input value="<?= $dados['numero_op'] ? $dados['numero_op'] : '' ?>" style="min-width: 20px; max-width: 158px;" type="text" class="form-control" id="numero_op" name="numero_op" >
     </div>
     </div>
     
@@ -115,7 +115,7 @@
           
    <div class="form-group">
     <label for="descricao">Descrição da mudança:</label>
-    <textarea class="form-control rounded-0" id="descricao" rows="4" name="descricao" required></textarea>
+    <textarea class="form-control rounded-0" id="descricao" rows="4" name="descricao" required><?= $dados['descricao'] ?></textarea>
   </div>
 
   <div class="form-group">

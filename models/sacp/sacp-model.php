@@ -31,33 +31,25 @@ class SacpModel extends MainModel
     {
         return array(
             ['dt' => 0, 'db' => 'id'],
-            ['dt' => 1, 'db' => 'id_origem', 'formatter' => function($d) 
+            ['dt' => 1, 'db' => 'setor_origem', 'formatter' => function($d) 
             {
-                $query = $this->db->query('SELECT nome, setor FROM usuarios WHERE id = ?', [$d]);
+                $query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$d]);
 				$result = $query->fetch();
 				
 				if (empty($result)) {
 					return "Não encontrado";	
 				}
-
-				$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$result['setor']]);
-				$setor = $query->fetch();
-
-                return $setor['nome'] . " - " . $result['nome'];
+                return $result['nome'];
             }],
-            ['dt' => 2, 'db' => 'id_destino', 'formatter' => function($d) 
+            ['dt' => 2, 'db' => 'setor_destino', 'formatter' => function($d) 
             {
-                $query = $this->db->query('SELECT nome, setor FROM usuarios WHERE id = ?', [$d]);
+                $query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$d]);
 				$result = $query->fetch();
-
+				
 				if (empty($result)) {
 					return "Não encontrado";	
 				}
-
-                $query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$result['setor']]);
-				$setor = $query->fetch();
-
-                return $setor['nome'] . " - " . $result['nome'];
+                return $result['nome'];
             }],
             ['dt' => 3, 'db' => 'status', 'formatter' => function($d) 
             {
@@ -71,8 +63,20 @@ class SacpModel extends MainModel
 					return "<span class='label label-default'>Expirado</span>";
 				}
             }],
-			['dt' => 4, 'db' => 'numero_op'],
-			['dt' => 5, 'db' => 'sacp'],
+			['dt' => 4, 'db' => 'numero_op', 'formatter' => function($d) 
+            {
+				if (!empty($d)) {
+					return $d;
+				}
+				return 'Não';
+			}],
+			['dt' => 5, 'db' => 'id_rnc', 'formatter' => function($d) 
+            {
+				if (!empty($d)) {
+					return $d;
+				}
+				return 'Não';
+			}],
 			['dt' => 6, 'db' => 'data_gerada', 'formatter' => function($d) 
             {
 				if ($d !== null) {
@@ -154,18 +158,21 @@ class SacpModel extends MainModel
     }
 	
 	
+	public function consultaRNC($id) 
+	{
+		$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', $id);
+		$rnc = $query->fetch(PDO::FETCH_ASSOC);
+
+		return $rnc;
+	}
+
+
 	public function consultaSACP($id) 
 	{
-		$query = $this->db->query('SELECT * FROM sacp WHERE id = ?', [$id]);
-		$sacp = $query->fetch(PDO::FETCH_ASSOC);
+		$query = $this->db->query('SELECT * FROM sacp WHERE id = ?', $id);
+		$rnc = $query->fetch(PDO::FETCH_ASSOC);
 
-		$query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$sacp['id_origem']]);
-		$userOrigem = $query->fetch(PDO::FETCH_ASSOC);
-
-		$query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$sacp['id_destino']]);
-		$userDestino = $query->fetch(PDO::FETCH_ASSOC);
-
-		return array('sacp' => $sacp, 'userOrigem' => $userOrigem, 'userDestino' => $userDestino);
+		return $rnc;
 	}
 
     
@@ -288,5 +295,44 @@ class SacpModel extends MainModel
 		}
 		return 'Falha ao finalizar a SACP';
 	}
+
+
+	public function gerarSACPdeRNC($id) 
+	{
+		/* Verifica se algo foi postado e se está vindo do form que tem o campo
+		insere_noticia. */
+		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['editarSACP'])) {
+			return;
+		}
+
+		/* Remove o campo inserirSACP para não gerar problema com o PDO */
+		unset($_POST['editarSACP']);
+
+		// Checa se o campo numero_op está vazio, caso esteja, seta pra null
+		if (empty($_POST['numero_op'])) {
+			$_POST['numero_op'] = null;
+		}
+
+		// Cria a data atual para ser gravada no banco de dados
+		$dataGerada = new DateTime('now');
+		$dataGerada = $dataGerada->format('Y-m-d H:i:s');
+
+		// Salva na $_POST e deleta a variavel desnecessária
+		$_POST['data_gerada'] = $dataGerada;
+		unset($dataGerada);
+
+		$_POST['participantes'] = implode(';', $_POST['participantes']);
+
+		$_POST['id_rnc'] = $id;
+
+		/* query */
+		$query = $this->db->insert('sacp', $_POST);
+		
+		/* Verifica a consulta */
+		if ($query) {
+			return 'success';
+		}
+		return 'Erro ao inserir SACP no banco de dados';
+	} // insert
 
 } // model

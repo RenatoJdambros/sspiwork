@@ -71,7 +71,7 @@ class SacpController extends MainController
     } // inserir
 
 
-    public function editar($id)
+    public function editar()
 	{
 		$this->title = 'Editar SACP';
 
@@ -91,19 +91,18 @@ class SacpController extends MainController
 		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
 
 		// Carrega o método para editar uma SACP
-		$retorno = $modelo->editarSACP($id[0]);
+		$retorno = $modelo->editarSACP($parametros[0]);
 		
-		$dadosSACP = $modelo->consultaSACP($id[0]);
-		extract($dadosSACP);
+		$setores = $modelo->listaSetores();
+		$participantes = $modelo->listarUsuarios();
+		$dados = $modelo->consultaSACP($parametros);
 
-		if (empty($sacp)) {
+		if (empty($dados)) {
 			require_once ABSPATH . '/includes/404.php';
 			return;
 		}
 
 		$usuarios = $modelo->listarUsuarios();
-		$setorOrigem = $modelo->buscaSetor($userOrigem['setor']);
-		$setorDestino = $modelo->buscaSetor($userDestino['setor']);
 		
 		if ($retorno == 'success') {
 			$this->modal_notification = MainModel::openNotification('Sucesso', 'SACP atualizada com sucesso.', 'success');
@@ -187,6 +186,50 @@ class SacpController extends MainController
 
 		require ABSPATH . '/views/_includes/header.php';
 		require ABSPATH . '/views/sacp/finalizar-sacp.php';
+		require ABSPATH . '/views/_includes/footer.php';
+	}
+
+
+	public function gerarSACPdeRNC()
+	{
+		$this->title = 'Editar SACP';
+
+		// Verifica se o usuário está logado
+		if (!$this->logged_in) {
+			$this->logout(true);
+			return;
+		}
+
+		// Verifica se o usuário tem permissão
+		if (!$this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) {
+			require_once ABSPATH . '/includes/403.php';
+			return;
+		}
+
+		$modelo = $this->load_model('sacp/sacp-model');
+		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
+
+		// Carrega o método para editar uma SACP
+		$retorno = $modelo->gerarSACPdeRNC($parametros[0]);
+		
+		$dados = $modelo->consultaRNC($parametros);
+
+		$setores = $modelo->listaSetores();
+		$participantes = $modelo->listarUsuarios();
+
+		if (empty($dados)) {
+			require_once ABSPATH . '/includes/404.php';
+			return;
+		}
+		
+		if ($retorno == 'success') {
+			$this->modal_notification = MainModel::openNotification('Sucesso', 'SACP atualizada com sucesso.', 'success');
+		} elseif (!empty($retorno)) {
+			$this->modal_notification = MainModel::openNotification('Erro', $retorno, 'error');
+		}
+
+		require ABSPATH . '/views/_includes/header.php';
+		require ABSPATH . '/views/sacp/editar-sacp.php';
 		require ABSPATH . '/views/_includes/footer.php';
 	}
 	

@@ -49,3 +49,6 @@
 </div>
 <hr>
 <!-- /page content -->
+<script>
+    var controlador = 'sacp';
+</script>
