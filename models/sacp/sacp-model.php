@@ -106,7 +106,7 @@ class SacpModel extends MainModel
                             <?php } ?>
 							<?php if ($this->controller->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
                                 <li>
-                                    <a href="<?= HOME_URI ?>/sacp/finalizar/<?= $d ?>"><i class="fa fa-edit"></i> Finalizar</a>
+                                    <a href="<?= HOME_URI ?>/sacp/finalizar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
                                 </li>
                             <?php } ?>
                             <?php if ($this->controller->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
@@ -172,6 +172,9 @@ class SacpModel extends MainModel
 		$query = $this->db->query('SELECT * FROM sacp WHERE id = ?', $id);
 		$rnc = $query->fetch(PDO::FETCH_ASSOC);
 
+		$query = $this->db->query('SELECT id_participante FROM sacp_participantes WHERE id_sacp = ?', $id);
+		$rnc['participantes'] = $query->fetchAll(PDO::FETCH_COLUMN, 0);
+
 		return $rnc;
 	}
 
@@ -211,13 +214,28 @@ class SacpModel extends MainModel
 		$_POST['data_gerada'] = $dataGerada;
 		unset($dataGerada);
 
-		$_POST['participantes'] = implode(';', $_POST['participantes']);
+		// Passa os participantes para um variavel e unseta da post
+		$participantes = $_POST['participantes'];
+		unset($_POST['participantes']);
+
+		// Cria a data atual para ser gravada no banco de dados
+		$dataGerada = new DateTime('now');
+		$dataGerada = $dataGerada->format('Y-m-d H:i:s');
+
+		// Salva na $_POST e deleta a variavel desnecessária
+		$_POST['data_gerada'] = $dataGerada;
+		unset($dataGerada);
 
 		/* query */
 		$query = $this->db->insert('sacp', $_POST);
 		
 		/* Verifica a consulta */
 		if ($query) {
+			$idSacp = $this->db->last_id;
+	
+			foreach ($participantes as $key => $participante) {
+				$query = $this->db->insert('sacp_participantes', ['id_sacp' => $idSacp, 'id_participante' => $participante]);
+			}
 			return 'success';
 		}
 		return 'Erro ao inserir SACP no banco de dados';
@@ -240,14 +258,22 @@ class SacpModel extends MainModel
 			$_POST['numero_op'] = null;
 		}
 
-		/* Atualiza os dados */
-		$query = $this->db->update('sacp', 'id', $id[0], $_POST);
+		// Passa os participantes para um variavel e unseta da post
+		$participantes = $_POST['participantes'];
+		unset($_POST['participantes']);
+
+		/* query */
+		$query = $this->db->insert('sacp', $_POST);
 		
 		/* Verifica a consulta */
 		if ($query) {
+			$query = $this->db->delete('sacp_participantes', 'id_sacp', $id);
+			foreach ($participantes as $key => $participante) {
+				$query = $this->db->insert('sacp_participantes', ['id_sacp' => $id, 'id_participante' => $participante]);
+			}
 			return 'success';
 		}
-		return 'Falha ao atualizar o cadastro do usuário';
+		return 'Erro ao atualizar SACP no banco de dados';
 	} // update
 
 
@@ -285,6 +311,14 @@ class SacpModel extends MainModel
 
 		/* Remove o campo insere_usuario para não gerar problema com o PDO */
 		unset($_POST['finalizarSACP']);
+
+		// Cria a data atual para ser gravada no banco de dados
+		$dataFinalizada = new DateTime('now');
+		$dataFinalizada = $dataFinalizada->format('Y-m-d H:i:s');
+
+		// Salva na $_POST e deleta a variavel desnecessária
+		$_POST['data_finalizada'] = $dataFinalizada;
+		unset($dataFinalizada);
 
 		/* Atualiza os dados */
 		$query = $this->db->update('sacp', 'id', $id[0], $_POST);

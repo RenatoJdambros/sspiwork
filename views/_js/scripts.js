@@ -34,6 +34,6 @@ $('.outros').click(function()
     
     $('.origemRadio').click(function()
     {
-      $('#origemText').val("");
+      //$('#origemText').val("");
       $('#origemText').attr("disabled","disabled");
     });

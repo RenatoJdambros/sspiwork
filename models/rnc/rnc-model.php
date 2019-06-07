@@ -104,7 +104,7 @@ class RncModel extends MainModel
                         <ul class="dropdown-menu dropdown-menu-right">
 							<?php if ($this->controller->check_permissions('sacp', 'inserir', $this->userdata['user_permissions'])) { ?>
                                 <li>
-                                    <a href="<?= HOME_URI ?>/sacp/gerarSACPdeRNC/<?= $d ?>"><i class="fa fa-edit"></i> Gerar SACP</a>
+                                    <a href="<?= HOME_URI ?>/sacp/gerarSACPdeRNC/<?= $d ?>"><i class="fa fa-copy"></i> Gerar SACP</a>
                                 </li>
                             <?php } ?>
                             <?php if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { ?>
@@ -123,7 +123,7 @@ class RncModel extends MainModel
 								 || $this->userdata['tipo_usuario'] == 1
 								 || $this->userdata['tipo_usuario'] == 2) { ?>
 									<li>
-										<a href="<?= HOME_URI ?>/rnc/finalizar/<?= $d ?>"><i class="fa fa-edit"></i> Finalizar</a>
+										<a href="<?= HOME_URI ?>/rnc/finalizar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
 									</li>
                             <?php } } ?>
                             <?php if ($this->controller->check_permissions('rnc', 'excluir', $this->userdata['user_permissions'])) { ?>

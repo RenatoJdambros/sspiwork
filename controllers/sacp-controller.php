@@ -163,17 +163,16 @@ class SacpController extends MainController
 
 		$modelo = $this->load_model('sacp/sacp-model');
 		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
-		
-		$dadosSACP = $modelo->consultaSACP($id[0]);
-		extract($dadosSACP);
 
-		if (empty($sacp)) {
+		$dados = $modelo->consultaSACP($parametros);
+
+		if (empty($dados)) {
 			require_once ABSPATH . '/includes/404.php';
 			return;
 		}
 
-		$setorOrigem = $modelo->buscaSetor($userOrigem['setor']);
-		$setorDestino = $modelo->buscaSetor($userDestino['setor']);
+		$setores = $modelo->listaSetores();
+		$participantes = $modelo->listarUsuarios();
 
 		// Carrega o método para finalizar uma SACP
 		$retorno = $modelo->finalizarSACP($id[0]);
