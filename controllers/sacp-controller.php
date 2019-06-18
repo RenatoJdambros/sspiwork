@@ -91,7 +91,7 @@ class SacpController extends MainController
 		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
 
 		// Carrega o método para editar uma SACP
-		$retorno = $modelo->editarSACP($parametros[0]);
+		$retorno = $modelo->editarSACP($parametros);
 		
 		$setores = $modelo->listaSetores();
 		$participantes = $modelo->listarUsuarios();

@@ -56,7 +56,7 @@
                 <br>
                 <!--botão Dados de Clientes-->
                 <div id="accordion">
-                <button class="btn btn-basic" data-toggle="collapse" href="#collapseOne">
+                <button style="background-color: #FAF6DC;" class="btn btn-basic" data-toggle="collapse" href="#collapseOne">
                                 Dados de clientes
                                 <small id="" class="form-text text-muted">
                                     &nbsp;&nbsp;|&nbsp;&nbsp;Utilizados em não-conformidades geradas por clientes
@@ -64,7 +64,7 @@
                             </button>
                             <!--Corpo Dados de Clientes-->
                         <div id="collapseOne" class="collapse" data-parent="#accordion">
-                            <div class="form-group row">
+                            <div class="container-fuid form-group row" style="background-color: #FAF6DC;">
                                 <div class="form-group col-xs-8">
                                     <br>
                                         <label for="cliente_nome">

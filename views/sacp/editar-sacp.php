@@ -140,6 +140,307 @@
     <textarea class="form-control rounded-0" id="brainstorming" rows="4" name="brainstorming" required><?= $dados['brainstorming'] ?></textarea>
   </div> 
   </div>
+
+  <div id="accordion" style=" ">
+                  <button style="background-color: #80BDFF;"  class="btn btn-basic" data-toggle="collapse" href="#collapseOne">
+                                 Gerar diagrama de causa e efeito
+                                <small id="" class="form-text">
+                                    &nbsp;&nbsp;|&nbsp;&nbsp;6M
+                                </small>
+                            </button>
+                            <p align="right" style="position: relative; max-height: 2px; 
+                             background:#80BDFF; margin-left: 0px; margin-bottom: -4px;">&nbsp;</p>
+                           
+
+
+    <!--Corpo esp-peixe-->
+    <div id="collapseOne" style="background-color: #80BDFF;" class="collapse backgroundS" data-parent="#accordion">
+                            <div align="center"  class="form-group row">
+                                <div class="form-group col-xs-12">
+                                    <br>
+    <!--Div esp-peixe-->
+    <div style="width: 1151px; height: 438px;" class="row-fuid esp-peixe">
+                       <p style="font-size: 10px;">&nbsp;&nbsp;</p> 
+
+                        <!--L1-->
+                        <div style="z-index:8; position:relative" class="row">
+                          <textarea class="form-control" name="medida[]" style="position:absolute; min-height: 33px; min-width:172px;  margin-left: 7.9%; margin-top: 2.4%; width:172px; height: 33px;" rows="1" placeholder=" 1 -"
+                          ><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 3) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="metodo[]" style="position:absolute; min-height: 33px; min-width:167px; margin-left: 26%; margin-top: 2.4%;  width:167px; height: 33px;" rows="1" placeholder=" 1 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 2) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="maodeobra[]" style="position:absolute; min-height: 33px; min-width:165px; margin-left: 43.6%; margin-top: 2.4%;  width:165px; height: 33px;" rows="1" placeholder=" 1 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 1) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+                        </div>
+                        <!--endL1-->
+
+                        <!--L2-->
+                        <div style="z-index:7; position:relative" class="row">
+                            <textarea class="form-control" name="medida[]" style="position:absolute; min-height: 33px; min-width:169px; margin-left: 9.6%; margin-top: 5.7%; width:169px; height: 33px;" rows="1" placeholder=" 2 -"
+                          ><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 3) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="metodo[]" style="position:absolute; min-height: 33px; min-width:170px; margin-left: 27.2%; margin-top: 5.7%;  width:170px; height: 33px;" rows="1" placeholder=" 2 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 2) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="maodeobra[]" style="position:absolute; min-height: 33px; min-width:168px; margin-left: 44.6%; margin-top: 5.7%;  width:168px; height: 33px;" rows="1" placeholder=" 2 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 1) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+                        </div>
+                        <!--endL2-->
+
+                        <!--L3-->
+                        <div style="z-index:6; position:relative" class="row">
+                            <textarea class="form-control" name="medida[]" style="position:absolute; min-height: 33px; min-width:166px; margin-left: 11.3%; margin-top: 9%; width:166px; height: 33px;" rows="1" placeholder=" 3 -"
+                          ><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 3) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="metodo[]" style="position:absolute; min-height: 33px; min-hwidth:166px; margin-left: 28.7%; margin-top: 9%;  width:166px; height: 33px;" rows="1" placeholder=" 3 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 2) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="maodeobra[]" style="position:absolute; min-height: 33px; min-width:166px; margin-left: 46%; margin-top: 9%;  width:166px; height: 33px;" rows="1" placeholder=" 3 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 1) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+                        </div>
+                        <!--endL3-->
+
+                        <!--L4-->
+                        <div style="z-index:5; position:relative" class="row">
+                            <textarea class="form-control" name="medida[]" style="position:absolute; min-height: 33px; min-width:164px; margin-left: 12.9%; margin-top: 12.4%; width:164px; height: 33px;" rows="1" placeholder=" 4 -"
+                          ><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 3) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="metodo[]" style="position:absolute; min-height: 33px; min-width:163px; margin-left: 30%; margin-top: 12.4%;  width:163px; height: 33px;" rows="1" placeholder=" 4 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 2) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="maodeobra[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 47.1%; margin-top: 12.4%;  width:172px; height: 33px;" rows="1" placeholder=" 4 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 1) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+                        </div>
+                        <!--endL4-->
+
+                        <!--L5-->
+                        <div style="z-index:4; position:relative" class="row">
+                            <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; min-width:164px; margin-left: 12.9%; margin-top: 17.4%; width:164px; height: 33px;" rows="1" placeholder=" 1 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 6) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="materiais[]" style="position:absolute; min-height: 33px; min-width:163px; margin-left: 30%; margin-top: 17.4%;  width:163px; height: 33px;" rows="1" placeholder=" 1 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 5) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="meioambiente[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 47.1%; margin-top: 17.4%;  width:172px; height: 33px;" rows="1" placeholder=" 1 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 4) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+                        </div>
+                        <!--endL5-->
+
+                        <!--L6-->
+                        <div style="z-index:3; position:relative" class="row">
+                            <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; minwidth:172px;  margin-left: 11.3%; margin-top: 20.9%; width:172px; height: 33px;" rows="1" placeholder=" 2 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 6) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="materiais[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 28.7%; margin-top: 20.9%;  width:172px; height: 33px;" rows="1" placeholder=" 2 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 5) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="meioambiente[]" style="position:absolute; min-height: 33px; miwidth:172px; margin-left: 46%; margin-top: 20.9%;  width:172px; height: 33px;" rows="1" placeholder=" 2 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 4) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+                        </div>
+                        <!--endL6-->
+
+                        <!--L7-->
+                        <div style="z-index:2; position:relative" class="row">
+                            <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; miwidth:172px; margin-left: 9.6%; margin-top: 24.2%; width:172px; height: 33px;" rows="1" placeholder=" 3 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 6) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                           <textarea class="form-control" name="materiais[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 27.2%; margin-top: 24.2%;  width:172px; height: 33px;" rows="1" placeholder=" 3 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 5) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                           <textarea class="form-control" name="meioambiente[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 44.6%; margin-top: 24.2%;  width:172px; height: 33px;" rows="1" placeholder=" 3 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 4) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+                        </div>
+                        <!--endL7-->
+
+                        <!--L8-->
+                        <div style="z-index:1; position:relative" class="row">
+                            <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; miwidth:172px; margin-left: 7.9%; margin-top: 27.7%; width:172px; height: 33px;" rows="1" placeholder=" 4 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 6) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="materiais[]" style="position:absolute; min-height: 33px; miwidth:172px; margin-left: 26%; margin-top: 27.7%;  width:172px; height: 33px;" rows="1" placeholder=" 4 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 5) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+
+                            <textarea class="form-control" name="meioambiente[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 43.6%; margin-top: 27.7%;  width:172px; height: 33px;" rows="1" placeholder=" 4 -"><?php 
+                            foreach($dados["espinhaPeixe"] as $key => $dado) {
+                              if ($dado['id_tipo_plano_acao'] == 4) {
+                                echo $dado['descricao'];
+                                unset($dados['espinhaPeixe'][$key]);
+                                break;
+                              }
+                            } ?></textarea>
+                        </div>
+                        <!--endL8-->
+
+                        <!--Descrição-->
+                        <div style="z-index:1; position:relative" class="row">
+                            <textarea class="form-control" name="descricaoPeixe" style="position:absolute; min-height: 32px; margin-left: 72.4%; margin-top: 2.5%; width:286px; height: 327px;" rows="1" placeholder="Adicione uma descrição:"
+                            ><?php 
+                              $dados['espinhaPeixe'] = array_values($dados['espinhaPeixe']); 
+                              echo $dados['espinhaPeixe'][0]['descricao']; 
+                            ?></textarea>
+                        </div>
+                        <!--endDescr-->
+
+
+
+
+                    
+            
+            </div>
+            <!--endL8-->
+
+            <!--end esp-peixe-->
+
+
+
+
+      </div>
+      </div>
+    </div>
+    </div>
   <div class="panel-footer">
     <button type="submit" class="btn btn-primary">
       Atualizar SACP

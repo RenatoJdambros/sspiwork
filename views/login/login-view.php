@@ -94,7 +94,7 @@
 
                 <!-- Error Login -->
                 <?php if ($this->login_error) { ?>
-                    <div align="center">
+                    <div align="center" style="color: white;">
                         <?= $this->login_error; ?>
                     </div>
                 <?php } ?>

@@ -61,7 +61,7 @@
                 <br>
                 <!--botão Dados de Clientes-->
                 <div id="accordion">
-                <button class="btn btn-basic" data-toggle="collapse" href="#collapseOne">
+                <button class="btn btn-basic" style="background-color: #FAF6DC;" data-toggle="collapse" href="#collapseOne">
                                 Dados de clientes
                                 <small id="" class="form-text text-muted">
                                     &nbsp;&nbsp;|&nbsp;&nbsp;Utilizados em não-conformidades geradas por clientes
@@ -75,7 +75,9 @@
                         } else {
                             echo "class='collapse'";
                         } ?>>
-                            <div class="form-group row">
+                        
+                            <div class="form-group container-fuid row" style="background-color: #FAF6DC;">
+                            
                                 <div class="form-group col-xs-8">
                                     <br>
                                         <label for="cliente_nome">

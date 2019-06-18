@@ -10,44 +10,16 @@
 .esp-peixe {
   background-image: url(../_images/esp-peixe.png);
   background-size: cover;
+
 }
 
-/* Tabelas de seleção de destino */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+.linha-peixe {
+
+  min-height: 33px;
+
 }
 
-/* Style the buttons inside the tab */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  font-size: 17px;
-}
 
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-}
 
 
 .backgroundR{ background-color:rgb(255, 253, 248); }
@@ -93,6 +65,7 @@
       padding: 8px 20px; /* firefox bug fix */
       width: auto;
     }
+
 
 
     

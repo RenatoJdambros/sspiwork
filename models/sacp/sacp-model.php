@@ -170,12 +170,17 @@ class SacpModel extends MainModel
 	public function consultaSACP($id) 
 	{
 		$query = $this->db->query('SELECT * FROM sacp WHERE id = ?', $id);
-		$rnc = $query->fetch(PDO::FETCH_ASSOC);
+		$sacp = $query->fetch(PDO::FETCH_ASSOC);
 
 		$query = $this->db->query('SELECT id_participante FROM sacp_participantes WHERE id_sacp = ?', $id);
-		$rnc['participantes'] = $query->fetchAll(PDO::FETCH_COLUMN, 0);
+		$sacp['participantes'] = $query->fetchAll(PDO::FETCH_COLUMN, 0);
 
-		return $rnc;
+		$query = $this->db->query('SELECT id_tipo_plano_acao, descricao FROM espinha_peixe WHERE id_sacp = ?', $id);
+		$sacp['espinhaPeixe'] = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		// infodie($sacp['espinhaPeixe']);
+
+		return $sacp;
 	}
 
     
@@ -184,17 +189,6 @@ class SacpModel extends MainModel
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		insere_noticia. */
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['inserirSACP'])) {
-			return;
-		}
-		
-		/* Para evitar conflitos apenas inserimos valores se o parâmetro edit
-		não estiver configurado. */
-		if (chk_array($this->parametros, 0) == 'edit') {
-			return;
-		}
-		
-		/* Só pra garantir que não estamos atualizando nada */
-		if (is_numeric(chk_array($this->parametros, 1))) {
 			return;
 		}
 
@@ -206,14 +200,6 @@ class SacpModel extends MainModel
 			$_POST['numero_op'] = null;
 		}
 
-		// Cria a data atual para ser gravada no banco de dados
-		$dataGerada = new DateTime('now');
-		$dataGerada = $dataGerada->format('Y-m-d H:i:s');
-
-		// Salva na $_POST e deleta a variavel desnecessária
-		$_POST['data_gerada'] = $dataGerada;
-		unset($dataGerada);
-
 		// Passa os participantes para um variavel e unseta da post
 		$participantes = $_POST['participantes'];
 		unset($_POST['participantes']);
@@ -223,20 +209,103 @@ class SacpModel extends MainModel
 		$dataGerada = $dataGerada->format('Y-m-d H:i:s');
 
 		// Salva na $_POST e deleta a variavel desnecessária
-		$_POST['data_gerada'] = $dataGerada;
+		$dados['data_gerada'] = $dataGerada;
 		unset($dataGerada);
 
+		$dados['setor_origem']  = $_POST['setor_origem'];
+		$dados['setor_destino'] = $_POST['setor_destino'];
+		$dados['numero_op']     = $_POST['numero_op'];
+		$dados['origem']        = $_POST['origem'];
+		$dados['descricao']     = $_POST['descricao'];
+		$dados['proposito']     = $_POST['proposito'];
+		$dados['consequencia']  = $_POST['consequencia'];
+		$dados['brainstorming'] = $_POST['brainstorming'];
+
 		/* query */
-		$query = $this->db->insert('sacp', $_POST);
+		$query = $this->db->insert('sacp', $dados);
 		
 		/* Verifica a consulta */
 		if ($query) {
+			// Seta o id da SACP
 			$idSacp = $this->db->last_id;
 	
+			// Insere os participantes
 			foreach ($participantes as $key => $participante) {
 				$query = $this->db->insert('sacp_participantes', ['id_sacp' => $idSacp, 'id_participante' => $participante]);
 			}
-			return 'success';
+
+			// Prepara a variavel _POST para o insert na espinha de peixe
+			unset($_POST['setor_origem']);
+			unset($_POST['setor_destino']);
+			unset($_POST['numero_op']);
+			unset($_POST['origem']);
+			unset($_POST['descricao']);
+			unset($_POST['proposito']);
+			unset($_POST['consequencia']);
+			unset($_POST['brainstorming']);
+
+			// Insere na espinha de peixe
+			foreach ($_POST as $key => $dadoPeixe) {
+
+				if (is_array($dadoPeixe)) {
+					$dadoPeixe = array_filter($dadoPeixe);
+
+					foreach ($dadoPeixe as $dado) {
+
+						switch($key) {
+							case 'medida':
+								$palavra = 'Medida';
+								break;
+							case 'metodo':
+								$palavra = 'Método';
+								break;
+							case 'maodeobra':
+								$palavra = 'Mão de Obra';
+								break;
+							case 'maquina':
+								$palavra = 'Máquina';
+								break;
+							case 'materiais':
+								$palavra = 'Materiais';
+								break;
+							case 'meioambiente':
+								$palavra = 'Meio Ambiente';
+								break;
+							default:
+								break;
+						}
+
+						$query = $this->db->query('SELECT id FROM tipo_plano_acao WHERE nome = ?', [$palavra]);
+						$plano = $query->fetch(PDO::FETCH_COLUMN, 0);
+
+						$query = $this->db->insert(
+							'espinha_peixe', 
+							[
+								'id_sacp' => $idSacp, 
+								'id_tipo_plano_acao' => $plano, 
+								'descricao' => $dado
+							]
+						);
+					}
+				} else {
+					
+					$query = $this->db->query('SELECT id FROM tipo_plano_acao WHERE nome = ?', ['Descrição']);
+					$plano = $query->fetch(PDO::FETCH_COLUMN, 0);
+
+					$query = $this->db->insert(
+						'espinha_peixe', 
+						[
+							'id_sacp' => $idSacp, 
+							'id_tipo_plano_acao' => $plano, 
+							'descricao' => $dadoPeixe
+						]
+					);
+				}
+			}
+			
+			// Redireciona para a página de administração de notícias
+			echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . ">";
+			echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . ";'</script>";
 		}
 		return 'Erro ao inserir SACP no banco de dados';
 	} // insert
@@ -262,15 +331,98 @@ class SacpModel extends MainModel
 		$participantes = $_POST['participantes'];
 		unset($_POST['participantes']);
 
+		$dados['setor_origem']  = $_POST['setor_origem'];
+		$dados['setor_destino'] = $_POST['setor_destino'];
+		$dados['numero_op']     = $_POST['numero_op'];
+		$dados['origem']        = $_POST['origem'];
+		$dados['descricao']     = $_POST['descricao'];
+		$dados['proposito']     = $_POST['proposito'];
+		$dados['consequencia']  = $_POST['consequencia'];
+		$dados['brainstorming'] = $_POST['brainstorming'];
+
 		/* query */
-		$query = $this->db->insert('sacp', $_POST);
+		$query = $this->db->update('sacp', 'id', $id[0], $dados);
 		
 		/* Verifica a consulta */
 		if ($query) {
-			$query = $this->db->delete('sacp_participantes', 'id_sacp', $id);
+			$query = $this->db->delete('sacp_participantes', 'id_sacp', $id[0]);
+
 			foreach ($participantes as $key => $participante) {
-				$query = $this->db->insert('sacp_participantes', ['id_sacp' => $id, 'id_participante' => $participante]);
+				$query = $this->db->insert('sacp_participantes', ['id_sacp' => $id[0], 'id_participante' => $participante]);
 			}
+
+			// Prepara a variavel _POST para o insert na espinha de peixe
+			unset($_POST['setor_origem']);
+			unset($_POST['setor_destino']);
+			unset($_POST['numero_op']);
+			unset($_POST['origem']);
+			unset($_POST['descricao']);
+			unset($_POST['proposito']);
+			unset($_POST['consequencia']);
+			unset($_POST['brainstorming']);
+			unset($_POST['status']);
+
+			$query = $this->db->delete('espinha_peixe', 'id_sacp', $id[0]);
+
+			// Insere na espinha de peixe
+			foreach ($_POST as $key => $dadoPeixe) {
+
+				if (is_array($dadoPeixe)) {
+					$dadoPeixe = array_filter($dadoPeixe);
+
+					foreach ($dadoPeixe as $dado) {
+
+						switch($key) {
+							case 'medida':
+								$palavra = 'Medida';
+								break;
+							case 'metodo':
+								$palavra = 'Método';
+								break;
+							case 'maodeobra':
+								$palavra = 'Mão de Obra';
+								break;
+							case 'maquina':
+								$palavra = 'Máquina';
+								break;
+							case 'materiais':
+								$palavra = 'Materiais';
+								break;
+							case 'meioambiente':
+								$palavra = 'Meio Ambiente';
+								break;
+							default:
+								break;
+						}
+
+						$query = $this->db->query('SELECT id FROM tipo_plano_acao WHERE nome = ?', [$palavra]);
+						$plano = $query->fetch(PDO::FETCH_COLUMN, 0);
+
+						$query = $this->db->insert(
+							'espinha_peixe', 
+							[
+								'id_sacp' => $id[0], 
+								'id_tipo_plano_acao' => $plano, 
+								'descricao' => $dado
+							]
+						);
+					}
+				} else {
+					
+					$query = $this->db->query('SELECT id FROM tipo_plano_acao WHERE nome = ?', ['Descrição']);
+					$plano = $query->fetch(PDO::FETCH_COLUMN, 0);
+
+					$query = $this->db->insert(
+						'espinha_peixe', 
+						[
+							'id_sacp' => $id[0], 
+							'id_tipo_plano_acao' => $plano, 
+							'descricao' => $dadoPeixe
+						]
+					);
+				}
+			}
+
 			return 'success';
 		}
 		return 'Erro ao atualizar SACP no banco de dados';
