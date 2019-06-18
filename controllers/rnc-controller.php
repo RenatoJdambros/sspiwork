@@ -2,6 +2,7 @@
 
 class RncController extends MainController
 {
+	
 	public function index() 
 	{
 		// Título da página
