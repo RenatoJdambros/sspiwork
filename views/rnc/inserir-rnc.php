@@ -42,7 +42,7 @@
                         <label for="numeroOP">
                             Número O.P:
                         </label>
-                        <input type="text" class="form-control" id="numeroOP" name="numero_op" placeholder="ex: 20182">
+                        <input type="number" class="form-control" id="numeroOP" name="numero_op" placeholder="ex: 20182">
                     </div>
                     </div>
                 <div class="form-group">

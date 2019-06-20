@@ -38,65 +38,43 @@ spl_autoload_register(function ($class_name) {
 	require_once $file;
 });
 
-// Printr formatado
-function info($var, $name = null)
+/**
+ * Função para debugar variáveis.
+ *
+ * @author Luiz Comiran
+ *
+ * @param $var variável a ser debugada
+ * @param $type opcional, especifica como deve ser debugada e se deve matar o script ou não
+ * @param $name opcional, "título" para a variável debugada
+ *
+ * @return var variável debugada
+ */
+function info($var, $type = null, $name = null)
 {
-  echo '<div style="display: inline-block;"><pre style=font-size:14;>';
-  if (!empty($name)) {
-    echo "<b>$name</b>:";
-    echo '<br><br>';
-  }
-  print_r($var);
-  echo '</pre></div>';
-  echo '<br><br>';
-}
+    echo '<div style="display:inline-block;"><pre style="font-size:14;">';
 
+    if (!empty($name)) {
+        echo "<b>$name</b>:<br><br>";
+    }
 
-// Printr formatado e mata o script
-function infodie($var, $name = null)
-{
-  echo '<div style="display: inline-block;"><pre style=font-size:14;>';
-  if (!empty($name)) {
-    echo "<b>$name</b>:";
-    echo '<br><br>';
-  }
-  print_r($var);
-  die();
-}
+    switch ($type) {
+        case 'h':
+            var_dump($var);
+            break;
 
+        case 'die':
+            print_r($var);
+            die();
+        
+        case 'hdie':
+            var_dump($var);
+            die();
+        
+        default:
+            print_r($var);
+            break;
+    }
 
-// Vardump formatado
-function infoh($var, $name = null)
-{
-  echo '<div style="display: inline-block;"><pre style=font-size:14;>';
-  if (!empty($name)) {
-    echo "<b>$name</b>:";
-    echo '<br><br>';
-  }
-  var_dump($var);
-  echo '</pre>';
-  echo '<br><br>';
-}
-
-
-// Vardump formatado e mata o script
-function infohdie($var, $name = null)
-{
-  echo '<div style="display: inline-block;"><pre style=font-size:14;>';
-  if (!empty($name)) {
-    echo "<b>$name</b>:";
-    echo '<br><br>';
-  }
-  var_dump($var);
-  die();
-}
-
-
-function dataBR($data, $time = null)
-{
-  $date = new DateTime($data);
-  if ($time === true) {
-    return $date->format('d/m/Y H:i:s');
-  }
-  return $date->format('d/m/Y');
+    echo '</pre></div><br><br>';
+    return; 
 }

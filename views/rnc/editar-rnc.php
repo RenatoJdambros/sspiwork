@@ -46,7 +46,7 @@
                         <label for="numeroOP">
                             Número O.P:
                         </label>
-                        <input value="<?= $rnc['numero_op'] ?>" type="text" class="form-control" 
+                        <input value="<?= $rnc['numero_op'] ?>" type="number" class="form-control" 
                         id="numero_op" placeholder="ex: 20182"
                         <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>>                    </div>
                     </div>

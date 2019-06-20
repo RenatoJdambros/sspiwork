@@ -303,9 +303,9 @@ class SacpModel extends MainModel
 				}
 			}
 			
-			// Redireciona para a página de administração de notícias
-			echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . ">";
-			echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . ";'</script>";
+			// Redireciona para a página de edit
+			echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
+			echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "'</script>";
 		}
 		return 'Erro ao inserir SACP no banco de dados';
 	} // insert
@@ -516,6 +516,11 @@ class SacpModel extends MainModel
 		
 		/* Verifica a consulta */
 		if ($query) {
+			$idSacp = $this->db->last_id;
+			// Redireciona para a página de edit
+			echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
+			echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "'</script>";
+		
 			return 'success';
 		}
 		return 'Erro ao inserir SACP no banco de dados';

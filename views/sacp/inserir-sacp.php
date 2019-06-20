@@ -53,7 +53,7 @@
     
    <div class="form-group col-md-2">
       <label for="numero_op">Número O.P:</label>
-      <input style="min-width: 20px; max-width: 178px;" type="text" class="form-control" id="numero_op" name="numero_op" >
+      <input style="min-width: 20px; max-width: 178px;" type="number" class="form-control" id="numero_op" name="numero_op" >
     </div>
     </div>
     
