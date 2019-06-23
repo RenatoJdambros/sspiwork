@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 23-Jun-2019 às 03:09
+-- Generation Time: 24-Jun-2019 às 01:17
 -- Versão do servidor: 10.1.37-MariaDB
 -- versão do PHP: 7.2.12
 
@@ -41,7 +41,9 @@ CREATE TABLE `espinha_peixe` (
 
 INSERT INTO `espinha_peixe` (`id`, `id_sacp`, `id_tipo_plano_acao`, `descricao`) VALUES
 (65, 55, 7, '2'),
-(66, 58, 7, '');
+(66, 58, 7, ''),
+(75, 37, 7, ''),
+(80, 36, 7, '');
 
 -- --------------------------------------------------------
 
@@ -66,10 +68,8 @@ CREATE TABLE `planos_acao` (
 --
 
 INSERT INTO `planos_acao` (`id`, `id_sacp`, `id_tipo_plano`, `o_que`, `como`, `quem`, `quando`, `onde`, `status`) VALUES
-(5, 37, 5, 'fazer sei la oq', 'matar um pombo', 20, '2020-08-01 00:00:00', 6, 1),
+(5, 37, 5, 'fazer sei la oqeaseas', 'seilaeaseaseas', 20, '2020-08-01 00:00:00', 6, 1),
 (6, 37, 1, 'fazer sei la oq', 'matar um pombo na base da marretada', 24, '2050-08-01 00:00:00', 6, 1),
-(7, 36, 6, 'maquina1', 'montar a maquina1', 21, '2060-08-01 00:00:00', 7, 1),
-(8, 36, 6, 'maquina2', 'montar a maquina2', 21, '2050-08-01 00:00:00', 7, 1),
 (9, 38, 5, 'materiais1', 'materiais1', 23, '0101-01-01 00:00:00', 3, 1),
 (10, 38, 5, 'materiais2', 'materiais2', 23, '0001-01-01 00:00:00', 3, 1);
 
@@ -136,7 +136,7 @@ CREATE TABLE `sacp` (
 --
 
 INSERT INTO `sacp` (`id`, `setor_origem`, `setor_destino`, `status`, `origem`, `descricao`, `proposito`, `consequencia`, `brainstorming`, `data_gerada`, `data_prazo`, `data_finalizada`, `numero_op`, `id_rnc`) VALUES
-(36, 2, 7, 1, 'arroba teu cu', 'a', 'a', 'a', 'a', '2019-06-19 20:26:54', '0000-00-00 00:00:00', NULL, 90, NULL),
+(36, 2, 3, 1, 'arroba teu cu', 'a', 'a', 'a', 'a', '2019-06-19 20:26:54', '0000-00-00 00:00:00', NULL, 90, NULL),
 (37, 2, 6, 1, 'relatorio', 'a', 'a', 'a', 'a', '2019-06-22 18:52:48', '0000-00-00 00:00:00', NULL, 123, NULL),
 (38, 3, 3, 1, 'recebida', 'easeas', 'easeas', 'easeas', 'easeas', '2019-06-22 19:47:59', '0000-00-00 00:00:00', NULL, 123, NULL),
 (39, 7, 2, 1, 'relatorio', 's', 's', 's', 'a', '2019-06-22 20:07:01', '2019-07-22 20:07:01', NULL, NULL, NULL),
@@ -177,12 +177,6 @@ CREATE TABLE `sacp_participantes` (
 --
 
 INSERT INTO `sacp_participantes` (`id`, `id_sacp`, `id_participante`) VALUES
-(49, 37, 23),
-(50, 37, 25),
-(51, 37, 20),
-(52, 37, 24),
-(53, 36, 25),
-(54, 36, 21),
 (55, 38, 23),
 (56, 39, 23),
 (57, 40, 23),
@@ -219,7 +213,15 @@ INSERT INTO `sacp_participantes` (`id`, `id_sacp`, `id_participante`) VALUES
 (96, 55, 24),
 (97, 56, 25),
 (98, 57, 23),
-(99, 58, 23);
+(99, 58, 23),
+(132, 37, 23),
+(133, 37, 25),
+(134, 37, 20),
+(135, 37, 24),
+(144, 36, 19),
+(145, 36, 23),
+(146, 36, 25),
+(147, 36, 21);
 
 -- --------------------------------------------------------
 
@@ -333,10 +335,10 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `setor`, `email`, `usuario`, `senha`, `tipo_usuario`, `user_session_id`) VALUES
-(19, 'usuário A', 2, 'usuarioA@edelbra.com.br', 'usuarioA', '$2a$08$dMoCrtIiDZl4KWU1H3PI1e2ccGF9j2PFYoTTds5nPpN8XaKsi1gka', 3, '5n5b2sl32ufkbes95f6bt6acv6'),
-(20, 'usuário B', 6, 'usuarioB@edelbra.com.br', 'usuarioB', '$2a$08$aJFwqAflqJahcDAObDPis.pxwH/dUIr73FUh29vX6GPH4o9Hseqf2', 3, '0025tjeuhg3e0v9f748o4oea18'),
+(19, 'usuário A', 2, 'usuarioA@edelbra.com.br', 'usuarioA', '$2a$08$dMoCrtIiDZl4KWU1H3PI1e2ccGF9j2PFYoTTds5nPpN8XaKsi1gka', 3, 'pv35u8bgo7apk497iu8roij3s5'),
+(20, 'usuário B', 6, 'usuarioB@edelbra.com.br', 'usuarioB', '$2a$08$aJFwqAflqJahcDAObDPis.pxwH/dUIr73FUh29vX6GPH4o9Hseqf2', 3, 'sm22028bmm2aeipbgvsgju4jmj'),
 (21, 'usuário C', 5, 'usuarioC@edelbra.com.br', 'usuarioC', '$2a$08$BtEveze.8u3z7fCzXs13Gu8TpCMGDUji26i02xzxsW3MnV31h.UEy', 3, '7nsqcpgfr12ih9tens9qakg8ei'),
-(22, 'Administrador', 2, 'administrador@edelbra.com.br', 'admin', '$2a$08$vfXLeWf8sxOPX36Ioo0tX.PQlpSAtegW2MdvngEY88UElveO4GDs2', 1, 's1ujn0ricorss9mvmisg1vgmsn'),
+(22, 'Administrador', 2, 'administrador@edelbra.com.br', 'admin', '$2a$08$vfXLeWf8sxOPX36Ioo0tX.PQlpSAtegW2MdvngEY88UElveO4GDs2', 1, '54bofl7nmbjhdp3isab93ui5qp'),
 (23, 'Qualidade', 2, 'qualidade@edelbra.combr', 'qualidade', '$2a$08$FFtkqoNn0p.U4R5FJ3nLPOfas66V57LZGi7/wa3XYt4IDknBVPQKC', 2, '23h7p2h9721bl7fc29p51ne29e'),
 (24, 'usuário D', 5, 'usuarioD@edelbra.com.br', 'usuarioD', '$2a$08$kSOs1zk3Ax5O.yr96GWNFOQtmxdBvcm7SF4cHGMwqk4ZVHErf.44q', 3, NULL),
 (25, 'maria aparecida da silva sauro teu cu ', 7, 'ghjc2@zdv', 'maria', '$2a$08$s19dKGMjrQMOY9ufiLopq.TQ1AgGZjyZuGiQ8YuFc5jMQ62cOqFoW', 3, 'haertdnpru1as1md5tcbiqtnio');
@@ -432,13 +434,13 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `espinha_peixe`
 --
 ALTER TABLE `espinha_peixe`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `planos_acao`
 --
 ALTER TABLE `planos_acao`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `rnc`
@@ -456,7 +458,7 @@ ALTER TABLE `sacp`
 -- AUTO_INCREMENT for table `sacp_participantes`
 --
 ALTER TABLE `sacp_participantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=148;
 
 --
 -- AUTO_INCREMENT for table `setores`
@@ -503,11 +505,11 @@ ALTER TABLE `espinha_peixe`
 -- Limitadores para a tabela `planos_acao`
 --
 ALTER TABLE `planos_acao`
-  ADD CONSTRAINT `fk_onde` FOREIGN KEY (`onde`) REFERENCES `setores` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_plano_quem` FOREIGN KEY (`quem`) REFERENCES `usuarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_sacp` FOREIGN KEY (`id_sacp`) REFERENCES `sacp` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_status_plano_acao` FOREIGN KEY (`status`) REFERENCES `status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_tipo_plano` FOREIGN KEY (`id_tipo_plano`) REFERENCES `tipo_plano_acao` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_onde` FOREIGN KEY (`onde`) REFERENCES `setores` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_plano_quem` FOREIGN KEY (`quem`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_sacp` FOREIGN KEY (`id_sacp`) REFERENCES `sacp` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_status_plano_acao` FOREIGN KEY (`status`) REFERENCES `status` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_tipo_plano` FOREIGN KEY (`id_tipo_plano`) REFERENCES `tipo_plano_acao` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `rnc`
