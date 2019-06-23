@@ -33,6 +33,7 @@
                                 <th>Número O.P.</th>
                                 <th>RNC</th>
                                 <th>Data Geração</th>
+                                <th>Data Prazo</th>
                                 <th>Data Finalização</th>
                                 <th class="no-export"></th>
                             </tr>

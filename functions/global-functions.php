@@ -78,3 +78,11 @@ function info($var, $type = null, $name = null)
     echo '</pre></div><br><br>';
     return; 
 }
+
+function dataBR($data, $time = null) {
+    $date = new DateTime($data);
+    if ($time === true) {
+        return $date->format('d/m/Y H:i:s');
+    }
+    return $date->format('d/m/Y');
+}

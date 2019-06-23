@@ -1,9 +1,22 @@
 <?php
-    if (!defined('ABSPATH')) exit;
+    if (!defined('ABSPATH')) {
+        exit;
+    }
+
+    if (!in_array($parametros[0], $sacpPresente) 
+     && $this->userdata['tipo_usuario'] != 1
+     && $this->userdata['tipo_usuario'] != 2)  {
+        require_once ABSPATH . '/includes/403.php';
+        return;
+    }
+
     $radioOptions = array('relatorio', 'indicador', 'auditoria', 'recebida', 'acao', 'riscos', 'oportunidade', 'necessidade');
     if (empty($dados['origem'])) {
         $dados['origem'] = '';
     }
+    $request = $_SERVER['REQUEST_URI'];
+    $request = explode("/", $request);
+    $request = $request[3];
 ?>
 
 <hr>
@@ -12,8 +25,13 @@
         <div class="container-fluid">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <button  type="button" class="btn btn-default" onclick="window.location='<?= HOME_URI ?>/sacp/'">
-                    Voltar
+                    <button  type="button" class="btn btn-default" 
+                        <?php if ($request == 'editar') { ?>
+                            onclick="window.location='<?= HOME_URI ?>/sacp/'"
+                        <?php } else { ?>
+                            onclick="window.location='<?= HOME_URI ?>/rnc/'"
+                        <?php } ?>>
+                        Voltar
                     </button>
                     <h3 style="text-align: center; margin-top: -30px; margin-left: 70px">Solicitação de Ação Corretiva ou Preventiva</h3>
                 </div>
@@ -23,7 +41,6 @@
 
         <form method="post"> <!-- form -->
             <input type="hidden" name="editarSACP" value="1" />
-            <input type="hidden" name="status" value="2" />
 
             <div style="position: absolut; margin-top: -12px;" class="panel-body backgroundS"> 
                 <br>
@@ -142,7 +159,7 @@
     <div class="row">
       <div class="col-md-12">
         <input id="origemText" type="text" class="form-control form-control-sm origemText" name="origem" placeholder="Outros..." 
-        value="<?php if (!in_array($dados['origem'], $radioOptions)) {echo $dados['origem'];} else {echo 'disabled';} ?>" required>
+        value="<?php if (!in_array($dados['origem'], $radioOptions)) {echo $dados['origem'] . "\"";} else { ?>" <?php echo 'disabled'; } ?> required>
       </div>
     </div>
   </div>
@@ -197,32 +214,38 @@
         <div style="z-index:8; position:relative" class="row">
             <textarea class="form-control" name="medida[]" style="position:absolute; min-height: 33px; min-width:172px;  margin-left: 7.9%; margin-top: 2.4%; width:172px; height: 33px;" rows="1" placeholder=" 1 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 3) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 3) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="metodo[]" style="position:absolute; min-height: 33px; min-width:167px; margin-left: 26%; margin-top: 2.4%;  width:167px; height: 33px;" rows="1" placeholder=" 1 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 2) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 2) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="maodeobra[]" style="position:absolute; min-height: 33px; min-width:165px; margin-left: 43.6%; margin-top: 2.4%;  width:165px; height: 33px;" rows="1" placeholder=" 1 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 1) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 1) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
         </div>
         <!--endL1-->
@@ -231,32 +254,38 @@
         <div style="z-index:7; position:relative" class="row">
             <textarea class="form-control" name="medida[]" style="position:absolute; min-height: 33px; min-width:169px; margin-left: 9.6%; margin-top: 5.7%; width:169px; height: 33px;" rows="1" placeholder=" 2 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 3) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 3) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="metodo[]" style="position:absolute; min-height: 33px; min-width:170px; margin-left: 27.2%; margin-top: 5.7%;  width:170px; height: 33px;" rows="1" placeholder=" 2 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 2) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 2) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="maodeobra[]" style="position:absolute; min-height: 33px; min-width:168px; margin-left: 44.6%; margin-top: 5.7%;  width:168px; height: 33px;" rows="1" placeholder=" 2 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 1) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 1) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
         </div>
         <!--endL2-->
@@ -265,32 +294,38 @@
         <div style="z-index:6; position:relative" class="row">
             <textarea class="form-control" name="medida[]" style="position:absolute; min-height: 33px; min-width:166px; margin-left: 11.3%; margin-top: 9%; width:166px; height: 33px;" rows="1" placeholder=" 3 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 3) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 3) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="metodo[]" style="position:absolute; min-height: 33px; min-hwidth:166px; margin-left: 28.7%; margin-top: 9%;  width:166px; height: 33px;" rows="1" placeholder=" 3 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 2) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 2) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="maodeobra[]" style="position:absolute; min-height: 33px; min-width:166px; margin-left: 46%; margin-top: 9%;  width:166px; height: 33px;" rows="1" placeholder=" 3 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 1) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 1) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
         </div>
         <!--endL3-->
@@ -299,32 +334,38 @@
         <div style="z-index:5; position:relative" class="row">
             <textarea class="form-control" name="medida[]" style="position:absolute; min-height: 33px; min-width:164px; margin-left: 12.9%; margin-top: 12.4%; width:164px; height: 33px;" rows="1" placeholder=" 4 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 3) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 3) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="metodo[]" style="position:absolute; min-height: 33px; min-width:163px; margin-left: 30%; margin-top: 12.4%;  width:163px; height: 33px;" rows="1" placeholder=" 4 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 2) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 2) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="maodeobra[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 47.1%; margin-top: 12.4%;  width:172px; height: 33px;" rows="1" placeholder=" 4 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 1) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 1) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
         </div>
         <!--endL4-->
@@ -333,32 +374,38 @@
         <div style="z-index:4; position:relative" class="row">
             <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; min-width:164px; margin-left: 12.9%; margin-top: 17.4%; width:164px; height: 33px;" rows="1" placeholder=" 1 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 6) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 6) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="materiais[]" style="position:absolute; min-height: 33px; min-width:163px; margin-left: 30%; margin-top: 17.4%;  width:163px; height: 33px;" rows="1" placeholder=" 1 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 5) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 5) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="meioambiente[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 47.1%; margin-top: 17.4%;  width:172px; height: 33px;" rows="1" placeholder=" 1 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 4) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 4) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
         </div>
         <!--endL5-->
@@ -367,32 +414,38 @@
         <div style="z-index:3; position:relative" class="row">
             <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; minwidth:172px;  margin-left: 11.3%; margin-top: 20.9%; width:172px; height: 33px;" rows="1" placeholder=" 2 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 6) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 6) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="materiais[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 28.7%; margin-top: 20.9%;  width:172px; height: 33px;" rows="1" placeholder=" 2 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 5) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 5) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="meioambiente[]" style="position:absolute; min-height: 33px; miwidth:172px; margin-left: 46%; margin-top: 20.9%;  width:172px; height: 33px;" rows="1" placeholder=" 2 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 4) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 4) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
         </div>
         <!--endL6-->
@@ -401,32 +454,38 @@
         <div style="z-index:2; position:relative" class="row">
             <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; miwidth:172px; margin-left: 9.6%; margin-top: 24.2%; width:172px; height: 33px;" rows="1" placeholder=" 3 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 6) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 6) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="materiais[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 27.2%; margin-top: 24.2%;  width:172px; height: 33px;" rows="1" placeholder=" 3 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 5) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 5) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="meioambiente[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 44.6%; margin-top: 24.2%;  width:172px; height: 33px;" rows="1" placeholder=" 3 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 4) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 4) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
         </div>
         <!--endL7-->
@@ -435,47 +494,55 @@
         <div style="z-index:1; position:relative" class="row">
             <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; miwidth:172px; margin-left: 7.9%; margin-top: 27.7%; width:172px; height: 33px;" rows="1" placeholder=" 4 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 6) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 6) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="materiais[]" style="position:absolute; min-height: 33px; miwidth:172px; margin-left: 26%; margin-top: 27.7%;  width:172px; height: 33px;" rows="1" placeholder=" 4 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 5) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 5) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
 
             <textarea class="form-control" name="meioambiente[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 43.6%; margin-top: 27.7%;  width:172px; height: 33px;" rows="1" placeholder=" 4 -"
             ><?php 
-            foreach($dados["espinhaPeixe"] as $key => $dado) {
-                if ($dado['id_tipo_plano_acao'] == 4) {
-                echo $dado['descricao'];
-                unset($dados['espinhaPeixe'][$key]);
-                break;
-                }
+            if (!empty($dados['espinhaPeixe'])) {
+                foreach ($dados["espinhaPeixe"] as $key => $dado) {
+                    if ($dado['id_tipo_plano_acao'] == 4) {
+                        echo $dado['descricao'];
+                        unset($dados['espinhaPeixe'][$key]);
+                        break;
+                    }
+                } 
             } ?></textarea>
         </div>
         <!--endL8-->
-
         <!--Descrição-->
         <div style="z-index:1; position:relative" class="row">
             <textarea class="form-control" name="descricaoPeixe" style="position:absolute; min-height: 32px; margin-left: 72.4%; margin-top: 2.5%; width:286px; height: 327px;" rows="1" placeholder="Adicione uma descrição:"
-            ><?php 
-                $dados['espinhaPeixe'] = array_values($dados['espinhaPeixe']); 
-                echo $dados['espinhaPeixe'][0]['descricao']; 
+            ><?php
+                if (!empty($dados['espinhaPeixe'])) { 
+                    $dados['espinhaPeixe'] = array_values($dados['espinhaPeixe']); 
+                    echo $dados['espinhaPeixe'][0]['descricao']; 
+                }
             ?></textarea>
+                </div>
+                <!--endDescr-->
         </div>
-        <!--endDescr-->
-    </div>
-            <!--endL8-->
+                <!
+            --endL8-->
 
             <!--end esp-peixe-->
 
@@ -484,14 +551,362 @@
     </div>
     </div>
 
-    <?php if(isset($dados['brainstorming'])) { ?>
+    <?php if ($request == 'editar') { ?>
 
-        ratomanocu
+    <h3>Mão de Obra</h3>
+    <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/1">
+        <button type="button" class="btn btn-primary">
+            Inserir Plano
+        </button>
+    </a>
+    <table id="maodeobra" class="table table-striped table-bordered bulk_action" style="width: 100%;">
+        
+        <thead>
+            <tr>
+                <th>O que Fazer</th>
+                <th>Como Fazer</th>
+                <th>Quem</th>
+                <th>Quando</th>
+                <th>Onde</th>
+                <th>Status</th>
+                <th class="no-export"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <?php foreach ($dados['maodeobra'] as $key => $dado) { ?>
+                <tr>
+                    <th><?= $dado['o_que'] ?></th>
+                    <th><?= $dado['como'] ?></th>
+                    <th><?= $dado['nomeSetor'] . " - " . $dado['nome'] ?></th>
+                    <th><?= dataBR($dado['quando']) ?></th>
+                    <th><?= $dado['onde'] ?></th>
+                    <th><?= $dado['status'] ?></th>
+                    <th>
+                        <div class="btn-group">
+                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
+                            <ul class="dropdown-menu">
+                            <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
+                                    </li>
+                                <?php } ?>
+                                <?php if ($this->check_permissions('sacp', 'finalizar', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
+                                    </li>
+                                <?php } ?>
+                                <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
+                                        <div style="display:none">
+                                            <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
+                                        </div>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
+            <?php } ?>
+        </tbody>
+
+    </table>
+
+    <hr>
+
+    <h3>Método</h3>
+    <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/2">
+        <button type="button" class="btn btn-primary">
+            Inserir Plano
+        </button>
+    </a>
+    <table id="metodo" class="table table-striped table-bordered bulk_action" style="width: 100%;">
+        
+        <thead>
+            <tr>
+                <th>O que Fazer</th>
+                <th>Como Fazer</th>
+                <th>Quem</th>
+                <th>Quando</th>
+                <th>Onde</th>
+                <th>Status</th>
+                <th class="no-export"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <?php foreach ($dados['metodo'] as $key => $dado) { ?>
+                <tr>
+                    <th><?= $dado['o_que'] ?></th>
+                    <th><?= $dado['como'] ?></th>
+                    <th><?= $dado['nomeSetor'] . " - " . $dado['nome'] ?></th>
+                    <th><?= dataBR($dado['quando']) ?></th>
+                    <th><?= $dado['onde'] ?></th>
+                    <th><?= $dado['status'] ?></th>
+                    <th>
+                        <div class="btn-group">
+                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
+                            <ul class="dropdown-menu">
+                                <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
+                                    </li>
+                                <?php } ?>
+                                <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
+                                        <div style="display:none">
+                                            <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
+                                        </div>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
+            <?php } ?>
+        </tbody>
+
+    </table>
+
+    <hr>
+
+    <h3>Medida</h3>
+    <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/3">
+        <button type="button" class="btn btn-primary">
+            Inserir Plano
+        </button>
+    </a>
+    <table id="medida" class="table table-striped table-bordered bulk_action" style="width: 100%;">
+        
+        <thead>
+            <tr>
+                <th>O que Fazer</th>
+                <th>Como Fazer</th>
+                <th>Quem</th>
+                <th>Quando</th>
+                <th>Onde</th>
+                <th>Status</th>
+                <th class="no-export"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <?php foreach ($dados['medida'] as $key => $dado) { ?>
+                <tr>
+                    <th><?= $dado['o_que'] ?></th>
+                    <th><?= $dado['como'] ?></th>
+                    <th><?= $dado['nomeSetor'] . " - " . $dado['nome'] ?></th>
+                    <th><?= dataBR($dado['quando']) ?></th>
+                    <th><?= $dado['onde'] ?></th>
+                    <th><?= $dado['status'] ?></th>
+                    <th>
+                        <div class="btn-group">
+                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
+                            <ul class="dropdown-menu">
+                                <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
+                                    </li>
+                                <?php } ?>
+                                <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
+                                        <div style="display:none">
+                                            <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
+                                        </div>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
+            <?php } ?>
+        </tbody>
+
+    </table>
+
+    <hr>
+
+    <h3>Meio Ambiente</h3>
+    <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/4">
+        <button type="button" class="btn btn-primary">
+            Inserir Plano
+        </button>
+    </a>
+    <table id="meioambiente" class="table table-striped table-bordered bulk_action" style="width: 100%;">
+        
+        <thead>
+            <tr>
+                <th>O que Fazer</th>
+                <th>Como Fazer</th>
+                <th>Quem</th>
+                <th>Quando</th>
+                <th>Onde</th>
+                <th>Status</th>
+                <th class="no-export"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <?php foreach ($dados['meioambiente'] as $key => $dado) { ?>
+                <tr>
+                    <th><?= $dado['o_que'] ?></th>
+                    <th><?= $dado['como'] ?></th>
+                    <th><?= $dado['nomeSetor'] . " - " . $dado['nome'] ?></th>
+                    <th><?= dataBR($dado['quando']) ?></th>
+                    <th><?= $dado['onde'] ?></th>
+                    <th><?= $dado['status'] ?></th>
+                    <th>
+                        <div class="btn-group">
+                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
+                            <ul class="dropdown-menu">
+                                <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
+                                    </li>
+                                <?php } ?>
+                                <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
+                                        <div style="display:none">
+                                            <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
+                                        </div>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
+            <?php } ?>
+        </tbody>
+
+    </table>
+
+    <hr>
+
+    <h3>Materiais</h3>
+    <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/5">
+        <button type="button" class="btn btn-primary">
+            Inserir Plano
+        </button>
+    </a>
+    <table id="materiais" class="table table-striped table-bordered bulk_action" style="width: 100%;">
+        
+        <thead>
+            <tr>
+                <th>O que Fazer</th>
+                <th>Como Fazer</th>
+                <th>Quem</th>
+                <th>Quando</th>
+                <th>Onde</th>
+                <th>Status</th>
+                <th class="no-export"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <?php foreach ($dados['materiais'] as $key => $dado) { ?>
+                <tr>
+                    <th><?= $dado['o_que'] ?></th>
+                    <th><?= $dado['como'] ?></th>
+                    <th><?= $dado['nomeSetor'] . " - " . $dado['nome'] ?></th>
+                    <th><?= dataBR($dado['quando']) ?></th>
+                    <th><?= $dado['onde'] ?></th>
+                    <th><?= $dado['status'] ?></th>
+                    <th>
+                        <div class="btn-group">
+                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
+                            <ul class="dropdown-menu">
+                                <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
+                                    </li>
+                                <?php } ?>
+                                <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
+                                        <div style="display:none">
+                                            <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
+                                        </div>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
+            <?php } ?>
+        </tbody>
+
+    </table>
+
+    <hr>
+
+    <h3>Máquina</h3>
+    <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/6">
+        <button type="button" class="btn btn-primary">
+            Inserir Plano
+        </button>
+    </a>
+    <table id="maquina" class="table table-striped table-bordered bulk_action" style="width: 100%;">
+        
+        <thead>
+            <tr>
+                <th>O que Fazer</th>
+                <th>Como Fazer</th>
+                <th>Quem</th>
+                <th>Quando</th>
+                <th>Onde</th>
+                <th>Status</th>
+                <th class="no-export"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <?php foreach ($dados['maquina'] as $key => $dado) { ?>
+                <tr>
+                    <th><?= $dado['o_que'] ?></th>
+                    <th><?= $dado['como'] ?></th>
+                    <th><?= $dado['nomeSetor'] . " - " . $dado['nome'] ?></th>
+                    <th><?= dataBR($dado['quando']) ?></th>
+                    <th><?= $dado['onde'] ?></th>
+                    <th><?= $dado['status'] ?></th>
+                    <th>
+                        <div class="btn-group">
+                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
+                            <ul class="dropdown-menu">
+                                <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
+                                    </li>
+                                <?php } ?>
+                                <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
+                                        <div style="display:none">
+                                            <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
+                                        </div>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
+            <?php } ?>
+        </tbody>
+
+    </table>
 
     <?php } ?>
+
   <div class="panel-footer">
     <button type="submit" class="btn btn-primary">
-      Atualizar SACP
+      <?php if ($request == 'editar') {
+          echo "Atualizar SACP";
+      } else {
+        echo "Gerar SACP";
+      } ?> 
     </button>
   </div>
 

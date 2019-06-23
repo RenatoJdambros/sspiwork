@@ -82,10 +82,10 @@ class SacpController extends MainController
 		}
 
 		// Verifica se o usuário tem permissão
-		if (!$this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) {
-			require_once ABSPATH . '/includes/403.php';
-			return;
-		}
+		// if (!$this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) {
+		// 	require_once ABSPATH . '/includes/403.php';
+		// 	return;
+		// }
 
 		$modelo = $this->load_model('sacp/sacp-model');
 		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
@@ -93,16 +93,18 @@ class SacpController extends MainController
 		// Carrega o método para editar uma SACP
 		$retorno = $modelo->editarSACP($parametros);
 		
+		$sacpPresente = $modelo->listarSacpsPresentes();
+		// info($sacpPresente, 'die', 'name');
 		$setores = $modelo->listaSetores();
 		$participantes = $modelo->listarUsuarios();
 		$dados = $modelo->consultaSACP($parametros);
+
+		// info($dados, 'die', 'name');
 
 		if (empty($dados)) {
 			require_once ABSPATH . '/includes/404.php';
 			return;
 		}
-
-		$usuarios = $modelo->listarUsuarios();
 		
 		if ($retorno == 'success') {
 			$this->modal_notification = MainModel::openNotification('Sucesso', 'SACP atualizada com sucesso.', 'success');
@@ -229,6 +231,45 @@ class SacpController extends MainController
 
 		require ABSPATH . '/views/_includes/header.php';
 		require ABSPATH . '/views/sacp/editar-sacp.php';
+		require ABSPATH . '/views/_includes/footer.php';
+	}
+
+
+	public function plano()
+	{
+		$this->title = 'Inserir Plano de Ação';
+
+		// Verifica se o usuário está logado
+		if (!$this->logged_in) {
+			$this->logout(true);
+			return;
+		}
+
+		// Verifica se o usuário tem permissão
+		if (!$this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) {
+			require_once ABSPATH . '/includes/403.php';
+			return;
+		}
+
+		$modelo = $this->load_model('sacp/sacp-model');
+		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
+
+		$dados = $modelo->consultaSACP(array($parametros[0]));
+
+		$participantes = $modelo->consultaParticipantes($dados['participantes']);
+		$setor = $modelo->consultaSetor($dados['setor_destino']);
+
+		// Carrega o método para editar uma SACP
+		$retorno = $modelo->inserirPlano($parametros);
+
+		if ($retorno == 'success') {
+			$this->modal_notification = MainModel::openNotification('Sucesso', 'Plano inserido com sucesso.', 'success');
+		} elseif (!empty($retorno)) {
+			$this->modal_notification = MainModel::openNotification('Erro', $retorno, 'error');
+		}
+
+		require ABSPATH . '/views/_includes/header.php';
+		require ABSPATH . '/views/sacp/inserir-plano.php';
 		require ABSPATH . '/views/_includes/footer.php';
 	}
 	

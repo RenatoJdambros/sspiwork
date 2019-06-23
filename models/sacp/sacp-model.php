@@ -20,11 +20,24 @@ class SacpModel extends MainModel
 
 	public function paginacao()
     {
-        $columns = $this->formatar_colunas();
-        $page = DataTable::simple($_POST, $this->db->pdo, 'sacp', 'id', $columns);
+        if ($this->userdata['tipo_usuario'] == 3) {
+			$query = $this->db->query('SELECT id_sacp FROM sacp_participantes WHERE id_participante = ?', array($this->userdata['id']));
+			$sacpPresente = $query->fetchAll(PDO::FETCH_COLUMN, 0);
+
+			$sacpPresente = implode(",", $sacpPresente);
+
+			$sql = 'SELECT * FROM sacp';
+			$where = "id IN ($sacpPresente)";
+
+			$columns = $this->formatar_colunas();
+			$page = DataTable::complex($_POST, $this->db->pdo, 'sacp', 'id', $columns, $sql, null, $where);
+		} else {
+			$columns = $this->formatar_colunas();
+			$page = DataTable::simple($_POST, $this->db->pdo, 'sacp', 'id', $columns);
+		}
 
         return json_encode($page);
-    }
+	}
 
 
     private function formatar_colunas()
@@ -81,29 +94,37 @@ class SacpModel extends MainModel
             {
 				if ($d !== null) {
 					$data = new DateTime($d);
-					return $data->format('d/m/Y H:i:s');
+					return $data->format('d/m/Y');
 				}
 				return "";
-            }],
-			['dt' => 7, 'db' => 'data_finalizada', 'formatter' => function($d) 
+			}],
+			['dt' => 7, 'db' => 'data_prazo', 'formatter' => function($d) 
             {
 				if ($d !== null) {
 					$data = new DateTime($d);
-					return $data->format('d/m/Y H:i:s');
+					return $data->format('d/m/Y');
 				}
 				return "";
             }],
-            ['dt' => 8, 'db' => 'id', 'formatter' => function($d) 
+			['dt' => 8, 'db' => 'data_finalizada', 'formatter' => function($d) 
+            {
+				if ($d !== null) {
+					$data = new DateTime($d);
+					return $data->format('d/m/Y');
+				}
+				return "";
+            }],
+            ['dt' => 9, 'db' => 'id', 'formatter' => function($d) 
             {
                 ob_start(); ?>
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
                         <ul class="dropdown-menu">
-                            <?php if ($this->controller->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
+                            <?php // if ($this->controller->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
                                 </li>
-                            <?php } ?>
+                            <?php // } ?>
 							<?php if ($this->controller->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/sacp/finalizar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
@@ -137,6 +158,15 @@ class SacpModel extends MainModel
 	}
 
 
+	public function consultaSetor($id)
+	{
+		// Busca o nome do setor individual
+		$query = $this->db->query('SELECT id, nome FROM setores WHERE id = ?', array($id));
+		$setor = $query->fetch(PDO::FETCH_ASSOC);
+		return $setor;
+	}
+
+
     public function listarUsuarios() 
 	{
 		// Busca os usuários fora o admin
@@ -167,6 +197,43 @@ class SacpModel extends MainModel
 	}
 
 
+	public function consultaParticipantes($id) 
+	{
+		$participantes = implode(",", $id);
+		$query = $this->db->query("SELECT id, nome, setor FROM usuarios WHERE id IN ($participantes)");
+		$resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach ($resultado as $key => $usuario) {
+			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$usuario['setor']]);
+			$result = $query->fetch(PDO::FETCH_ASSOC);
+			$resultado[$key]['nomeSetor'] = $result['nome'];
+		}
+		
+		// Sorteia a array ordem crescente por setor
+		usort($resultado, function($a, $b) {
+			return $a['nomeSetor'] <=> $b['nomeSetor'];
+		});
+
+		return $resultado;
+	}
+
+
+	public function listarSacpsPresentes() {
+		$query = $this->db->query('SELECT id_sacp FROM sacp_participantes WHERE id_participante = ?', array($this->userdata['id']));
+		$sacpPresente = $query->fetchAll(PDO::FETCH_COLUMN, 0);
+
+		if ($sacpPresente) {
+			$sacpPresente = implode(",", $sacpPresente);
+
+			$query = $this->db->query("SELECT id FROM sacp WHERE id IN ($sacpPresente)");
+			$resultado = $query->fetchAll(PDO::FETCH_COLUMN, 0);
+			
+			return $resultado;
+		}
+		return array();
+	}
+
+
 	public function consultaSACP($id) 
 	{
 		$query = $this->db->query('SELECT * FROM sacp WHERE id = ?', $id);
@@ -178,7 +245,89 @@ class SacpModel extends MainModel
 		$query = $this->db->query('SELECT id_tipo_plano_acao, descricao FROM espinha_peixe WHERE id_sacp = ?', $id);
 		$sacp['espinhaPeixe'] = $query->fetchAll(PDO::FETCH_ASSOC);
 
-		// infodie($sacp['espinhaPeixe']);
+		$query = $this->db->query('SELECT id_sacp, o_que, como, quem, quando, onde, status FROM planos_acao WHERE id_sacp = ? AND id_tipo_plano = ?', array($id[0], 1));
+		$sacp['maodeobra'] = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach($sacp['maodeobra'] as $key => $value) {
+			$query = $this->db->query("SELECT nome, setor FROM usuarios WHERE id = ?", array($value['quem']));
+			$resultado = $query->fetch(PDO::FETCH_ASSOC);
+			$sacp['maodeobra'][$key]['nome'] = $resultado['nome'];
+
+			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$resultado['setor']]);
+			$result = $query->fetch(PDO::FETCH_ASSOC);
+
+			$sacp['maodeobra'][$key]['nomeSetor'] = $result['nome'];
+		}
+
+		$query = $this->db->query('SELECT id_sacp, o_que, como, quem, quando, onde, status FROM planos_acao WHERE id_sacp = ? AND id_tipo_plano = ?', array($id[0], 2));
+		$sacp['metodo'] = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach($sacp['metodo'] as $key => $value) {
+			$query = $this->db->query("SELECT nome, setor FROM usuarios WHERE id = ?", array($value['quem']));
+			$resultado = $query->fetch(PDO::FETCH_ASSOC);
+			$sacp['metodo'][$key]['nome'] = $resultado['nome'];
+
+			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$resultado['setor']]);
+			$result = $query->fetch(PDO::FETCH_ASSOC);
+
+			$sacp['metodo'][$key]['nomeSetor'] = $result['nome'];
+		}
+
+		$query = $this->db->query('SELECT id_sacp, o_que, como, quem, quando, onde, status FROM planos_acao WHERE id_sacp = ? AND id_tipo_plano = ?', array($id[0], 3));
+		$sacp['medida'] = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach($sacp['medida'] as $key => $value) {
+			$query = $this->db->query("SELECT nome, setor FROM usuarios WHERE id = ?", array($value['quem']));
+			$resultado = $query->fetch(PDO::FETCH_ASSOC);
+			$sacp['medida'][$key]['nome'] = $resultado['nome'];
+
+			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$resultado['setor']]);
+			$result = $query->fetch(PDO::FETCH_ASSOC);
+
+			$sacp['medida'][$key]['nomeSetor'] = $result['nome'];
+		}
+
+		$query = $this->db->query('SELECT id_sacp, o_que, como, quem, quando, onde, status FROM planos_acao WHERE id_sacp = ? AND id_tipo_plano = ?', array($id[0], 4));
+		$sacp['meioambiente'] = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach($sacp['meioambiente'] as $key => $value) {
+			$query = $this->db->query("SELECT nome, setor FROM usuarios WHERE id = ?", array($value['quem']));
+			$resultado = $query->fetch(PDO::FETCH_ASSOC);
+			$sacp['meioambiente'][$key]['nome'] = $resultado['nome'];
+
+			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$resultado['setor']]);
+			$result = $query->fetch(PDO::FETCH_ASSOC);
+
+			$sacp['meioambiente'][$key]['nomeSetor'] = $result['nome'];
+		}
+
+		$query = $this->db->query('SELECT id_sacp, o_que, como, quem, quando, onde, status FROM planos_acao WHERE id_sacp = ? AND id_tipo_plano = ?', array($id[0], 5));
+		$sacp['materiais'] = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach($sacp['materiais'] as $key => $value) {
+			$query = $this->db->query("SELECT nome, setor FROM usuarios WHERE id = ?", array($value['quem']));
+			$resultado = $query->fetch(PDO::FETCH_ASSOC);
+			$sacp['materiais'][$key]['nome'] = $resultado['nome'];
+
+			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$resultado['setor']]);
+			$result = $query->fetch(PDO::FETCH_ASSOC);
+
+			$sacp['materiais'][$key]['nomeSetor'] = $result['nome'];
+		}
+
+		$query = $this->db->query('SELECT id_sacp, o_que, como, quem, quando, onde, status FROM planos_acao WHERE id_sacp = ? AND id_tipo_plano = ?', array($id[0], 6));
+		$sacp['maquina'] = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach($sacp['maquina'] as $key => $value) {
+			$query = $this->db->query("SELECT nome, setor FROM usuarios WHERE id = ?", array($value['quem']));
+			$resultado = $query->fetch(PDO::FETCH_ASSOC);
+			$sacp['maquina'][$key]['nome'] = $resultado['nome'];
+
+			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$resultado['setor']]);
+			$result = $query->fetch(PDO::FETCH_ASSOC);
+
+			$sacp['maquina'][$key]['nomeSetor'] = $result['nome'];
+		}
 
 		return $sacp;
 	}
@@ -208,9 +357,14 @@ class SacpModel extends MainModel
 		$dataGerada = new DateTime('now');
 		$dataGerada = $dataGerada->format('Y-m-d H:i:s');
 
-		// Salva na $_POST e deleta a variavel desnecessária
+		$dataPrazo = new DateTime($dataGerada . '+ 30 days');
+		$dataPrazo = $dataPrazo->format('Y-m-d H:i:s');
+
+		// Salva na $dados e deleta a variavel desnecessária
 		$dados['data_gerada'] = $dataGerada;
+		$dados['data_prazo'] = $dataPrazo;
 		unset($dataGerada);
+		unset($dataPrazo);
 
 		$dados['setor_origem']  = $_POST['setor_origem'];
 		$dados['setor_destino'] = $_POST['setor_destino'];
@@ -246,7 +400,6 @@ class SacpModel extends MainModel
 
 			// Insere na espinha de peixe
 			foreach ($_POST as $key => $dadoPeixe) {
-
 				if (is_array($dadoPeixe)) {
 					$dadoPeixe = array_filter($dadoPeixe);
 
@@ -360,7 +513,6 @@ class SacpModel extends MainModel
 			unset($_POST['proposito']);
 			unset($_POST['consequencia']);
 			unset($_POST['brainstorming']);
-			unset($_POST['status']);
 
 			$query = $this->db->delete('espinha_peixe', 'id_sacp', $id[0]);
 
@@ -499,31 +651,142 @@ class SacpModel extends MainModel
 			$_POST['numero_op'] = null;
 		}
 
+		// Passa os participantes para um variavel e unseta da post
+		$participantes = $_POST['participantes'];
+		unset($_POST['participantes']);
+
 		// Cria a data atual para ser gravada no banco de dados
 		$dataGerada = new DateTime('now');
 		$dataGerada = $dataGerada->format('Y-m-d H:i:s');
 
-		// Salva na $_POST e deleta a variavel desnecessária
-		$_POST['data_gerada'] = $dataGerada;
+		$dataPrazo = new DateTime($dataGerada . '+ 30 days');
+		$dataPrazo = $dataPrazo->format('Y-m-d H:i:s');
+
+		// Salva na $dados e deleta a variavel desnecessária
+		$dados['data_gerada'] = $dataGerada;
+		$dados['data_prazo'] = $dataPrazo;
 		unset($dataGerada);
+		unset($dataPrazo);
 
-		$_POST['participantes'] = implode(';', $_POST['participantes']);
+		$dados['setor_origem']  = $_POST['setor_origem'];
+		$dados['setor_destino'] = $_POST['setor_destino'];
+		$dados['numero_op']     = $_POST['numero_op'];
+		$dados['origem']        = $_POST['origem'];
+		$dados['descricao']     = $_POST['descricao'];
+		$dados['proposito']     = $_POST['proposito'];
+		$dados['consequencia']  = $_POST['consequencia'];
+		$dados['brainstorming'] = $_POST['brainstorming'];
 
-		$_POST['id_rnc'] = $id;
+		$dados['id_rnc'] = $id;
 
 		/* query */
-		$query = $this->db->insert('sacp', $_POST);
+		$query = $this->db->insert('sacp', $dados);
 		
 		/* Verifica a consulta */
 		if ($query) {
+			// Seta o id da SACP
 			$idSacp = $this->db->last_id;
+	
+			// Insere os participantes
+			foreach ($participantes as $key => $participante) {
+				$query = $this->db->insert('sacp_participantes', ['id_sacp' => $idSacp, 'id_participante' => $participante]);
+			}
+
+			// Prepara a variavel _POST para o insert na espinha de peixe
+			unset($_POST['setor_origem']);
+			unset($_POST['setor_destino']);
+			unset($_POST['numero_op']);
+			unset($_POST['origem']);
+			unset($_POST['descricao']);
+			unset($_POST['proposito']);
+			unset($_POST['consequencia']);
+			unset($_POST['brainstorming']);
+
+			// Insere na espinha de peixe
+			foreach ($_POST as $key => $dadoPeixe) {
+				if (is_array($dadoPeixe)) {
+					$dadoPeixe = array_filter($dadoPeixe);
+
+					foreach ($dadoPeixe as $dado) {
+
+						switch($key) {
+							case 'medida':
+								$palavra = 'Medida';
+								break;
+							case 'metodo':
+								$palavra = 'Método';
+								break;
+							case 'maodeobra':
+								$palavra = 'Mão de Obra';
+								break;
+							case 'maquina':
+								$palavra = 'Máquina';
+								break;
+							case 'materiais':
+								$palavra = 'Materiais';
+								break;
+							case 'meioambiente':
+								$palavra = 'Meio Ambiente';
+								break;
+							default:
+								break;
+						}
+
+						$query = $this->db->query('SELECT id FROM tipo_plano_acao WHERE nome = ?', [$palavra]);
+						$plano = $query->fetch(PDO::FETCH_COLUMN, 0);
+
+						$query = $this->db->insert(
+							'espinha_peixe', 
+							[
+								'id_sacp' => $idSacp, 
+								'id_tipo_plano_acao' => $plano, 
+								'descricao' => $dado
+							]
+						);
+					}
+				} else {
+					
+					$query = $this->db->query('SELECT id FROM tipo_plano_acao WHERE nome = ?', ['Descrição']);
+					$plano = $query->fetch(PDO::FETCH_COLUMN, 0);
+
+					$query = $this->db->insert(
+						'espinha_peixe', 
+						[
+							'id_sacp' => $idSacp, 
+							'id_tipo_plano_acao' => $plano, 
+							'descricao' => $dadoPeixe
+						]
+					);
+				}
+			}
+			
 			// Redireciona para a página de edit
 			echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
 			echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "'</script>";
-		
-			return 'success';
 		}
 		return 'Erro ao inserir SACP no banco de dados';
-	} // insert
+	} // gerarSACPRNC
+
+
+	public function inserirPlano($dados)
+	{
+		/* Verifica se algo foi postado e se está vindo do form que tem o campo
+		inserirPlano. */
+		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['inserirPlano'])) {
+			return;
+		}
+		
+		unset($_POST['inserirPlano']);
+
+		$_POST['id_sacp'] = $dados[0];
+		$_POST['id_tipo_plano'] = $dados[1];
+
+		$query = $this->db->insert('planos_acao', $_POST);
+
+		if ($query) {
+			return 'success';
+		}
+		return 'Falha ao inserir no banco de dados';
+	}
 
 } // model
