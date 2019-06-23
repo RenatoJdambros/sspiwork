@@ -187,8 +187,8 @@
     <label for="brainstorming">Brainstorming / Alterações no SGI</label>
     <textarea class="form-control rounded-0" id="brainstorming" rows="4" name="brainstorming" required><?= !empty($dados['brainstorming']) ? $dados['brainstorming'] : '' ?></textarea>
   </div> 
-  </div>
-
+  
+<br>
   <div id="accordion" style=" ">
     <button style="background-color: #80BDFF;"  class="btn btn-basic" data-toggle="collapse" href="#collapseOne">
       Gerar diagrama de causa e efeito
@@ -196,13 +196,12 @@
         &nbsp;&nbsp;|&nbsp;&nbsp;6M
     </small>
               </button>
-              <p align="right" style="position: relative; max-height: 2px; 
-                background:#80BDFF; margin-left: 0px; margin-bottom: -4px;">&nbsp;</p>
+              
                            
 
 
     <!--Corpo esp-peixe-->
-    <div id="collapseOne" style="background-color: #80BDFF;" class="collapse backgroundS" data-parent="#accordion">
+    <div id="collapseOne" style="background-color: #80BDFF; margin-top: -2px;" class="collapse backgroundS" data-parent="#accordion">
         <div align="center"  class="form-group row">
             <div class="form-group col-xs-12">
                 <br>
@@ -304,7 +303,7 @@
                 } 
             } ?></textarea>
 
-            <textarea class="form-control" name="metodo[]" style="position:absolute; min-height: 33px; min-hwidth:166px; margin-left: 28.7%; margin-top: 9%;  width:166px; height: 33px;" rows="1" placeholder=" 3 -"
+            <textarea class="form-control" name="metodo[]" style="position:absolute; min-height: 33px; min-width:166px; margin-left: 28.7%; margin-top: 9%;  width:166px; height: 33px;" rows="1" placeholder=" 3 -"
             ><?php 
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
@@ -412,7 +411,7 @@
 
         <!--L6-->
         <div style="z-index:3; position:relative" class="row">
-            <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; minwidth:172px;  margin-left: 11.3%; margin-top: 20.9%; width:172px; height: 33px;" rows="1" placeholder=" 2 -"
+            <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; min-width:172px;  margin-left: 11.3%; margin-top: 20.9%; width:172px; height: 33px;" rows="1" placeholder=" 2 -"
             ><?php 
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
@@ -436,7 +435,7 @@
                 } 
             } ?></textarea>
 
-            <textarea class="form-control" name="meioambiente[]" style="position:absolute; min-height: 33px; miwidth:172px; margin-left: 46%; margin-top: 20.9%;  width:172px; height: 33px;" rows="1" placeholder=" 2 -"
+            <textarea class="form-control" name="meioambiente[]" style="position:absolute; min-height: 33px; min-width: 172px; margin-left: 46%; margin-top: 20.9%;  width:172px; height: 33px;" rows="1" placeholder=" 2 -"
             ><?php 
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
@@ -452,7 +451,7 @@
 
         <!--L7-->
         <div style="z-index:2; position:relative" class="row">
-            <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; miwidth:172px; margin-left: 9.6%; margin-top: 24.2%; width:172px; height: 33px;" rows="1" placeholder=" 3 -"
+            <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 9.6%; margin-top: 24.2%; width:172px; height: 33px;" rows="1" placeholder=" 3 -"
             ><?php 
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
@@ -492,7 +491,7 @@
 
         <!--L8-->
         <div style="z-index:1; position:relative" class="row">
-            <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; miwidth:172px; margin-left: 7.9%; margin-top: 27.7%; width:172px; height: 33px;" rows="1" placeholder=" 4 -"
+            <textarea class="form-control" name="maquina[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 7.9%; margin-top: 27.7%; width:172px; height: 33px;" rows="1" placeholder=" 4 -"
             ><?php 
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
@@ -504,7 +503,7 @@
                 } 
             } ?></textarea>
 
-            <textarea class="form-control" name="materiais[]" style="position:absolute; min-height: 33px; miwidth:172px; margin-left: 26%; margin-top: 27.7%;  width:172px; height: 33px;" rows="1" placeholder=" 4 -"
+            <textarea class="form-control" name="materiais[]" style="position:absolute; min-height: 33px; min-width:172px; margin-left: 26%; margin-top: 27.7%;  width:172px; height: 33px;" rows="1" placeholder=" 4 -"
             ><?php 
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
@@ -548,21 +547,32 @@
 
       </div>
       </div>
-    </div>
-    </div>
-
+      </div>
+      
     <?php if ($request == 'editar') { ?>
-
-    <h3>Mão de Obra</h3>
-    <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/1">
-        <button type="button" class="btn btn-primary">
-            Inserir Plano
-        </button>
-    </a>
+    
+    <br>
+    <br>
+    <br>
+    
+    <!-- planos de ação -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 style="margin-top: 4px;" align="center">PLANOS DE AÇÃO</h3>
+    </div>
+  <div class="panel-body">
+  <div class="well" >
+  <h3 style="background-color: #f2f2f4 "> &nbsp; Mão de Obra
+        <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/1">
+            <button style=" float: left; margin-top: -4px;" type="button" class="btn btn-primary">
+                +
+            </button>
+        </a>
+    </h3>
     <table id="maodeobra" class="table table-striped table-bordered bulk_action" style="width: 100%;">
         
         <thead>
-            <tr>
+            <tr class="info">
                 <th>O que Fazer</th>
                 <th>Como Fazer</th>
                 <th>Quem</th>
@@ -612,19 +622,22 @@
         </tbody>
 
     </table>
+    </div>
 
     <hr>
 
-    <h3>Método</h3>
-    <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/2">
-        <button type="button" class="btn btn-primary">
-            Inserir Plano
-        </button>
-    </a>
+    <div class="well" >                               
+    <h3> &nbsp; Método
+        <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/2">
+            <button style=" float: left; margin-top: -4px;" type="button" class="btn btn-primary">
+                +
+            </button>
+        </a>
+    </h3>
     <table id="metodo" class="table table-striped table-bordered bulk_action" style="width: 100%;">
         
         <thead>
-            <tr>
+            <tr class="info">
                 <th>O que Fazer</th>
                 <th>Como Fazer</th>
                 <th>Quem</th>
@@ -674,19 +687,20 @@
         </tbody>
 
     </table>
-
+</div>
     <hr>
-
-    <h3>Medida</h3>
-    <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/3">
-        <button type="button" class="btn btn-primary">
-            Inserir Plano
-        </button>
-    </a>
+<div class="well" >
+    <h3> &nbsp; Medida
+        <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/3">
+            <button style=" float: left; margin-top: -4px;" type="button" class="btn btn-primary">
+                +
+            </button>
+        </a>
+    </h3>
     <table id="medida" class="table table-striped table-bordered bulk_action" style="width: 100%;">
         
         <thead>
-            <tr>
+            <tr class="info">
                 <th>O que Fazer</th>
                 <th>Como Fazer</th>
                 <th>Quem</th>
@@ -736,19 +750,20 @@
         </tbody>
 
     </table>
-
+</div>
     <hr>
-
-    <h3>Meio Ambiente</h3>
-    <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/4">
-        <button type="button" class="btn btn-primary">
-            Inserir Plano
-        </button>
-    </a>
+<div class="well" >
+    <h3> &nbsp; Meio Ambiente
+        <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/4">
+            <button style=" float: left; margin-top: -4px;" type="button" class="btn btn-primary">
+                +
+            </button>
+        </a>
+    </h3>
     <table id="meioambiente" class="table table-striped table-bordered bulk_action" style="width: 100%;">
         
         <thead>
-            <tr>
+            <tr class="info">
                 <th>O que Fazer</th>
                 <th>Como Fazer</th>
                 <th>Quem</th>
@@ -798,19 +813,20 @@
         </tbody>
 
     </table>
-
+</div>
     <hr>
-
-    <h3>Materiais</h3>
-    <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/5">
-        <button type="button" class="btn btn-primary">
-            Inserir Plano
-        </button>
-    </a>
+<div class="well" >
+    <h3> &nbsp; Materiais
+        <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/5">
+            <button style=" float: left; margin-top: -4px;" type="button" class="btn btn-primary">
+                +
+            </button>
+        </a>
+    </h3>
     <table id="materiais" class="table table-striped table-bordered bulk_action" style="width: 100%;">
         
         <thead>
-            <tr>
+            <tr class="info">
                 <th>O que Fazer</th>
                 <th>Como Fazer</th>
                 <th>Quem</th>
@@ -860,19 +876,20 @@
         </tbody>
 
     </table>
-
+</div>
     <hr>
-
-    <h3>Máquina</h3>
-    <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/6">
-        <button type="button" class="btn btn-primary">
-            Inserir Plano
-        </button>
-    </a>
+<div class="well" >
+    <h3> &nbsp; Máquina
+        <a href="<?= HOME_URI ?>/sacp/plano/<?= $parametros[0] ?>/6">
+            <button style=" float: left; margin-top: -4px;" type="button" class="btn btn-primary">
+               +
+            </button>
+        </a>
+    </h3>
     <table id="maquina" class="table table-striped table-bordered bulk_action" style="width: 100%;">
         
         <thead>
-            <tr>
+            <tr class="info">
                 <th>O que Fazer</th>
                 <th>Como Fazer</th>
                 <th>Quem</th>
@@ -923,7 +940,16 @@
 
     </table>
 
+    </div>
+</div>   
+    </div> <!--Fim panel Body-->
+    
     <?php } ?>
+    
+    </div>
+</div>
+
+    
 
   <div class="panel-footer">
     <button type="submit" class="btn btn-primary">
@@ -938,7 +964,7 @@
 </form> <!--Fim formulário principal -->
 
 
-  </div> <!--Fim panel Body-->
+  
         
 
 
