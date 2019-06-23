@@ -653,6 +653,11 @@
                                         <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
                                     </li>
                                 <?php } ?>
+                                <?php if ($this->check_permissions('sacp', 'finalizar', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
+                                    </li>
+                                <?php } ?>
                                 <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
                                     <li>
                                         <a href="<?= HOME_URI ?>/sacp/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
@@ -708,6 +713,11 @@
                                 <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
                                     <li>
                                         <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
+                                    </li>
+                                <?php } ?>
+                                <?php if ($this->check_permissions('sacp', 'finalizar', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
                                     </li>
                                 <?php } ?>
                                 <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
@@ -767,6 +777,11 @@
                                         <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
                                     </li>
                                 <?php } ?>
+                                <?php if ($this->check_permissions('sacp', 'finalizar', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
+                                    </li>
+                                <?php } ?>
                                 <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
                                     <li>
                                         <a href="<?= HOME_URI ?>/sacp/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
@@ -824,6 +839,11 @@
                                         <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
                                     </li>
                                 <?php } ?>
+                                <?php if ($this->check_permissions('sacp', 'finalizar', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
+                                    </li>
+                                <?php } ?>
                                 <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
                                     <li>
                                         <a href="<?= HOME_URI ?>/sacp/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
@@ -879,6 +899,11 @@
                                 <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
                                     <li>
                                         <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
+                                    </li>
+                                <?php } ?>
+                                <?php if ($this->check_permissions('sacp', 'finalizar', $this->userdata['user_permissions'])) { ?>
+                                    <li>
+                                        <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
                                     </li>
                                 <?php } ?>
                                 <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
