@@ -77,8 +77,16 @@ class UsuariosModel extends MainModel
 					return "Não encontrado";	
 				}
                 return ucfirst($result['nome']);
+			}],
+			['dt' => 5, 'db' => 'status', 'formatter' => function($d) 
+            {
+				if ($d == 'ativo') {
+					return "<span class='label label-success'>Ativo</span>";
+				} else {
+					return "<span class='label label-danger'>Inativo</span>";
+				}
             }],
-            ['dt' => 5, 'db' => 'id', 'formatter' => function($d) 
+            ['dt' => 6, 'db' => 'id', 'formatter' => function($d) 
             {
                 ob_start(); ?>
                     <div class="btn-group">

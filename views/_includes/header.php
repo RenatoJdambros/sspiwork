@@ -121,12 +121,12 @@
               </a>
           </li>
 
-          <li>
+          <!-- <li>
               <a href="<?=HOME_URI?>/home/"> 
                 <i class="fa fa-cog"></i>
                 Configurações
               </a>
-          </li>
+          </li> -->
 
           <li>
             <a href="<?=HOME_URI?>/login/sair/">

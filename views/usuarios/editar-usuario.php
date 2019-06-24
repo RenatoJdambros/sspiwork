@@ -111,6 +111,20 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="status" 
+                    data-toggle="tooltip" title="Obrigatório">
+                        Status
+                        <span style="color: red;">*</span>
+                    </label>
+                    <div class=" col-md-6">
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="ativo" <?php if ($usuario['status'] == 'ativo') {echo 'selected';} ?>>Ativo</option>
+                            <option value="inativo" <?php if ($usuario['status'] == 'inativo') {echo 'selected';} ?>>Inativo</option>
+                        </select>
+                    </div>
+                </div>
                 </div>
                 </div>
                 <div class="panel-footer">

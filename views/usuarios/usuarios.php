@@ -38,6 +38,7 @@
                             <th>Setor</th>
                             <th>Email</th>
                             <th>Tipo de Usuário</th>
+                            <th>Status</th>
                             <th class="no-export"></th>
                         </tr>
                     </thead>

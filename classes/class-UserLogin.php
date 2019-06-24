@@ -119,7 +119,7 @@ class UserLogin
 		}
 		
 		// Verifica se o usuário existe na base de dados
-		$query = $this->db->query('SELECT * FROM usuarios WHERE usuario = ? LIMIT 1', [$usuario]);
+		$query = $this->db->query('SELECT * FROM usuarios WHERE usuario = ? AND status = ? LIMIT 1', [$usuario, 'ativo']);
 		
 		// Verifica a consulta
 		if ( ! $query ) {
