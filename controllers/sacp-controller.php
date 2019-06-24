@@ -94,12 +94,9 @@ class SacpController extends MainController
 		$retorno = $modelo->editarSACP($parametros);
 		
 		$sacpPresente = $modelo->listarSacpsPresentes();
-		// info($sacpPresente, 'die', 'name');
 		$setores = $modelo->listaSetores();
 		$participantes = $modelo->listarUsuarios();
 		$dados = $modelo->consultaSACP($parametros);
-
-		// info($dados, 'die', 'name');
 
 		if (empty($dados)) {
 			require_once ABSPATH . '/includes/404.php';
@@ -147,7 +144,7 @@ class SacpController extends MainController
 	}
 
 
-	public function finalizar($id)
+	public function finalizar()
 	{
 		$this->title = 'Finalizar SACP';
 
@@ -177,7 +174,7 @@ class SacpController extends MainController
 		$participantes = $modelo->listarUsuarios();
 
 		// Carrega o método para finalizar uma SACP
-		$retorno = $modelo->finalizarSACP($id[0]);
+		$retorno = $modelo->finalizarSACP($parametros[0]);
 		
 		if ($retorno == 'success') {
 			$this->modal_notification = MainModel::openNotification('Sucesso', 'SACP finalizada com sucesso.', 'success');
@@ -342,6 +339,49 @@ class SacpController extends MainController
 		
 		require ABSPATH . '/views/_includes/header.php';
 		//require ABSPATH . '/views/sacp/sacp-view.php';
+		require ABSPATH . '/views/_includes/footer.php';
+	}
+
+
+	public function finalizarPlano()
+	{
+		$this->title = 'Finalizar Plano de Ação';
+
+		// Verifica se o usuário está logado
+		if (!$this->logged_in) {
+			$this->logout(true);
+			return;
+		}
+
+		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
+
+		// Verifica se o usuário tem permissão
+		if (!$this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])
+		  && $this->userdata['id'] != $parametros[3]) {
+			require_once ABSPATH . '/includes/403.php';
+			return;
+		}
+
+		$modelo = $this->load_model('sacp/sacp-model');
+
+		$dados = $modelo->consultaSACP(array($parametros[0]));
+
+		$participantes = $modelo->consultaParticipantes($dados['participantes']);
+		$setor = $modelo->consultaSetor($dados['setor_destino']);
+
+		// Carrega o método para editar uma SACP
+		$retorno = $modelo->finalizarPlano($parametros[2]);
+
+		$dadosPlano = $modelo->consultarPlano($parametros[2]);
+
+		if ($retorno == 'success') {
+			$this->modal_notification = MainModel::openNotification('Sucesso', 'Plano finalizado com sucesso.', 'success');
+		} elseif (!empty($retorno)) {
+			$this->modal_notification = MainModel::openNotification('Erro', $retorno, 'error');
+		}
+
+		require ABSPATH . '/views/_includes/header.php';
+		require ABSPATH . '/views/sacp/finalizar-plano.php';
 		require ABSPATH . '/views/_includes/footer.php';
 	}
 	

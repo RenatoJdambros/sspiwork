@@ -136,30 +136,3 @@
                 </div><!-- Fim div row -->               
             </form><!-- end form -->
             <!-- Fim conteúdo página-->
-
-
-
-
-
-                  
-
-                        
-            
-                
-               
-            
-            
-            
-            
-
-
-
-
-    
-          
-
-        
-
-        
-
-

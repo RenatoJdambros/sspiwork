@@ -97,7 +97,7 @@
                         </label>
                         <div class="col-md-6">
                             <input type="date" id="quando" class="form-control" name="quando"
-                            value="<?= $dadosPlano['quando'] ?>" max="2099-01-01" required
+                            value="<?= $dadosPlano['quando'] ?>" min="<?php $data = new DateTime('now'); echo $data->format('Y-m-d'); ?>" max="2099-01-01" required
                             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'disabled';} ?>>
                         </div>
                     </div>

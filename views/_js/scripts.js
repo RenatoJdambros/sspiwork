@@ -28,12 +28,14 @@ $(document).ready(function () {
 } */
 
 $('.outros').click(function()
-    {
-      $('#origemText').removeAttr("disabled");
-    });
+{
+    $('#origemText').removeAttr("disabled");
+});
     
-    $('.origemRadio').click(function()
-    {
-      //$('#origemText').val("");
-      $('#origemText').attr("disabled","disabled");
-    });
+$('.origemRadio').click(function()
+{
+    //$('#origemText').val("");
+    $('#origemText').attr("disabled","disabled");
+});
+
+// $("#cliente_telefone").mask("(00) 00000-0000");

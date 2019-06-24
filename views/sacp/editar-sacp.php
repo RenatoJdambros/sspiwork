@@ -3,11 +3,11 @@
         exit;
     }
 
-    if (!in_array($parametros[0], $sacpPresente) 
-     && $this->userdata['tipo_usuario'] != 1
-     && $this->userdata['tipo_usuario'] != 2)  {
-        require_once ABSPATH . '/includes/403.php';
-        return;
+    if ($this->userdata['tipo_usuario'] == 3) {
+        if (!in_array($parametros[0], $sacpPresente))  {
+            require_once ABSPATH . '/includes/403.php';
+            return;
+        }
     }
 
     $radioOptions = array('relatorio', 'indicador', 'auditoria', 'recebida', 'acao', 'riscos', 'oportunidade', 'necessidade');
@@ -101,7 +101,7 @@
     
     <label for="participantes">Participantes:</label>
     <select class="js-example-basic-multiple form-group custom-select" id="participantes" name="participantes[]" style="width: 100%" multiple="multiple" 
-    required <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
+    required <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'disabled';} ?>>
       <?php 
             foreach ($participantes as $key => $participante) { ?>
                 <option value="<?= $participante['id'] ?>" 
@@ -641,10 +641,10 @@
     </div>
   <div class="panel-body">
   <div class="well" >
-  <h3 style="background-color: #f2f2f4 "> &nbsp; Mão de Obra
+  <h3 style="background-color: #f2f2f4 ">Mão de Obra
         <?php if ($this->userdata['tipo_usuario'] != 3) { ?>
             <a href="<?= HOME_URI ?>/sacp/inserirPlano/<?= $parametros[0] ?>/1">
-                <button style=" float: left; margin-top: -4px;" type="button" class="btn btn-primary">
+                <button style=" float: left; margin-top: -4px; margin-right: 10px;" type="button" class="btn btn-primary">
                     +
                 </button>
             </a>
@@ -659,7 +659,7 @@
                 <th>Quem</th>
                 <th>Quando</th>
                 <th>Onde</th>
-                <th>Status</th>
+                <th style="width:1%;">Status</th>
                 <th class="no-export" style="width:1%;"></th>
             </tr>
         </thead>
@@ -672,7 +672,7 @@
                     <th><?= $dado['nomeSetor'] . " - " . $dado['nome'] ?></th>
                     <th><?= dataBR($dado['quando']) ?></th>
                     <th><?= $dado['nomeOnde'] ?></th>
-                    <th><?= $dado['nomeStatus'] ?></th>
+                    <th><span class='label label-<?php if ($dado['status'] == 2) {echo 'warning';} else {echo 'success';} ?>'><?= $dado['nomeStatus'] ?></span></th>
                     <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])
                            || $dado['quem'] == $this->userdata['id']) { ?>
                         <th>
@@ -688,7 +688,7 @@
                                     <?php if ($this->check_permissions('sacp', 'finalizar', $this->userdata['user_permissions'])
                                     || $dado['quem'] == $this->userdata['id']) { ?>
                                         <li>
-                                            <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
+                                            <a href="<?= HOME_URI ?>/sacp/finalizarPlano/<?= $dado['id_sacp'] . "/" . $dado['id_tipo_plano'] . "/" . $dado['id'] . "/" . $dado['quem'] ?>"><i class="fa fa-check"></i> Finalizar</a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
@@ -713,10 +713,10 @@
     <hr>
 
     <div class="well" >                               
-    <h3> &nbsp; Método
+    <h3>Método
         <?php if ($this->userdata['tipo_usuario'] != 3) { ?>
             <a href="<?= HOME_URI ?>/sacp/inserirPlano/<?= $parametros[0] ?>/2">
-                <button style=" float: left; margin-top: -4px;" type="button" class="btn btn-primary">
+                <button style=" float: left; margin-top: -4px; margin-right: 10px;" type="button" class="btn btn-primary">
                     +
                 </button>
             </a>
@@ -731,7 +731,7 @@
                 <th>Quem</th>
                 <th>Quando</th>
                 <th>Onde</th>
-                <th>Status</th>
+                <th style="width:1%;">Status</th>
                 <th class="no-export" style="width:1%;"></th>
             </tr>
         </thead>
@@ -744,7 +744,7 @@
                     <th><?= $dado['nomeSetor'] . " - " . $dado['nome'] ?></th>
                     <th><?= dataBR($dado['quando']) ?></th>
                     <th><?= $dado['nomeOnde'] ?></th>
-                    <th><?= $dado['nomeStatus'] ?></th>
+                    <th><span class='label label-<?php if ($dado['status'] == 2) {echo 'warning';} else {echo 'success';} ?>'><?= $dado['nomeStatus'] ?></span></th>
                     <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])
                                            || $dado['quem'] == $this->userdata['id']) { ?>
                         <th>
@@ -760,7 +760,7 @@
                                     <?php if ($this->check_permissions('sacp', 'finalizar', $this->userdata['user_permissions'])
                                            || $dado['quem'] == $this->userdata['id']) { ?>
                                         <li>
-                                            <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
+                                            <a href="<?= HOME_URI ?>/sacp/finalizarPlano/<?= $dado['id_sacp'] . "/" . $dado['id_tipo_plano'] . "/" . $dado['id'] . "/" . $dado['quem'] ?>"><i class="fa fa-check"></i> Finalizar</a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
@@ -783,10 +783,10 @@
 </div>
     <hr>
 <div class="well" >
-    <h3> &nbsp; Medida
+    <h3>Medida
         <?php if ($this->userdata['tipo_usuario'] != 3) { ?>
             <a href="<?= HOME_URI ?>/sacp/inserirPlano/<?= $parametros[0] ?>/3">
-                <button style=" float: left; margin-top: -4px;" type="button" class="btn btn-primary">
+                <button style=" float: left; margin-top: -4px; margin-right: 10px;" type="button" class="btn btn-primary">
                     +
                 </button>
             </a>
@@ -801,7 +801,7 @@
                 <th>Quem</th>
                 <th>Quando</th>
                 <th>Onde</th>
-                <th>Status</th>
+                <th style="width:1%;">Status</th>
                 <th class="no-export" style="width:1%;"></th>
             </tr>
         </thead>
@@ -814,7 +814,7 @@
                     <th><?= $dado['nomeSetor'] . " - " . $dado['nome'] ?></th>
                     <th><?= dataBR($dado['quando']) ?></th>
                     <th><?= $dado['nomeOnde'] ?></th>
-                    <th><?= $dado['nomeStatus'] ?></th>
+                    <th><span class='label label-<?php if ($dado['status'] == 2) {echo 'warning';} else {echo 'success';} ?>'><?= $dado['nomeStatus'] ?></span></th>
                     <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])
                                            || $dado['quem'] == $this->userdata['id']) { ?>
                         <th>
@@ -830,7 +830,7 @@
                                     <?php if ($this->check_permissions('sacp', 'finalizar', $this->userdata['user_permissions'])
                                     || $dado['quem'] == $this->userdata['id']) { ?>
                                         <li>
-                                            <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
+                                            <a href="<?= HOME_URI ?>/sacp/finalizarPlano/<?= $dado['id_sacp'] . "/" . $dado['id_tipo_plano'] . "/" . $dado['id'] . "/" . $dado['quem'] ?>"><i class="fa fa-check"></i> Finalizar</a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
@@ -853,10 +853,10 @@
 </div>
     <hr>
 <div class="well" >
-    <h3> &nbsp; Meio Ambiente
+    <h3>Meio Ambiente
         <?php if ($this->userdata['tipo_usuario'] != 3) { ?>
             <a href="<?= HOME_URI ?>/sacp/inserirPlano/<?= $parametros[0] ?>/4">
-                <button style=" float: left; margin-top: -4px;" type="button" class="btn btn-primary">
+                <button style=" float: left; margin-top: -4px; margin-right: 10px;" type="button" class="btn btn-primary">
                     +
                 </button>
             </a>
@@ -871,7 +871,7 @@
                 <th>Quem</th>
                 <th>Quando</th>
                 <th>Onde</th>
-                <th>Status</th>
+                <th style="width:1%;">Status</th>
                 <th class="no-export" style="width:1%;"></th>
             </tr>
         </thead>
@@ -884,7 +884,7 @@
                     <th><?= $dado['nomeSetor'] . " - " . $dado['nome'] ?></th>
                     <th><?= dataBR($dado['quando']) ?></th>
                     <th><?= $dado['nomeOnde'] ?></th>
-                    <th><?= $dado['nomeStatus'] ?></th>
+                    <th><span class='label label-<?php if ($dado['status'] == 2) {echo 'warning';} else {echo 'success';} ?>'><?= $dado['nomeStatus'] ?></span></th>
                     <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])
                                            || $dado['quem'] == $this->userdata['id']) { ?>
                         <th>
@@ -900,7 +900,7 @@
                                     <?php if ($this->check_permissions('sacp', 'finalizar', $this->userdata['user_permissions'])
                                     || $dado['quem'] == $this->userdata['id']) { ?>
                                         <li>
-                                            <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
+                                            <a href="<?= HOME_URI ?>/sacp/finalizarPlano/<?= $dado['id_sacp'] . "/" . $dado['id_tipo_plano'] . "/" . $dado['id'] . "/" . $dado['quem'] ?>"><i class="fa fa-check"></i> Finalizar</a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
@@ -923,10 +923,10 @@
 </div>
     <hr>
 <div class="well" >
-    <h3> &nbsp; Materiais
+    <h3>Materiais
         <?php if ($this->userdata['tipo_usuario'] != 3) { ?>
             <a href="<?= HOME_URI ?>/sacp/inserirPlano/<?= $parametros[0] ?>/5">
-                <button style=" float: left; margin-top: -4px;" type="button" class="btn btn-primary">
+                <button style=" float: left; margin-top: -4px; margin-right: 10px;" type="button" class="btn btn-primary">
                     +
                 </button>
             </a>
@@ -941,7 +941,7 @@
                 <th>Quem</th>
                 <th>Quando</th>
                 <th>Onde</th>
-                <th>Status</th>
+                <th style="width:1%;">Status</th>
                 <th class="no-export" style="width:1%;"></th>
             </tr>
         </thead>
@@ -954,7 +954,7 @@
                     <th><?= $dado['nomeSetor'] . " - " . $dado['nome'] ?></th>
                     <th><?= dataBR($dado['quando']) ?></th>
                     <th><?= $dado['nomeOnde'] ?></th>
-                    <th><?= $dado['nomeStatus'] ?></th>
+                    <th><span class='label label-<?php if ($dado['status'] == 2) {echo 'warning';} else {echo 'success';} ?>'><?= $dado['nomeStatus'] ?></span></th>
                     <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])
                                            || $dado['quem'] == $this->userdata['id']) { ?>
                         <th>
@@ -970,7 +970,7 @@
                                     <?php if ($this->check_permissions('sacp', 'finalizar', $this->userdata['user_permissions'])
                                     || $dado['quem'] == $this->userdata['id']) { ?>
                                         <li>
-                                            <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
+                                            <a href="<?= HOME_URI ?>/sacp/finalizarPlano/<?= $dado['id_sacp'] . "/" . $dado['id_tipo_plano'] . "/" . $dado['id'] . "/" . $dado['quem'] ?>"><i class="fa fa-check"></i> Finalizar</a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
@@ -993,10 +993,10 @@
 </div>
     <hr>
 <div class="well" >
-    <h3> &nbsp; Máquina
+    <h3>Máquina
         <?php if ($this->userdata['tipo_usuario'] != 3) { ?>
             <a href="<?= HOME_URI ?>/sacp/inserirPlano/<?= $parametros[0] ?>/6">
-                <button style=" float: left; margin-top: -4px;" type="button" class="btn btn-primary">
+                <button style=" float: left; margin-top: -4px; margin-right: 10px;" type="button" class="btn btn-primary">
                 +
                 </button>
             </a>
@@ -1011,7 +1011,7 @@
                 <th>Quem</th>
                 <th>Quando</th>
                 <th>Onde</th>
-                <th>Status</th>
+                <th style="width:1%;">Status</th>
                 <th class="no-export" style="width:1%;"></th>
             </tr>
         </thead>
@@ -1024,7 +1024,7 @@
                     <th><?= $dado['nomeSetor'] . " - " . $dado['nome'] ?></th>
                     <th><?= dataBR($dado['quando']) ?></th>
                     <th><?= $dado['nomeOnde'] ?></th>
-                    <th><?= $dado['nomeStatus'] ?></th>
+                    <th><span class='label label-<?php if ($dado['status'] == 2) {echo 'warning';} else {echo 'success';} ?>'><?= $dado['nomeStatus'] ?></span></th>
                     <?php if ($this->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])
                                            || $dado['quem'] == $this->userdata['id']) { ?>
                         <th>
@@ -1040,7 +1040,7 @@
                                     <?php if ($this->check_permissions('sacp', 'finalizar', $this->userdata['user_permissions'])
                                     || $dado['quem'] == $this->userdata['id']) { ?>
                                         <li>
-                                            <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
+                                            <a href="<?= HOME_URI ?>/sacp/finalizarPlano/<?= $dado['id_sacp'] . "/" . $dado['id_tipo_plano'] . "/" . $dado['id'] . "/" . $dado['quem'] ?>"><i class="fa fa-check"></i> Finalizar</a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($this->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
@@ -1071,16 +1071,17 @@
 </div>
 
     
-
-  <div class="panel-footer">
-    <button type="submit" class="btn btn-primary">
-      <?php if ($request == 'editar') {
-          echo "Atualizar SACP";
-      } else {
-        echo "Gerar SACP";
-      } ?> 
-    </button>
-  </div>
+<?php if ($this->userdata['tipo_usuario'] != 3) { ?>
+    <div class="panel-footer">
+        <button type="submit" class="btn btn-primary">
+        <?php if ($request == 'editar') {
+            echo "Atualizar SACP";
+        } else {
+            echo "Gerar SACP";
+        } ?> 
+        </button>
+    </div>
+<?php } ?>
 
 </form> <!--Fim formulário principal -->
 

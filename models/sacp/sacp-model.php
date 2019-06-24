@@ -572,10 +572,13 @@ class SacpModel extends MainModel
 		
 		/* Verifica a consulta */
 		if ($query) {
-			$query = $this->db->delete('sacp_participantes', 'id_sacp', $id[0]);
 
-			foreach ($participantes as $key => $participante) {
-				$query = $this->db->insert('sacp_participantes', ['id_sacp' => $id[0], 'id_participante' => $participante]);
+			if (!empty($participantes)) {
+				$query = $this->db->delete('sacp_participantes', 'id_sacp', $id[0]);
+
+				foreach ($participantes as $key => $participante) {
+					$query = $this->db->insert('sacp_participantes', ['id_sacp' => $id[0], 'id_participante' => $participante]);
+				}
 			}
 
 			// Prepara a variavel _POST para o insert na espinha de peixe
@@ -703,12 +706,8 @@ class SacpModel extends MainModel
 		$dataFinalizada = new DateTime('now');
 		$dataFinalizada = $dataFinalizada->format('Y-m-d H:i:s');
 
-		// Salva na $_POST e deleta a variavel desnecessária
-		$_POST['data_finalizada'] = $dataFinalizada;
-		unset($dataFinalizada);
-
 		/* Atualiza os dados */
-		$query = $this->db->update('sacp', 'id', $id[0], $_POST);
+		$query = $this->db->update('sacp', 'id', $id, array('status' => 3, 'data_finalizada' => $dataFinalizada));
 		
 		/* Verifica a consulta */
 		if ($query) {
@@ -932,6 +931,25 @@ class SacpModel extends MainModel
 		// Redireciona para a página de administração de notícias
 		echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
 		echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "'</script>";
+	}
+
+
+	public function finalizarPlano($id)
+	{
+		/* Verifica se algo foi postado e se está vindo do form que tem o campo
+		finalizarPlano. */
+		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['finalizarPlano'])) {
+			return;
+		}
+		
+		unset($_POST['finalizarPlano']);
+
+		$query = $this->db->update('planos_acao', 'id', $id, array('status' => 3));
+
+		if ($query) {
+			return 'success';
+		}
+		return 'Falha ao inserir no banco de dados';
 	}
 
 } // model
