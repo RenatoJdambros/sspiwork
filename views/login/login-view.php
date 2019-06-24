@@ -24,7 +24,7 @@
 
     </head>
 
-    <body style="background-color: gray;">
+    <body style="background-color: rgb(108,117,125);">
 
     <div class="container-fluid " style="max-width: 360px; max-height: 300px; width: auto;">    
         

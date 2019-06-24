@@ -236,10 +236,15 @@ class RncModel extends MainModel
 		/* Remove o campo editarRNC para não gerar problema com o PDO */
 		unset($_POST['editarRNC']);
 
-		// Checa se o campo numero_op está vazio, caso esteja, seta pra null
-		if (empty($_POST['numero_op'])) {
-			$_POST['numero_op'] = null;
-		}
+        // Checa se o campo numero_op está vazio, caso esteja, seta pra null
+        if (isset($_POST['numero_op']) 
+            && empty($_POST['numero_op'])) {
+                $_POST['numero_op'] = null;
+        }
+
+		// if (empty($_POST['numero_op'])) {
+		// 	$_POST['numero_op'] = null;
+		// }
 
 		/* Atualiza os dados */
 		$query = $this->db->update('rnc', 'id', $id, $_POST);

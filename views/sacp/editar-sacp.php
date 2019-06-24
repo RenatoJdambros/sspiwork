@@ -640,7 +640,7 @@
                 } ?> 
             </button>
             <?php if ($request == 'editar') { ?>
-                OBS: Salvar antes de inserir planos de ação
+               &nbsp; OBS: Salvar antes de inserir planos de ação
             <?php } ?> 
         </div>
     <?php } ?>
@@ -659,10 +659,10 @@
         <div class="panel-heading">
             <h3 style="margin-top: 4px;" align="center">PLANOS DE AÇÃO</h3>
     </div>
-    <div style="position: absolut; margin-top: -12px;" class="panel-body backgroundS"> 
+    <div style="position: absolut; margin-top: -12px; background: rgb(108,117,125)"class="panel-body"> 
   <div class="panel-body">
   <div class="well" >
-  <h3 style="background-color: #f2f2f4 ">Mão de Obra
+  <h3 >Mão de Obra
         <?php if ($this->userdata['tipo_usuario'] != 3) { ?>
             <a href="<?= HOME_URI ?>/sacp/inserirPlano/<?= $parametros[0] ?>/1">
                 <button style=" float: left; margin-top: -4px; margin-right: 10px;" type="button" class="btn btn-primary">

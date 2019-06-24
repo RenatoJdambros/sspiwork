@@ -686,7 +686,7 @@ class SacpModel extends MainModel
 		// Executa a consulta
 		$query = $this->db->delete('sacp', 'id', $user_id);
 		
-		// Redireciona para a página de administração de notícias
+		// Redireciona para a página Painel de visualização
 		echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/sacp/">';
 		echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/sacp/";</script>';
 	} // delete
@@ -958,15 +958,28 @@ class SacpModel extends MainModel
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['finalizarPlano'])) {
 			return;
 		}
+
+		// Checa se o parametro reservado para o id_sacp é numérico
+		if (!is_numeric(chk_array($this->parametros, 0))) {
+			return;
+		}
+
+		// Seta o id da sacp
+		$idSacp = (int)chk_array($this->parametros, 0);
 		
 		unset($_POST['finalizarPlano']);
 
 		$query = $this->db->update('planos_acao', 'id', $id, array('status' => 3));
 
+		// Redireciona para a página Painel de visualização
+		echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
+		echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "'</script>";
+
 		if ($query) {
 			return 'success';
+
 		}
-		return 'Falha ao inserir no banco de dados';
+		return 'Falha ao Finalizar Plano';
 	}
 
 } // model

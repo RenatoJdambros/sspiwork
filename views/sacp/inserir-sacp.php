@@ -135,28 +135,24 @@
     <label for="brainstorming">Brainstorming / Alterações no SGI</label>
     <textarea class="form-control rounded-0" id="brainstorming" rows="1" name="brainstorming" required></textarea>
     <br>
- 
-
   <div id="accordion" style=" ">
-                  <button style="background-color: #80BDFF;"  class="btn btn-basic" data-toggle="collapse" href="#collapseOne">
-                                 Gerar diagrama de causa e efeito
-                                <small id="" class="form-text">
-                                    &nbsp;&nbsp;|&nbsp;&nbsp;6M
-                                </small>
-                            </button>
-                            <p align="right" style="position: relative; max-height: 2px; 
-                             background:#80BDFF; margin-left: 0px; margin-bottom: -4px;">&nbsp;</p>
+    <button style="background-color: #80BDFF;"  class="btn btn-basic" data-toggle="collapse" href="#collapseOne">
+      Gerar diagrama de causa e efeito
+    <small id="" class="form-text">
+        &nbsp;&nbsp;|&nbsp;&nbsp;6M
+    </small>
+              </button>
                            
 
 
     <!--Corpo esp-peixe-->
-    <div id="collapseOne" style="background-color: #80BDFF;" class="collapse backgroundS" data-parent="#accordion">
-                            <div align="center"  class="form-group row">
-                                <div class="form-group col-xs-12">
-                                    <br>
+    <div id="collapseOne" style="background-color: #80BDFF; margin-top: -2px;" class="collapse backgroundS" data-parent="#accordion">
+        <div align="center"  class="form-group row">
+            <div class="form-group col-xs-12">
+                <br>
     <!--Div esp-peixe-->
     <div style="width: 1151px; height: 438px;" class="row-fuid esp-peixe">
-                       <p style="font-size: 10px;">&nbsp;&nbsp;</p> 
+        <p style="font-size: 10px;">&nbsp;&nbsp;</p> 
 
                         <!--L1-->
                         <div style="z-index:8; position:relative" class="row">
