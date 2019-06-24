@@ -874,6 +874,8 @@ class SacpModel extends MainModel
 		$_POST['id_sacp'] = $dados[0];
 		$_POST['id_tipo_plano'] = $dados[1];
 
+		// info($_POST, 'die', 'name');
+
 		$query = $this->db->insert('planos_acao', $_POST);
 
 		if ($query) {
