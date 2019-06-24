@@ -137,8 +137,15 @@ class RncController extends MainController
 	
 		$modelo = $this->load_model('rnc/rnc-model');
 		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
+		
+		error_reporting(0);
+		$retorno = $modelo->excluirRNC();
 
-		$modelo->form_confirma = $modelo->excluirRNC();
+		if ($retorno == 'success') {
+			$this->modal_notification = MainModel::openNotification('Sucesso', 'SACP atualizada com sucesso.', 'success');
+		} elseif (!empty($retorno)) {
+			$this->modal_notification = MainModel::openNotification('Erro', $retorno, 'error');
+		}
 		
 		require ABSPATH . '/views/_includes/header.php';
 		//require ABSPATH . '/views/rnc/rnc-view.php';

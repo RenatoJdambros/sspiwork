@@ -279,11 +279,13 @@ class RncModel extends MainModel
 		$user_id = (int)chk_array($this->parametros, 0);
 
 		// Executa a consulta
-		$query = $this->db->delete('rnc', 'id', $user_id);
-		
-		// Redireciona para a página de administração de notícias
-		echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/rnc/">';
-		echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/rnc/";</script>';
+        $query = $this->db->delete('rnc', 'id', $user_id);
+        
+        if ($query) {
+            echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/rnc/">';
+		    echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/rnc/";</script>';
+        }
+		return 'Falha ao excluir a RNC';
 	} // delete
 
 
