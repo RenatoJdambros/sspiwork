@@ -21,8 +21,6 @@ class UsuariosController extends MainController
 		$modelo = $this->load_model('usuarios/usuarios-model');
 		
 		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
-		//$this->lista = $modelo->listar_usuarios(); 
-		//$this->tipos_usuarios = $modelo->consultTipoUsuario();
 		
 		require ABSPATH . '/views/_includes/header.php';
 		require ABSPATH . '/views/usuarios/usuarios.php';
@@ -60,8 +58,6 @@ class UsuariosController extends MainController
 		$tiposUsuario = $modelo->consultaTiposUsuario();
 		$setores = $modelo->listarSetores();
 		$retorno = $modelo->inserirUsuario();
-
-		//echo $modelo->json(array('home' => 'visualizar'));
 		
 		if ($retorno == 'success') {
 			$this->modal_notification = MainModel::openNotification('Sucesso', 'Usuário cadastrado com sucesso.', 'success');

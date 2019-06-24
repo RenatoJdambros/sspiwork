@@ -3,11 +3,12 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if ($this->userdata['tipo_usuario'] == 3
-&& ($this->userdata['id'] != $userOrigem
- || $this->userdata['id'] != $userDestino)) {
-    require_once ABSPATH . '/includes/403.php';
-    return;
+if ($this->userdata['tipo_usuario'] == 3) {
+    if ($this->userdata['id'] != $userOrigem['id']
+     && $this->userdata['id'] != $userDestino['id']) {
+        require_once ABSPATH . '/includes/403.php';
+        return;
+    }
 }
 ?>
 

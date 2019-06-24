@@ -128,9 +128,6 @@
                 </div>
                 </div>
                 <div class="panel-footer">
-                    <button type="button" class="btn btn-primary" onclick="window.location='<?=HOME_URI?>/usuarios/'">
-                        Cancelar
-                    </button>
                     <button type="submit" class="btn btn-success">
                         Alterar dados
                     </button>

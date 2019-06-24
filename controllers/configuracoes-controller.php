@@ -49,7 +49,7 @@
 // 		$modelo = $this->load_model('configuracoes/configuracoes-model');
 // 		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
 		
-// 		// Carrega o método para editar um usuario
+// 		// Carrega o método para editar a configuração
 // 		$this->update=$modelo->update_configuracoes($id);
 // 		$this->config=$modelo->consult_configuracoes($id);
 		

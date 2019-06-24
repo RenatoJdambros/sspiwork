@@ -1,34 +1,6 @@
 <?php 
-/**
- * Modelo para gerenciar notícias
- *
- * @package TutsupMVC
- * @since 0.1
- */
 class UsuariosModel extends MainModel
 {
-	/**
-	 * $posts_per_page
-	 *
-	 * Receberá o número de posts por página para configurar a listagem de 
-	 * notícias. Também utilizada na paginação. 
-	 *
-	 * @access public
-	 */
-	public $posts_por_pagina = 5;
-	
-	public $modal_message = array();
-	
-	/**
-	 * Construtor para essa classe
-	 *
-	 * Configura o DB, o controlador, os parâmetros e dados do usuário.
-	 *
-	 * @since 0.1
-	 * @access public
-	 * @param object $db Objeto da nossa conexão PDO
-	 * @param object $controller Objeto do controlador
-	 */
 	public function __construct($db = false, $controller = null) 
 	{
 		// Configura o DB (PDO)
@@ -116,27 +88,13 @@ class UsuariosModel extends MainModel
 	} // end formatar colunas
 
 
-
 	public function inserirUsuario() 
 	{
 		/* 
 		Verifica se algo foi postado e se está vindo do form que tem o campo
-		insere_noticia.
+		inserirUsuario.
 		*/
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['inserirUsuario'])) {
-			return;
-		}
-		
-		/*
-		Para evitar conflitos apenas inserimos valores se o parâmetro edit
-		não estiver configurado.
-		*/
-		if (chk_array($this->parametros, 0) == 'edit') {
-			return;
-		}
-		
-		// Só pra garantir que não estamos atualizando nada
-		if (is_numeric(chk_array($this->parametros, 1))) {
 			return;
 		}
 
@@ -150,7 +108,7 @@ class UsuariosModel extends MainModel
 		// Configura a senha
 		$_POST['senha'] = $this->controller->phpass->HashPassword($_POST['senha']);
 
-		// Remove o campo insere_usuario para não gerar problema com o PDO
+		// Remove o campo inserirUsuario para não gerar problema com o PDO
 		unset($_POST['inserirUsuario']);
 		
 		$query = $this->db->insert('usuarios', $_POST);
@@ -162,7 +120,7 @@ class UsuariosModel extends MainModel
 		
 		return 'Erro ao inserir usuário no banco de dados';
 
-	} // insere_noticia
+	} // inserirUsuario
 	
 	
 	public function editarUsuario($id) 
@@ -187,7 +145,7 @@ class UsuariosModel extends MainModel
 			}
 		}
 
-		// Remove o campo insere_usuario para não gerar problema com o PDO
+		// Remove o campo editarUsuario para não gerar problema com o PDO
 		unset($_POST['editarUsuario']);
 
 		// Se a senha tiver sido preenchida, gera uma nova hash, caso não, 
@@ -227,7 +185,7 @@ class UsuariosModel extends MainModel
 		// Executa a consulta
 		$query = $this->db->delete('usuarios', 'id', $user_id);
 		
-		// Redireciona para a página de administração de notícias
+		// Redireciona para a página de usuários
 		echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/usuarios/">';
 		echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/usuarios/";</script>';
 		

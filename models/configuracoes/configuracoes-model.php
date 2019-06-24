@@ -1,6 +1,6 @@
 <?php 
 /**
- * Modelo para gerenciar produtos
+ * Modelo para gerenciar configurações
  *
  * @package TutsupMVC
  * @since 0.1
@@ -32,11 +32,11 @@ class ConfiguracoesModel extends MainModel
 	
 	public function update_configuracoes($user_id) 
 	{
-		if ('POST' == $_SERVER['REQUEST_METHOD'] && ! empty($_POST['insere_configuracoes'])) {
+		if ('POST' == $_SERVER['REQUEST_METHOD'] && ! empty($_POST['inserirConfiguracoes'])) {
 			
-			unset($_POST['insere_configuracoes']);
+			unset($_POST['inserirConfiguracoes']);
 			
-			$query = $this->db->update('ut_configuracoes', 'id',$user_id[0],$_POST);
+			$query = $this->db->update('configuracoes', 'id',$user_id[0],$_POST);
 			
 			if ($query) {
 				return 'success';
@@ -48,13 +48,13 @@ class ConfiguracoesModel extends MainModel
 	
 	public function consult_configuracoes($user_id)
 	{
-		$query = $this->db->query('SELECT * FROM ut_configuracoes WHERE id = ? LIMIT 1', $user_id);
-		$fetch_data = $query->fetch();
+		$query = $this->db->query('SELECT * FROM configuracoes WHERE id = ? LIMIT 1', $user_id);
+		$resultado = $query->fetch();
 
-		if (empty($fetch_data)) {
+		if (empty($resultado)) {
 			return;
 		}
-	 	return $fetch_data;
+	 	return $resultado;
 	}
 	
 } // 

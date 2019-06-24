@@ -22,7 +22,7 @@ class RncModel extends MainModel
     {
 		if ($this->userdata['tipo_usuario'] == 3) {
 			$sql = 'SELECT * FROM rnc';
-			$where = $this->userdata['id'] . " IN (id_origem, id_destino)";
+			$where = $this->userdata['id'] . " IN (id_origem, id_destino) AND status != 3";
 
 			$columns = $this->formatar_colunas();
 			$page = DataTable::complex($_POST, $this->db->pdo, 'rnc', 'id', $columns, $sql, null, $where);
@@ -193,19 +193,8 @@ class RncModel extends MainModel
     public function inserirRNC() 
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
-		insere_noticia. */
+		inserirRNC. */
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['inserirRNC'])) {
-			return;
-		}
-		
-		/* Para evitar conflitos apenas inserimos valores se o parâmetro edit
-		não estiver configurado. */
-		if (chk_array($this->parametros, 0) == 'edit') {
-			return;
-		}
-		
-		/* Só pra garantir que não estamos atualizando nada */
-		if (is_numeric(chk_array($this->parametros, 1))) {
 			return;
 		}
 
@@ -239,12 +228,12 @@ class RncModel extends MainModel
 	public function editarRNC($id) 
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
-		editar_usuario. */
+		editarRNC. */
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['editarRNC'])) {
 			return;
 		}
 
-		/* Remove o campo insere_usuario para não gerar problema com o PDO */
+		/* Remove o campo editarRNC para não gerar problema com o PDO */
 		unset($_POST['editarRNC']);
 
 		// Checa se o campo numero_op está vazio, caso esteja, seta pra null
@@ -275,7 +264,7 @@ class RncModel extends MainModel
 			return;	
 		}
 
-		// Configura o ID do Usuário
+		// Configura o ID RNC
 		$user_id = (int)chk_array($this->parametros, 0);
 
 		// Executa a consulta
@@ -292,12 +281,12 @@ class RncModel extends MainModel
 	public function finalizarRNC($id) 
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
-		editar_usuario. */
+		finalizarRNC. */
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['finalizarRNC'])) {
 			return;
 		}
 
-		/* Remove o campo insere_usuario para não gerar problema com o PDO */
+		/* Remove o campo finalizarRNC para não gerar problema com o PDO */
 		unset($_POST['finalizarRNC']);
 
 		// Cria a data atual para ser gravada no banco de dados

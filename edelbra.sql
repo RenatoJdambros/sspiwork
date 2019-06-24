@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 24-Jun-2019 às 03:38
+-- Generation Time: 24-Jun-2019 às 05:56
 -- Versão do servidor: 10.1.37-MariaDB
 -- versão do PHP: 7.2.12
 
@@ -43,7 +43,8 @@ INSERT INTO `espinha_peixe` (`id`, `id_sacp`, `id_tipo_plano_acao`, `descricao`)
 (65, 55, 7, '2'),
 (66, 58, 7, ''),
 (80, 36, 7, ''),
-(83, 37, 7, '');
+(87, 50, 7, ''),
+(90, 37, 7, '');
 
 -- --------------------------------------------------------
 
@@ -68,11 +69,11 @@ CREATE TABLE `planos_acao` (
 --
 
 INSERT INTO `planos_acao` (`id`, `id_sacp`, `id_tipo_plano`, `o_que`, `como`, `quem`, `quando`, `onde`, `status`) VALUES
-(5, 37, 5, 'fazer sei la oqeaseas', 'seilaeaseaseas', 20, '2020-08-01 00:00:00', 6, 1),
-(6, 37, 1, 'fazer sei la oq', 'matar um pombo na base da marretada', 24, '2050-08-01 00:00:00', 6, 3),
+(5, 37, 5, 'fazer sei la oqeaseas', 'seilaeaseaseas', 21, '2020-08-01 00:00:00', 6, 2),
+(6, 37, 1, 'fazer sei la oq', 'matar um pombo na base da marretada', 21, '2050-08-01 00:00:00', 6, 3),
 (9, 38, 5, 'materiais1', 'materiais1', 23, '0101-01-01 00:00:00', 3, 1),
 (10, 38, 5, 'materiais2', 'materiais2', 23, '0001-01-01 00:00:00', 3, 1),
-(13, 37, 5, 'easeas', 'easeas', 25, '2019-10-01 00:00:00', 6, 2),
+(13, 37, 5, 'easeas', 'easeas', 21, '2019-10-01 00:00:00', 6, 3),
 (14, 37, 1, 'ease', 'easea', 23, '2019-06-24 00:00:00', 6, 2);
 
 -- --------------------------------------------------------
@@ -106,7 +107,9 @@ CREATE TABLE `rnc` (
 INSERT INTO `rnc` (`id`, `id_origem`, `id_destino`, `descricao`, `justificativa`, `correcao`, `status`, `data_gerada`, `data_finalizada`, `numero_op`, `sacp`, `cliente_nome`, `cliente_obra`, `cliente_telefone`, `cliente_email`) VALUES
 (19, 19, 21, 'de user A para user C', NULL, NULL, 3, '2019-06-04 12:08:21', '2019-06-19 20:16:21', NULL, NULL, '', '', '', ''),
 (21, 21, 19, 'de user C para user A', NULL, NULL, 3, '2019-06-04 12:09:49', '2019-06-06 12:28:00', 3, NULL, '', '', '', ''),
-(23, 22, 23, 'dadas', NULL, NULL, 1, '2019-06-19 20:05:07', NULL, NULL, NULL, '', '', '', '');
+(23, 22, 23, 'dadas', NULL, NULL, 1, '2019-06-19 20:05:07', NULL, NULL, NULL, '', '', '', ''),
+(24, 19, 21, 'de user A para user C', NULL, NULL, 3, '2019-06-04 12:08:21', '2019-06-23 23:04:47', NULL, NULL, '', '', '', ''),
+(25, 19, 21, 'de user A para user C', NULL, NULL, 1, '2019-06-04 12:08:21', '2019-06-19 20:16:21', NULL, NULL, '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -136,8 +139,8 @@ CREATE TABLE `sacp` (
 --
 
 INSERT INTO `sacp` (`id`, `setor_origem`, `setor_destino`, `status`, `origem`, `descricao`, `proposito`, `consequencia`, `brainstorming`, `data_gerada`, `data_prazo`, `data_finalizada`, `numero_op`, `id_rnc`) VALUES
-(36, 2, 3, 1, 'arroba teu cu', 'a', 'a', 'a', 'a', '2019-06-19 20:26:54', '0000-00-00 00:00:00', NULL, 90, NULL),
-(37, 2, 6, 3, 'relatorio', 'a', 'a', 'a', 'a', '2019-06-22 18:52:48', '0000-00-00 00:00:00', '2019-06-23 21:38:42', 123, NULL),
+(36, 2, 3, 3, 'arroba teu cu', 'a', 'a', 'a', 'a', '2019-06-19 20:26:54', '0000-00-00 00:00:00', '2019-06-23 23:24:17', 90, NULL),
+(37, 2, 6, 2, 'relatorio', 'a', 'a', 'a', 'a', '2019-06-22 18:52:48', '0000-00-00 00:00:00', '2019-06-23 22:48:23', 123, NULL),
 (38, 3, 3, 1, 'recebida', 'easeas', 'easeas', 'easeas', 'easeas', '2019-06-22 19:47:59', '0000-00-00 00:00:00', NULL, 123, NULL),
 (39, 7, 2, 1, 'relatorio', 's', 's', 's', 'a', '2019-06-22 20:07:01', '2019-07-22 20:07:01', NULL, NULL, NULL),
 (40, 3, 6, 1, 'relatorio', 'dadas', 'eaeas', 'easeas', 'easeas', '2019-06-22 20:41:31', '2019-07-22 20:41:31', NULL, 123, 23),
@@ -197,8 +200,6 @@ INSERT INTO `sacp_participantes` (`id`, `id_sacp`, `id_participante`) VALUES
 (74, 48, 21),
 (75, 49, 23),
 (76, 49, 21),
-(77, 50, 23),
-(78, 50, 21),
 (79, 51, 23),
 (80, 51, 21),
 (81, 52, 23),
@@ -218,10 +219,12 @@ INSERT INTO `sacp_participantes` (`id`, `id_sacp`, `id_participante`) VALUES
 (145, 36, 23),
 (146, 36, 25),
 (147, 36, 21),
-(156, 37, 23),
-(157, 37, 25),
-(158, 37, 20),
-(159, 37, 24);
+(172, 50, 23),
+(181, 37, 23),
+(182, 37, 25),
+(183, 37, 20),
+(184, 37, 21),
+(185, 37, 24);
 
 -- --------------------------------------------------------
 
@@ -337,8 +340,8 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `nome`, `setor`, `email`, `usuario`, `senha`, `tipo_usuario`, `status`, `user_session_id`) VALUES
 (19, 'usuário A', 2, 'usuarioA@edelbra.com.br', 'usuarioA', '$2a$08$dMoCrtIiDZl4KWU1H3PI1e2ccGF9j2PFYoTTds5nPpN8XaKsi1gka', 3, 'ativo', 'onse2ll8akostch6rvh1pmupv7'),
-(20, 'usuário B', 6, 'usuarioB@edelbra.com.br', 'usuarioB', '$2a$08$aJFwqAflqJahcDAObDPis.pxwH/dUIr73FUh29vX6GPH4o9Hseqf2', 3, 'ativo', 'oove7fpin9opog4vogvbpk7oe9'),
-(21, 'usuário C', 5, 'usuarioC@edelbra.com.br', 'usuarioC', '$2a$08$BtEveze.8u3z7fCzXs13Gu8TpCMGDUji26i02xzxsW3MnV31h.UEy', 3, 'ativo', '7nsqcpgfr12ih9tens9qakg8ei'),
+(20, 'usuário B', 6, 'usuarioB@edelbra.com.br', 'usuarioB', '$2a$08$aJFwqAflqJahcDAObDPis.pxwH/dUIr73FUh29vX6GPH4o9Hseqf2', 3, 'ativo', 'cru55ft6murvd672j68vv85101'),
+(21, 'usuário C', 5, 'usuarioC@edelbra.com.br', 'usuarioC', '$2a$08$BtEveze.8u3z7fCzXs13Gu8TpCMGDUji26i02xzxsW3MnV31h.UEy', 3, 'ativo', 'duapj69lscauiakh6k5r0spkp5'),
 (22, 'Administrador', 2, 'administrador@edelbra.com.br', 'admin', '$2a$08$vfXLeWf8sxOPX36Ioo0tX.PQlpSAtegW2MdvngEY88UElveO4GDs2', 1, 'ativo', '54bofl7nmbjhdp3isab93ui5qp'),
 (23, 'Qualidade', 2, 'qualidade@edelbra.combr', 'qualidade', '$2a$08$FFtkqoNn0p.U4R5FJ3nLPOfas66V57LZGi7/wa3XYt4IDknBVPQKC', 2, 'ativo', '23h7p2h9721bl7fc29p51ne29e'),
 (24, 'usuário D', 5, 'usuarioD@edelbra.com.br', 'usuarioD', '$2a$08$kSOs1zk3Ax5O.yr96GWNFOQtmxdBvcm7SF4cHGMwqk4ZVHErf.44q', 3, 'ativo', NULL),
@@ -435,7 +438,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `espinha_peixe`
 --
 ALTER TABLE `espinha_peixe`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT for table `planos_acao`
@@ -447,7 +450,7 @@ ALTER TABLE `planos_acao`
 -- AUTO_INCREMENT for table `rnc`
 --
 ALTER TABLE `rnc`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `sacp`
@@ -459,7 +462,7 @@ ALTER TABLE `sacp`
 -- AUTO_INCREMENT for table `sacp_participantes`
 --
 ALTER TABLE `sacp_participantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=160;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
 
 --
 -- AUTO_INCREMENT for table `setores`

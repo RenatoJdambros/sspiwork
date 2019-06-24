@@ -31,7 +31,7 @@ class SacpModel extends MainModel
 			}
 
 			$sql = 'SELECT * FROM sacp';
-			$where = "id IN ($sacpPresente)";
+			$where = "id IN ($sacpPresente) AND status != 3";
 
 			$columns = $this->formatar_colunas();
 			$page = DataTable::complex($_POST, $this->db->pdo, 'sacp', 'id', $columns, $sql, null, $where);
@@ -408,7 +408,7 @@ class SacpModel extends MainModel
     public function inserirSACP() 
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
-		insere_noticia. */
+		inserirSACP. */
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['inserirSACP'])) {
 			return;
 		}
@@ -541,12 +541,12 @@ class SacpModel extends MainModel
 	public function editarSACP($id) 
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
-		editar_usuario. */
+		editarSACP. */
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['editarSACP'])) {
 			return;
 		}
 
-		/* Remove o campo insere_usuario para não gerar problema com o PDO */
+		/* Remove o campo editarSACP para não gerar problema com o PDO */
 		unset($_POST['editarSACP']);
 
 		// Checa se o campo numero_op está vazio, caso esteja, seta pra null
@@ -566,6 +566,7 @@ class SacpModel extends MainModel
 		$dados['proposito']     = $_POST['proposito'];
 		$dados['consequencia']  = $_POST['consequencia'];
 		$dados['brainstorming'] = $_POST['brainstorming'];
+		$dados['status'] = 2;
 
 		/* query */
 		$query = $this->db->update('sacp', 'id', $id[0], $dados);
@@ -670,7 +671,7 @@ class SacpModel extends MainModel
 	public function excluirSACP() 
 	{
 		// O segundo parâmetro deverá ser um ID numérico
-		if (! is_numeric(chk_array($this->parametros, 0))) {
+		if (!is_numeric(chk_array($this->parametros, 0))) {
 			return;
 		}
 
@@ -679,7 +680,7 @@ class SacpModel extends MainModel
 			return;	
 		}
 
-		// Configura o ID do Usuário
+		// Configura o ID SACP
 		$user_id = (int)chk_array($this->parametros, 0);
 
 		// Executa a consulta
@@ -694,12 +695,26 @@ class SacpModel extends MainModel
 	public function finalizarSACP($id) 
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
-		editar_usuario. */
+		finalizarSACP. */
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['finalizarSACP'])) {
 			return;
 		}
 
-		/* Remove o campo insere_usuario para não gerar problema com o PDO */
+		// Busca os status de todos os planos de ação da SACP
+		$query = $this->db->query('SELECT status FROM planos_acao WHERE id_sacp = ?', array($id));
+		$planos = $query->fetchAll(PDO::FETCH_COLUMN, 0);
+		
+		// Percorre a array retornada do banco de dados, e caso algum plano não estiver como status 3(finalizado)
+		// retorna error
+		if (!empty($planos)) {
+			foreach ($planos as $plano) {
+				if ($plano != 3) {
+					return 'Todos os planos de ação devem estar finalizados';
+				}
+			}
+		}
+
+		/* Remove o campo finalizarSACP para não gerar problema com o PDO */
 		unset($_POST['finalizarSACP']);
 
 		// Cria a data atual para ser gravada no banco de dados
@@ -720,12 +735,12 @@ class SacpModel extends MainModel
 	public function gerarSACPdeRNC($id) 
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
-		insere_noticia. */
+		editarSACP. */
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['editarSACP'])) {
 			return;
 		}
 
-		/* Remove o campo inserirSACP para não gerar problema com o PDO */
+		/* Remove o campo editarSACP para não gerar problema com o PDO */
 		unset($_POST['editarSACP']);
 
 		// Checa se o campo numero_op está vazio, caso esteja, seta pra null
@@ -852,7 +867,7 @@ class SacpModel extends MainModel
 
 	public function consultarplano($id)
 	{
-		$query = $this->db->query('SELECT o_que, como, quem, quando, onde FROM planos_acao WHERE id = ?', array($id));
+		$query = $this->db->query('SELECT o_que, como, quem, quando, onde, status FROM planos_acao WHERE id = ?', array($id));
 		$resultado = $query->fetch(PDO::FETCH_ASSOC);
 
 		$data = new DateTime($resultado['quando']);
@@ -874,8 +889,6 @@ class SacpModel extends MainModel
 		$_POST['id_sacp'] = $dados[0];
 		$_POST['id_tipo_plano'] = $dados[1];
 
-		// info($_POST, 'die', 'name');
-
 		$query = $this->db->insert('planos_acao', $_POST);
 
 		if ($query) {
@@ -894,6 +907,8 @@ class SacpModel extends MainModel
 		}
 		
 		unset($_POST['editarPlano']);
+
+		$_POST['status'] = 2;
 
 		$query = $this->db->update('planos_acao', 'id', $id, $_POST);
 
@@ -930,7 +945,7 @@ class SacpModel extends MainModel
 		// Executa a consulta
 		$query = $this->db->delete('planos_acao', 'id', $idPlano);
 		
-		// Redireciona para a página de administração de notícias
+		// Redireciona para a página de edit
 		echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
 		echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "'</script>";
 	}

@@ -101,6 +101,11 @@ class RncController extends MainController
 			return;
 		}
 
+		if ($this->userdata['tipo_usuario'] == 3 && $rnc['status'] == 3) {
+			require_once ABSPATH . '/includes/finalizada.php';
+			return;
+		}
+
 		$usuarios = $modelo->listarUsuarios();
 		$setorOrigem = $modelo->buscaSetor($userOrigem['setor']);
 		$setorDestino = $modelo->buscaSetor($userDestino['setor']);
@@ -184,6 +189,11 @@ class RncController extends MainController
 
 		if (empty($rnc)) {
 			require_once ABSPATH . '/includes/404.php';
+			return;
+		}
+
+		if ($this->userdata['tipo_usuario'] == 3 && $rnc['status'] == 3) {
+			require_once ABSPATH . '/includes/finalizada.php';
 			return;
 		}
 

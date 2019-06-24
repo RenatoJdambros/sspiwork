@@ -1,5 +1,4 @@
 <?php
-
 class SacpController extends MainController
 {
 	public function index() 
@@ -100,6 +99,11 @@ class SacpController extends MainController
 
 		if (empty($dados)) {
 			require_once ABSPATH . '/includes/404.php';
+			return;
+		}
+
+		if ($this->userdata['tipo_usuario'] == 3 && $dados['status'] == 3) {
+			require_once ABSPATH . '/includes/finalizada.php';
 			return;
 		}
 		
@@ -302,8 +306,13 @@ class SacpController extends MainController
 
 		$dadosPlano = $modelo->consultarPlano($parametros[2]);
 
+		if ($this->userdata['tipo_usuario'] == 3 && $dadosPlano['status'] == 3) {
+			require_once ABSPATH . '/includes/finalizada.php';
+			return;
+		}
+
 		if ($retorno == 'success') {
-			$this->modal_notification = MainModel::openNotification('Sucesso', 'Plano inserido com sucesso.', 'success');
+			$this->modal_notification = MainModel::openNotification('Sucesso', 'Plano atualizado com sucesso.', 'success');
 		} elseif (!empty($retorno)) {
 			$this->modal_notification = MainModel::openNotification('Erro', $retorno, 'error');
 		}
@@ -369,10 +378,15 @@ class SacpController extends MainController
 		$participantes = $modelo->consultaParticipantes($dados['participantes']);
 		$setor = $modelo->consultaSetor($dados['setor_destino']);
 
-		// Carrega o método para editar uma SACP
+		// Carrega o método para finalizar uma SACP
 		$retorno = $modelo->finalizarPlano($parametros[2]);
 
 		$dadosPlano = $modelo->consultarPlano($parametros[2]);
+
+		if ($this->userdata['tipo_usuario'] == 3 && $dadosPlano['status'] == 3) {
+			require_once ABSPATH . '/includes/finalizada.php';
+			return;
+		}
 
 		if ($retorno == 'success') {
 			$this->modal_notification = MainModel::openNotification('Sucesso', 'Plano finalizado com sucesso.', 'success');
