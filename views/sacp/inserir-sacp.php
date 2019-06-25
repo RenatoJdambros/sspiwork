@@ -60,7 +60,7 @@
     <label for="participantes">Participantes:</label>
     <select class="js-example-basic-multiple form-group custom-select" id="participantes" name="participantes[]" style="width: 100%" multiple="multiple" required>
       <?php foreach ($participantes as $key => $participante) { ?>
-        <option value="<?= $participante['id'] ?>"><?= $participante['nomeSetor'] . " - " . $participante['nome'] ?></option>
+        <option value="<?= $participante['id'] ?>"><?= $participante['nome'] ?></option>
       <?php } ?>
     </select>
 
@@ -137,7 +137,7 @@
     <br>
   <div id="accordion" style=" ">
     <button style="background-color: #80BDFF;"  class="btn btn-basic" data-toggle="collapse" href="#collapseOne">
-      Gerar diagrama de causa e efeito
+      Diagrama de causa e efeito
     <small id="" class="form-text">
         &nbsp;&nbsp;|&nbsp;&nbsp;6M
     </small>

@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <button type="button" class="btn btn-default" onclick="window.location='<?= HOME_URI ?>/home/'">
+                    <button type="button" class="btn btn-default" onclick="window.location='<?= HOME_URI ?>/usuarios/'">
                         Voltar
                         </button>
                     <h4 style="text-align: center;  margin-top: -30px; " >

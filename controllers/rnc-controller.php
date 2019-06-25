@@ -213,5 +213,41 @@ class RncController extends MainController
 		require ABSPATH . '/views/rnc/finalizar-rnc.php';
 		require ABSPATH . '/views/_includes/footer.php';
 	}
+
+
+	public function visualizar($id)
+	{
+		$this->title = 'Visualizar RNC';
+
+		// Verifica se o usuário está logado
+		if (!$this->logged_in) {
+			$this->logout(true);
+			return;
+		}
+
+		// // Verifica se o usuário tem permissão
+		// if (!$this->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) {
+		// 	require_once ABSPATH . '/includes/403.php';
+		// 	return;
+		// }
+
+		$modelo = $this->load_model('rnc/rnc-model');
+		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
+		
+		$dadosRNC = $modelo->consultaRNC($id[0]);
+		extract($dadosRNC);
+
+		if (empty($rnc)) {
+			require_once ABSPATH . '/includes/404.php';
+			return;
+		}
+
+		$setorOrigem = $modelo->buscaSetor($userOrigem['setor']);
+		$setorDestino = $modelo->buscaSetor($userDestino['setor']);
+
+		require ABSPATH . '/views/_includes/header.php';
+		require ABSPATH . '/views/rnc/visualizar-rnc.php';
+		require ABSPATH . '/views/_includes/footer.php';
+	}
 	
 } // class RncController

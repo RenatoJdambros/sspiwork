@@ -36,7 +36,7 @@
                         </label>
                         <select id="selectUserOrigem" name="id_origem" class="form-control custom-select" disabled>
                             <option value="<?= $userOrigem['id'] ?>" selected>
-                                <?= $setorOrigem . " - " . $userOrigem['nome']?>
+                                <?= $userOrigem['nome']?>
                             </option>
                         </select>
                         </select>
@@ -128,7 +128,7 @@
                         </label>
                         <select id="selectUserDestino" name="id_destino" class="form-control custom-select" required disabled>
                             <option value="<?= $userDestino['id'] ?>" selected>
-                                <?= $setorDestino . " - " . $userDestino['nome']?>
+                                <?= $userDestino['nome'] ?>
                             </option>
                         </select>
                     </div>

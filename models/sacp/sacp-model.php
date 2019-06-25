@@ -31,7 +31,7 @@ class SacpModel extends MainModel
 			}
 
 			$sql = 'SELECT * FROM sacp';
-			$where = "id IN ($sacpPresente) AND status != 3";
+			$where = "id IN ($sacpPresente)";
 
 			$columns = $this->formatar_colunas();
 			$page = DataTable::complex($_POST, $this->db->pdo, 'sacp', 'id', $columns, $sql, null, $where);
@@ -120,28 +120,39 @@ class SacpModel extends MainModel
             }],
             ['dt' => 9, 'db' => 'id', 'formatter' => function($d) 
             {
+				$query = $this->db->query('SELECT status FROM sacp WHERE id = ?', array($d));
+				$status = $query->fetch(PDO::FETCH_COLUMN, 0);
+
                 ob_start(); ?>
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
                         <ul class="dropdown-menu">
-                            <?php // if ($this->controller->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
-                                <li>
-                                    <a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
-                                </li>
-                            <?php // } ?>
-							<?php if ($this->controller->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
-                                <li>
-                                    <a href="<?= HOME_URI ?>/sacp/finalizar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
-                                </li>
-                            <?php } ?>
-                            <?php if ($this->controller->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
-                                <li>
-                                    <a href="<?= HOME_URI ?>/sacp/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
-                                    <div style="display:none">
-                                        <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
-                                    </div>
-                                </li>
-                            <?php } ?>
+								<?php if ($this->userdata['tipo_usuario'] == 3) { if ($status != 3) { ?>
+									<li>
+										<a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
+									</li>
+								<?php } else { ?>
+									<li>
+										<a href="<?= HOME_URI ?>/sacp/visualizar/<?= $d ?>"><i class="fa fa-eye"></i> Visualizar</a>
+									</li>
+								<?php } } else { ?>
+									<li>
+										<a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
+									</li>
+								<?php } ?>
+								<?php if ($this->controller->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
+									<li>
+										<a href="<?= HOME_URI ?>/sacp/finalizar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
+									</li>
+								<?php } ?>
+								<?php if ($this->controller->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
+									<li>
+										<a href="<?= HOME_URI ?>/sacp/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
+										<div style="display:none">
+											<button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
+										</div>
+									</li>
+								<?php } ?>
                         </ul>
                     </div>
                 <?php

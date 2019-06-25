@@ -34,7 +34,7 @@
                         </label>
                         <select id="selectUserOrigem" name="id_origem" class="form-control" required>
                             <option value="<?= $this->userdata['id'] ?>" selected>
-                                <?= $setorAtual . " - " . $this->userdata['nome']?>
+                                <?= $this->userdata['nome']?>
                             </option>
                         </select>
                     </div>
@@ -116,8 +116,7 @@
                         <select id="selectUserDestino" name="id_destino" class="form-control custom-select" required>
                             <option hidden disabled selected value>Selecione um usuário</option>
                             <?php foreach ($usuarios as $key => $usuario) {
-                                echo "<option value='" . $usuario['id'] . "'>" . $usuario['nomeSetor'] 
-                                . " - " . $usuario['nome'] . "</option>";
+                                echo "<option value='" . $usuario['id'] . "'>" . $usuario['nome'] . "</option>";
                             } ?>
                         </select>
                         <br>

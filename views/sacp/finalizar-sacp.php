@@ -206,7 +206,7 @@
 <br>
   <div id="accordion" style=" ">
     <button style="background-color: #80BDFF;"  class="btn btn-basic" data-toggle="collapse" href="#collapseOne">
-      Gerar diagrama de causa e efeito
+      Diagrama de causa e efeito
     <small id="" class="form-text">
         &nbsp;&nbsp;|&nbsp;&nbsp;6M
     </small>

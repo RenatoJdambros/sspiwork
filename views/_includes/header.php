@@ -121,6 +121,13 @@
               </a>
           </li>
 
+          <li>
+              <a data-toggle="modal" href="<?=HOME_URI?>/setores/">
+                <i class="fa fa-users"></i>
+                Setores
+              </a>
+          </li>
+
           <!-- <li>
               <a href="<?=HOME_URI?>/home/"> 
                 <i class="fa fa-cog"></i>

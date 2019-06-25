@@ -43,7 +43,7 @@
         <br>
         <div class="container-fluid">
                 <form class="form-horizontal form-label-left" method="post">
-                    <input type="hidden" name="inserirPlano" value="1" />
+                    <input type="hidden" name="finalizarPlano" value="1" />
 
                     <div class="form-group">
                         <label class="control-label col-md-2 " for="o_que" 
@@ -53,7 +53,7 @@
                         </label>
                         <div class="col-md-6">
                             <textarea id="o_que" class="form-control" name="o_que" 
-                            placeholder="O Que Fazer" required></textarea>
+                            placeholder="O Que Fazer" disabled><?= $dadosPlano['o_que'] ?></textarea>
                         </div>
                     </div>
 
@@ -65,7 +65,7 @@
                         </label>
                         <div class="col-md-6">
                             <textarea id="como" class="form-control" name="como" 
-                            placeholder="Como Fazer" required></textarea>
+                            placeholder="Como Fazer" disabled><?= $dadosPlano['como'] ?></textarea>
                         </div>
                     </div>
 
@@ -76,15 +76,19 @@
                             <span style="color: red;">*</span>
                         </label>
                         <div class="col-md-6">
-                            <select name="quem" id="quem" class="form-control custom-select" required>
+                            <select name="quem" id="quem" class="form-control custom-select" disabled
+                            <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'disabled';} ?>>
                                 <option hidden disabled selected value>Selecione uma opção</option>
                                 <?php foreach($participantes as $key => $participante) { ?>
-                                    <option value='<?= $participante['id'] ?>'><?= $participante['nomeSetor'] . " - " . $participante['nome'] ?></option>
+                                    <option value='<?= $participante['id'] ?>' 
+                                    <?php if ($participante['id'] == $dadosPlano['quem']) {echo 'selected';} ?>>
+                                        <?= $participante['nome'] ?>
+                                    </option>
                                 <?php } ?>
                             </select>
                         </div>
                     </div>
-
+                
                     <div class="form-group">
                         <label class="control-label col-md-2 " for="quando" 
                         data-toggle="tooltip" title="Obrigatório">
@@ -92,8 +96,9 @@
                             <span style="color: red;">*</span>
                         </label>
                         <div class="col-md-6">
-                            <input type="date" id="quando" class="form-control" name="quando"  
-                            required min="<?php $data = new DateTime('now'); echo $data->format('Y-m-d'); ?>" max="2099-01-01">
+                            <input type="date" id="quando" class="form-control" name="quando"
+                            value="<?= $dadosPlano['quando'] ?>" min="<?php $data = new DateTime('now'); echo $data->format('Y-m-d'); ?>" max="2099-01-01" disabled
+                            <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'disabled';} ?>>
                         </div>
                     </div>
 
@@ -104,7 +109,7 @@
                             <span style="color: red;">*</span>
                         </label>
                         <div class="col-md-6">
-                            <select name="onde" id="onde" class="form-control custom-select" required readonly>
+                            <select name="onde" id="onde" class="form-control custom-select" disabled>
                                 <option value='<?= $setor['id'] ?>'><?= $setor['nome'] ?></option>
                             </select>
                         </div>
@@ -118,7 +123,7 @@
 
                 <div class="panel-footer">
                     <button type="submit" class="btn btn-success">
-                        Inserir
+                        Finalizar
                     </button>
                 </div>
                             
