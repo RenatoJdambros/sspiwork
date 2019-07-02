@@ -21,16 +21,14 @@ class RncModel extends MainModel
 	public function paginacao()
     {
 		if ($this->userdata['tipo_usuario'] == 3) {
-            // $filter = ""; $_POST['checkbox'];
-            // $filter = " AND status != 3";
-			$sql = 'SELECT * FROM rnc';
+			$sql = 'SELECT * FROM rnc_dados_fk';
 			$where = $this->userdata['id'] . " IN (id_origem, id_destino)";
 
 			$columns = $this->formatar_colunas();
-			$page = DataTable::complex($_POST, $this->db->pdo, 'rnc', 'id', $columns, $sql, null, $where);
+			$page = DataTable::complex($_POST, $this->db->pdo, 'rnc_dados_fk', 'id', $columns, $sql, null, $where);
 		} else {
 			$columns = $this->formatar_colunas();
-			$page = DataTable::simple($_POST, $this->db->pdo, 'rnc', 'id', $columns);
+			$page = DataTable::simple($_POST, $this->db->pdo, 'rnc_dados_fk', 'id', $columns);
 		}
         return json_encode($page);
     }
@@ -40,31 +38,24 @@ class RncModel extends MainModel
     {
         return array(
             ['dt' => 0, 'db' => 'id'],
-            ['dt' => 1, 'db' => 'id_origem', 'formatter' => function($d) 
-            {
-                $query = $this->db->query('SELECT nome FROM usuarios WHERE id = ?', [$d]);
-				$result = $query->fetch(PDO::FETCH_COLUMN, 0);
-
-                return $result;
-            }],
-            ['dt' => 2, 'db' => 'id_destino', 'formatter' => function($d) 
-            {
-                $query = $this->db->query('SELECT nome FROM usuarios WHERE id = ?', [$d]);
-				$result = $query->fetch(PDO::FETCH_COLUMN, 0);
-
-                return $result;
-            }],
+            ['dt' => 1, 'db' => 'nome_origem'],
+            ['dt' => 2, 'db' => 'nome_destino'],
             ['dt' => 3, 'db' => 'status', 'formatter' => function($d) 
             {
-                if ($d == 1) {
-					return "<span class='label label-primary'>Novo</span>";
-				} elseif ($d == 2) {
-					return "<span class='label label-warning'>Em progresso</span>";
-				} elseif ($d == 3) {
-					return "<span class='label label-success'>Finalizado</span>";
-				} elseif ($d == 4) {
-					return "<span class='label label-default'>Expirado</span>";
-				}
+                $return = "<span class='label label-";
+
+                if ($d == 'Novo') {
+					$return .= "primary";
+				} elseif ($d == 'Em progresso') {
+					$return .= "warning";
+				} elseif ($d == 'Finalizado') {
+					$return .= "success";
+				} else {
+					$return .= "default";
+                }
+                $return .= "'>$d</span>";
+                
+                return $return;
             }],
 			['dt' => 4, 'db' => 'numero_op'],
 			['dt' => 5, 'db' => 'sacp'],

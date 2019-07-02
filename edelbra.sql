@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 24-Jun-2019 às 05:56
+-- Generation Time: 02-Jul-2019 às 23:51
 -- Versão do servidor: 10.1.37-MariaDB
 -- versão do PHP: 7.2.12
 
@@ -110,6 +110,32 @@ INSERT INTO `rnc` (`id`, `id_origem`, `id_destino`, `descricao`, `justificativa`
 (23, 22, 23, 'dadas', NULL, NULL, 1, '2019-06-19 20:05:07', NULL, NULL, NULL, '', '', '', ''),
 (24, 19, 21, 'de user A para user C', NULL, NULL, 3, '2019-06-04 12:08:21', '2019-06-23 23:04:47', NULL, NULL, '', '', '', ''),
 (25, 19, 21, 'de user A para user C', NULL, NULL, 1, '2019-06-04 12:08:21', '2019-06-19 20:16:21', NULL, NULL, '', '', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `rnc_dados_fk`
+-- (See below for the actual view)
+--
+CREATE TABLE `rnc_dados_fk` (
+`id` int(11)
+,`id_origem` int(11)
+,`id_destino` int(11)
+,`descricao` varchar(5000)
+,`justificativa` varchar(5000)
+,`correcao` varchar(5000)
+,`data_gerada` datetime
+,`data_finalizada` datetime
+,`numero_op` int(11)
+,`sacp` int(11)
+,`cliente_nome` varchar(255)
+,`cliente_obra` varchar(255)
+,`cliente_telefone` varchar(255)
+,`cliente_email` varchar(255)
+,`status` varchar(255)
+,`nome_origem` varchar(255)
+,`nome_destino` varchar(255)
+);
 
 -- --------------------------------------------------------
 
@@ -339,13 +365,22 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `setor`, `email`, `usuario`, `senha`, `tipo_usuario`, `status`, `user_session_id`) VALUES
-(19, 'usuário A', 2, 'usuarioA@edelbra.com.br', 'usuarioA', '$2a$08$dMoCrtIiDZl4KWU1H3PI1e2ccGF9j2PFYoTTds5nPpN8XaKsi1gka', 3, 'ativo', 'onse2ll8akostch6rvh1pmupv7'),
+(19, 'usuário A', 2, 'usuarioA@edelbra.com.br', 'usuarioA', '$2a$08$dMoCrtIiDZl4KWU1H3PI1e2ccGF9j2PFYoTTds5nPpN8XaKsi1gka', 3, 'ativo', 'ngahqj389r0r7p5pkj4o106g4a'),
 (20, 'usuário B', 6, 'usuarioB@edelbra.com.br', 'usuarioB', '$2a$08$aJFwqAflqJahcDAObDPis.pxwH/dUIr73FUh29vX6GPH4o9Hseqf2', 3, 'ativo', 'cru55ft6murvd672j68vv85101'),
 (21, 'usuário C', 5, 'usuarioC@edelbra.com.br', 'usuarioC', '$2a$08$BtEveze.8u3z7fCzXs13Gu8TpCMGDUji26i02xzxsW3MnV31h.UEy', 3, 'ativo', 'duapj69lscauiakh6k5r0spkp5'),
-(22, 'Administrador', 2, 'administrador@edelbra.com.br', 'admin', '$2a$08$vfXLeWf8sxOPX36Ioo0tX.PQlpSAtegW2MdvngEY88UElveO4GDs2', 1, 'ativo', '54bofl7nmbjhdp3isab93ui5qp'),
+(22, 'Administrador', 2, 'administrador@edelbra.com.br', 'admin', '$2a$08$vfXLeWf8sxOPX36Ioo0tX.PQlpSAtegW2MdvngEY88UElveO4GDs2', 1, 'ativo', 'g36rc80ojaggbkiauqaqav2qg9'),
 (23, 'Qualidade', 2, 'qualidade@edelbra.combr', 'qualidade', '$2a$08$FFtkqoNn0p.U4R5FJ3nLPOfas66V57LZGi7/wa3XYt4IDknBVPQKC', 2, 'ativo', '23h7p2h9721bl7fc29p51ne29e'),
 (24, 'usuário D', 5, 'usuarioD@edelbra.com.br', 'usuarioD', '$2a$08$kSOs1zk3Ax5O.yr96GWNFOQtmxdBvcm7SF4cHGMwqk4ZVHErf.44q', 3, 'ativo', NULL),
 (25, 'maria aparecida da silva sauro teu cu ', 7, 'ghjc2@zdv', 'maria', '$2a$08$s19dKGMjrQMOY9ufiLopq.TQ1AgGZjyZuGiQ8YuFc5jMQ62cOqFoW', 3, 'ativo', 'haertdnpru1as1md5tcbiqtnio');
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `rnc_dados_fk`
+--
+DROP TABLE IF EXISTS `rnc_dados_fk`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `rnc_dados_fk`  AS  select `rnc`.`id` AS `id`,`rnc`.`id_origem` AS `id_origem`,`rnc`.`id_destino` AS `id_destino`,`rnc`.`descricao` AS `descricao`,`rnc`.`justificativa` AS `justificativa`,`rnc`.`correcao` AS `correcao`,`rnc`.`data_gerada` AS `data_gerada`,`rnc`.`data_finalizada` AS `data_finalizada`,`rnc`.`numero_op` AS `numero_op`,`rnc`.`sacp` AS `sacp`,`rnc`.`cliente_nome` AS `cliente_nome`,`rnc`.`cliente_obra` AS `cliente_obra`,`rnc`.`cliente_telefone` AS `cliente_telefone`,`rnc`.`cliente_email` AS `cliente_email`,`status`.`nome` AS `status`,`usro`.`nome` AS `nome_origem`,`usrd`.`nome` AS `nome_destino` from (((`rnc` join `status` on((`rnc`.`status` = `status`.`id`))) join `usuarios` `usro` on((`rnc`.`id_origem` = `usro`.`id`))) join `usuarios` `usrd` on((`rnc`.`id_destino` = `usrd`.`id`))) ;
 
 --
 -- Indexes for dumped tables
