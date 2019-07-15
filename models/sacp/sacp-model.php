@@ -126,7 +126,7 @@ class SacpModel extends MainModel
                 ob_start(); ?>
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-right">
 								<?php if ($this->userdata['tipo_usuario'] == 3) { if ($status != 3) { ?>
 									<li>
 										<a href="<?= HOME_URI ?>/sacp/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
