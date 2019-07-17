@@ -56,7 +56,7 @@ if ($this->userdata['tipo_usuario'] == 3) {
                         <label for="numeroOP">
                             Número O.P:
                         </label>
-                        <input value="<?= $rnc['numero_op'] ?>" type="number" class="form-control" 
+                        <input value="<?= $rnc['numero_op'] ?>" type="number" name="numero_op" class="form-control" 
                         id="numero_op" placeholder="ex: 20182"
                         <?php if($this->userdata['id'] != $userOrigem['id']) echo "disabled" ?>>                    </div>
                     </div>

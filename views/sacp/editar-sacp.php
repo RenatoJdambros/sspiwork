@@ -211,11 +211,20 @@
   </div>  
 
   <div class="form-group">
-    <label for="brainstorming">Brainstorming / Alterações no SGI</label>
+    <label for="brainstorming">Brainstorming / Alterações no SGI:</label>
     <textarea class="form-control rounded-0" id="brainstorming" rows="4" name="brainstorming" 
     required <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'disabled';} ?>
     ><?= !empty($dados['brainstorming']) ? $dados['brainstorming'] : '' ?></textarea>
-  </div> 
+  </div>
+
+  <div class="form-group">
+    <label for="data_prazo">Prazo Final:</label>
+    <input type='date' class="form-control" id="data_prazo" name="data_prazo" 
+    value="<?= $dados['data_prazo'] = $ex = date('Y-m-d', strtotime($dados['data_prazo'])); ?>" min="<?php $data = new DateTime('now'); echo $data->format('Y-m-d'); ?>" max="2099-01-01" 
+    <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'disabled';} ?>>
+     
+</div> 
+ 
   
 <br>
   <div id="accordion" style=" ">
@@ -630,6 +639,8 @@
       
       </div>
       </div>
+
+      
     <?php if ($this->userdata['tipo_usuario'] != 3) { ?>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">
@@ -640,12 +651,14 @@
                 } ?> 
             </button>
             <?php if ($request == 'editar') { ?>
-               &nbsp; OBS: Salvar antes de inserir planos de ação
+               &nbsp; OBS: Salvar alterações antes de inserir um novo planos de ação
             <?php } ?> 
         </div>
     <?php } ?>
     
     </div>
+
+    
     
 
 </form> <!--Fim formulário principal -->

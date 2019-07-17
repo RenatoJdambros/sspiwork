@@ -235,10 +235,145 @@ class RncModel extends MainModel
 		unset($dataGerada);
 
 		/* query */
-		$query = $this->db->insert('rnc', $_POST);
+        $query = $this->db->insert('rnc', $_POST);
+        $id = $this->db->last_id;
 		
 		/* Verifica a consulta */
 		if ($query) {
+
+			//chama a classe para enviar e-mail
+			require ABSPATH . '/PHPMailer/PHPMailer.php';
+			require ABSPATH . '/PHPMailer/SMTP.php';
+			$url= HOME_URI;
+
+			//traz os dados para o e-mail
+			$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$id]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$descricao		= $valor['descricao'];
+				$gerada 		= date('d/m/Y - H:i', strtotime($valor['data_gerada']));
+				$numeroOp		= $valor['numero_op'];
+			}
+
+			//traz os dados do usuário origem para o e-mail
+			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$_POST['id_origem']]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$userOrigem		= $valor['nome'];
+				$emailOrigem	= $valor['email'];
+			}
+
+			//traz os dados do usuário destino para o e-mail
+			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$_POST['id_destino']]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$userDestino		= $valor['nome'];
+				$emailDestino		= $valor['email'];
+			}
+
+			$mail = new PHPMailer;
+			$mail->isSMTP();
+			//$mail->SMTPSecure = 'ssl';
+			//$mail->SMTPAuth = true;
+			$mail->Host = 'nac.edelbra.com.br';
+			$mail->Port = 587;
+			$mail->Username = 'manutencao@edelbra.com.br';
+			$mail->Password = 'man@2015!';
+			$mail->setFrom('manutencao@edelbra.com.br');
+			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para Qualidade');
+			$mail->addAddress($emailOrigem);
+			$mail->addAddress($emailDestino);
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+			$mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+			$mail->Subject = 'RNC Novo';
+			$msg =
+				"<html dir='ltr'>
+					<head>
+					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+						<style>                   
+							#customers {
+							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+							border-collapse: collapse;
+							width: 100%;
+							}
+							#customers td, #customers th {
+							border: 1px solid #C0C0C0;
+							border-radius: 5px; 5px; 0px; 0px;
+							padding: 8px;
+							background-color: #E8E8E8;
+							}
+							#customers tr:nth-child(even){background-color: #E8E8E8;}
+							#customers th {
+							padding: 8px;
+							text-align: center;
+							background-color: #DAA520;
+							color: white;
+							display: inline-block;
+							}
+							body {background-color: gray;
+							}
+						</style>
+					</head>
+
+				<body align-self: center;>
+				<hr>
+				<br>
+					<table id='customers'>
+							<tr>
+								<th style='background-color: white; padding: 20px;' colspan='3'>
+									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+								<th style='background-color: white; colspan='1' >
+									<img src='cid:relat1.png' align=center width='90' height='130'></p></th>
+							</tr>
+							<tr>
+								<th colspan='3' >Relatório de Não-Conformidade</th>
+								<th colspan='1' >ID $id </th>						
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white; color: green;'><p align=center><b> ----> NOVO <---- </b></p></td>
+							</tr>
+							<tr>
+								<td colspan='4'><b>Origem:</b> $userOrigem </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b>Destino:</b> $userDestino </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b>Número O.P:</b> $numeroOp </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b>Data Gerada:</b> $gerada </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4'><b>Descrição:</b> $descricao </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4' style='background-color: white; color: white;'><b>Justificativa:</b>  </td>
+							</tr>
+							<br>
+							<br>
+							<br>
+							<br>
+								<p align=center> <a href='$url/rnc/editar/$id'> 
+								<img src='cid:acessar.png' width='170' height='50'></a>
+								</p>
+								<p align=center> 
+								<img src='cid:linha.png' width='600' height='4'>
+								</p>
+					</table>
+				<br>			
+				<hr>
+				<br>
+				</body>
+			</html>";
+			$mail->Body = $msg;
+            $mail->IsHTML(true); //enviar em HTML
+
+            //send the message, check for errors
+            $mail->send();
+				
 			return 'success';
 		}
 		return 'Erro ao inserir RNC no banco de dados';
@@ -270,10 +405,152 @@ class RncModel extends MainModel
 		$query = $this->db->update('rnc', 'id', $id, $_POST);
 		
 		/* Verifica a consulta */
-		if ($query) {
-			return 'success';
+		if ($query) { 
+			//chama a classe para enviar e-mail
+			require ABSPATH . '/PHPMailer/PHPMailer.php';
+			require ABSPATH . '/PHPMailer/SMTP.php';
+			$url= HOME_URI;
+
+			//traz os dados para o e-mail
+			$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$id]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$descricao		= $valor['descricao'];
+				$justificativa 	= $valor['justificativa'];
+				$correcao		= $valor['correcao'];
+				$gerada 		= date('d/m/Y H:i', strtotime($valor['data_gerada']));
+				$numeroOp		= $valor['numero_op'];
+			}
+
+			//traz os dados do usuário origem para o e-mail
+			$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$id]);
+			$rnc = $query->fetch(PDO::FETCH_ASSOC);	
+
+			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$rnc['id_origem']]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$userOrigem		= $valor['nome'];
+				$emailOrigem	= $valor['email'];
+			}
+			
+			//traz os dados do usuário destino para o e-mail
+			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$rnc['id_destino']]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$userDestino		= $valor['nome'];
+				$emailDestino		= $valor['email'];
+			}
+
+			$mail = new PHPMailer;
+			$mail->isSMTP();
+			//$mail->SMTPSecure = 'ssl';
+			//$mail->SMTPAuth = true;
+			$mail->Host = 'nac.edelbra.com.br';
+			$mail->Port = 587;
+			$mail->Username = 'manutencao@edelbra.com.br';
+			$mail->Password = 'man@2015!';
+			$mail->setFrom('manutencao@edelbra.com.br');
+			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para Qualidade');
+			$mail->addAddress($emailOrigem);
+			$mail->addAddress($emailDestino);
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+			$mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+			$mail->Subject = 'RNC Editado';
+			$msg =
+				"<html dir='ltr'>
+					<head>
+					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+						<style>                   
+							#customers {
+							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+							border-collapse: collapse;
+							width: 100%;
+							}
+							#customers td, #customers th {
+							border: 1px solid #C0C0C0;
+							border-radius: 5px; 5px; 0px; 0px;
+							padding: 8px;
+							background-color: #E8E8E8;
+							}
+							#customers tr:nth-child(even){background-color: #E8E8E8;}
+							#customers th {
+							padding: 8px;
+							text-align: center;
+							background-color: #337AB7;
+							color: white;
+							display: inline-block;
+							}
+							body {background-color: gray;
+							}
+						</style>
+					</head>
+
+				<body align-self: center;>
+				<hr>
+				<br>
+					<table id='customers'>
+							<tr>
+								<th style='background-color: white; padding: 20px;' colspan='3'>
+									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+								<th style='background-color: white; colspan='1' >
+									<img src='cid:relat1.png' align=center width='90' height='130'></p></th>
+							</tr>
+							<tr>
+								<th colspan='3' >Relatório de Não-Conformidade</th>
+								<th colspan='1' >ID $id </th>						
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white; color: #DAA520;'><p align=center><b> ----> EDITADO <---- </b></p></td>
+							</tr>
+							<tr>
+								<td colspan='4'><b>Origem:</b> $userOrigem </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b>Destino:</b> $userDestino </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b>Número O.P:</b> $numeroOp </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b>Data Gerada:</b> $gerada </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4'><b>Descrição:</b> $descricao </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4' style='background-color: white;' ><b>Justificativa:</b> $justificativa </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4'><b>Correção:</b> $correcao </td>								
+							</tr>
+							<br>
+							<br>
+							<br>
+							<br>
+								<p align=center> <a href='$url/rnc/inserir/'> 
+								<img src='cid:acessar.png' width='170' height='50'></a>
+								</p>
+								<p align=center> 
+								<img src='cid:linha.png' width='600' height='4'>
+								</p>
+					</table>
+				<br>
+				<hr>
+				<br>
+				</body>
+			</html>";
+
+			$mail->Body = $msg;
+            $mail->IsHTML(true); //enviar em HTML
+
+            //send the message, check for errors
+			$mail->send();
+			
+      		return 'success';
 		}
-		return 'Falha ao atualizar o cadastro do usuário';
+		return 'Falha ao atualizar RNC';
 	} // update
 
 
@@ -294,11 +571,105 @@ class RncModel extends MainModel
 
 		// Executa a consulta
         $query = $this->db->delete('rnc', 'id', $user_id);
+        $id = $this->db->last_id;
         
-        if ($query) {
-            echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/rnc/">';
-		    echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/rnc/";</script>';
-        }
+         if ($query) {
+            require ABSPATH . '/PHPMailer/PHPMailer.php';
+			require ABSPATH . '/PHPMailer/SMTP.php';
+			$url= HOME_URI;
+			
+			$mail = new PHPMailer;
+            $mail->isSMTP();
+            //$mail->SMTPSecure = 'ssl';
+            //$mail->SMTPAuth = true;
+            $mail->Host = 'nac.edelbra.com.br';
+            $mail->Port = 587;
+            $mail->Username = 'manutencao@edelbra.com.br';
+            $mail->Password = 'man@2015!';
+            $mail->setFrom('manutencao@edelbra.com.br');
+			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para Qualidade');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+            $mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+            $mail->Subject = 'RNC Excluída';
+			$msg = "<html dir='ltr'>
+				<head>
+					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+						<style>                   
+							#customers {
+							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+							border-collapse: collapse;
+							width: 100%;
+							}
+							#customers td, #customers th {
+							border: 1px solid #C0C0C0;
+							border-radius: 5px; 5px; 0px; 0px;
+							padding: 8px;
+							background-color: #E8E8E8;
+							}
+							#customers tr:nth-child(even){background-color: #E8E8E8;}
+							#customers th {
+							padding: 8px;
+							text-align: center;
+							background-color: #337AB7;
+							color: white;
+							display: inline-block;
+							}
+							body {background-color: gray;
+							}
+						</style>
+				</head>
+
+				<body align-self: center;>
+				<hr>
+				<br>
+					<table id='customers'>
+							<tr>
+								<th style='background-color: white; padding: 20px;' colspan='3'>
+									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+								<th style='background-color: white; colspan='1' >
+									<img src='cid:relat1.png' align=center width='90' height='130'></p></th>
+							</tr>
+							<tr>
+								<th colspan='3' >Relatório de Não-Conformidade</th>
+								<th colspan='1' >ID $user_id </th>						
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white; color: red;'><p align=center><b>----> EXCUÍDO <---- </b></p></td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4' style='color: #E8E8E8;'><b>Justificativa:</b>  </td>
+							<br>
+							<br>
+							<br>
+							<br>
+								<p align=center> <a href='$url/rnc/inserir/'> 
+								<img src='cid:acessar.png' width='170' height='50'></a>
+								</p>
+								<p align=center> 
+								<img src='cid:linha.png' width='600' height='4'>
+								</p>
+					</table>
+				<br>
+				<hr>
+				<br>
+				</body>
+			</html>";
+
+			$mail->Body = $msg;
+			$mail->IsHTML(true); //enviar em HTML
+			
+			//send the message, check for errors
+			$mail->send();
+						
+			//retorna para o painel de visualização
+			echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/rnc/">';
+			echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/rnc/";</script>';
+		}		
 		return 'Falha ao excluir a RNC';
 	} // delete
 
@@ -328,9 +699,41 @@ class RncModel extends MainModel
 		/* Verifica a consulta */
 		if ($query) {
             require ABSPATH . '/PHPMailer/PHPMailer.php';
-            require ABSPATH . '/PHPMailer/SMTP.php';
-            
-            $mail = new PHPMailer;
+			require ABSPATH . '/PHPMailer/SMTP.php';
+			$url= HOME_URI;
+
+		//traz os dados para o e-mail
+		$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$id]);
+			while ($valor = ($rnc = $query->fetch(PDO::FETCH_ASSOC))) {
+				$descricao		= $valor['descricao'];
+				$justificativa 	= $valor['justificativa'];
+				$correcao		= $valor['correcao'];
+				$gerada 		= date('d/m/Y - H:i', strtotime($valor['data_gerada']));
+				$finalizada		= date('d/m/Y - H:i', strtotime($valor['data_finalizada']));
+				$numeroOp		= $valor['numero_op'];
+			}
+
+		$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$id]);
+		$rnc = $query->fetch(PDO::FETCH_ASSOC);
+
+		//traz os dados do usuário origem para o e-mail
+			$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$id]);
+			$rnc = $query->fetch(PDO::FETCH_ASSOC);	
+
+			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$rnc['id_origem']]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$userOrigem		= $valor['nome'];
+				$emailOrigem	= $valor['email'];
+			}
+			
+			//traz os dados do usuário destino para o e-mail
+			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$rnc['id_destino']]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$userDestino		= $valor['nome'];
+				$emailDestino		= $valor['email'];
+			}
+
+			$mail = new PHPMailer;
             $mail->isSMTP();
             //$mail->SMTPSecure = 'ssl';
             //$mail->SMTPAuth = true;
@@ -339,517 +742,110 @@ class RncModel extends MainModel
             $mail->Username = 'manutencao@edelbra.com.br';
             $mail->Password = 'man@2015!';
             $mail->setFrom('manutencao@edelbra.com.br');
-            $mail->addAddress('renato.dambros@edelbra.com.br');
+			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para Qualidade');
+			$mail->addAddress($emailOrigem);
+			$mail->addAddress($emailDestino);
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
             $mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
-            $mail->Subject = 'Finalizar RNC';
-            $msg = "<html dir='ltr'>
-                <head>
-                    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-                    <style>
-                        @font-face {
-                            font-family: Cambria Math;
-                        }
+            $mail->Subject = 'RNC Finalizada';
+			$msg =
+			"<html dir='ltr'>
+				<head>
+					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+						<style>                   
+							#customers {
+							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+							border-collapse: collapse;
+							width: 100%;
+							}
+							#customers td, #customers th {
+							border: 1px solid #C0C0C0;
+							border-radius: 5px; 5px; 0px; 0px;
+							padding: 8px;
+							background-color: #E8E8E8;
+							}
+							#customers tr:nth-child(even){background-color: #E8E8E8;}
+							#customers th {
+							padding: 8px;
+							text-align: center;
+							background-color: #337AB7;
+							color: white;
+							display: inline-block;
+							}
+							body {background-color: gray;
+							}
+						</style>
+				</head>
 
-                        @font-face {
-                            font-family: Calibri;
-                        }
+				<body align-self: center;>
+				<hr>
+				<br>
+					<table id='customers'>
+							<tr>
+								<th style='background-color: white; padding: 20px;' colspan='3'>
+									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+								<th style='background-color: white; colspan='1' >
+									<img src='cid:relat1.png' align=center width='90' height='130'></p></th>
+							</tr>
+							<tr>
+								<th colspan='3' >Relatório de Não-Conformidade</th>
+								<th colspan='1' >ID $id </th>						
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white; color: green;'><p align=center><b> ----> FINALIZADO <---- </b></p></td>
+							</tr>
+							<tr>
+								<td colspan='4'><b>Origem:</b> $userOrigem </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b>Destino:</b>  $userDestino </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b>Número O.P:</b> $numeroOp </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b>Data Gerada:</b> $gerada </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b>Data Finalizada:</b> $finalizada </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4' style='background-color: white;'><b>Descrição:</b> $descricao </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4'><b>Justificativa:</b> $justificativa </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4' style='background-color: white;'><b>Correção:</b> $correcao </td>								
+							</tr>
+							<br>
+							<br>
+							<br>
+							<br>
+								<p align=center> <a href='$url/rnc/inserir/'> 
+								<img src='cid:acessar.png' width='170' height='50'></a>
+								</p>
+								<p align=center> 
+								<img src='cid:linha.png' width='600' height='4'>
+								</p>
+					</table>
+				<br>
+				<hr>
+				<br>
+				</body>
+			</html>";
 
-                        @font-face {
-                            font-family: Tahoma;
-                        }
-
-                        @font-face {
-                            font-family: Verdana;
-                        }
-
-                        @page WordSection1 {
-                            margin: 70.85pt 3.0cm 70.85pt 3.0cm;
-                        }
-
-                        P.MsoNormal {
-                            FONT-SIZE: 11pt;
-                            FONT-FAMILY: 'Calibri', 'sans-serif';
-                            MARGIN: 0cm 0cm 0pt
-                        }
-
-                        LI.MsoNormal {
-                            FONT-SIZE: 11pt;
-                            FONT-FAMILY: 'Calibri', 'sans-serif';
-                            MARGIN: 0cm 0cm 0pt
-                        }
-
-                        DIV.MsoNormal {
-                            FONT-SIZE: 11pt;
-                            FONT-FAMILY: 'Calibri', 'sans-serif';
-                            MARGIN: 0cm 0cm 0pt
-                        }
-
-                        H1 {
-                            FONT-SIZE: 24pt;
-                            FONT-FAMILY: 'Times New Roman', 'serif';
-                            FONT-WEIGHT: bold;
-                            MARGIN-LEFT: 0cm;
-                            MARGIN-RIGHT: 0cm
-                        }
-
-                        A:link {
-                            TEXT-DECORATION: underline;
-                            COLOR: blue
-                        }
-
-                        SPAN.MsoHyperlink {
-                            TEXT-DECORATION: underline;
-                            COLOR: blue
-                        }
-
-                        A:visited {
-                            TEXT-DECORATION: underline;
-                            COLOR: purple
-                        }
-
-                        SPAN.MsoHyperlinkFollowed {
-                            TEXT-DECORATION: underline;
-                            COLOR: purple
-                        }
-
-                        P.MsoAcetate {
-                            FONT-SIZE: 8pt;
-                            FONT-FAMILY: 'Tahoma', 'sans-serif';
-                            MARGIN: 0cm 0cm 0pt
-                        }
-
-                        LI.MsoAcetate {
-                            FONT-SIZE: 8pt;
-                            FONT-FAMILY: 'Tahoma', 'sans-serif';
-                            MARGIN: 0cm 0cm 0pt
-                        }
-
-                        DIV.MsoAcetate {
-                            FONT-SIZE: 8pt;
-                            FONT-FAMILY: 'Tahoma', 'sans-serif';
-                            MARGIN: 0cm 0cm 0pt
-                        }
-
-                        SPAN.Ttulo1Char {
-                            FONT-FAMILY: 'Cambria', 'serif';
-                            FONT-WEIGHT: bold;
-                            COLOR: #365f91
-                        }
-
-                        SPAN.TextodebaloChar {
-                            FONT-FAMILY: 'Tahoma', 'sans-serif'
-                        }
-
-                        SPAN.estilodeemail17 {
-                            FONT-FAMILY: 'Calibri', 'sans-serif';
-                            COLOR: windowtext
-                        }
-
-                        SPAN.textodebalochar0 {
-                            FONT-FAMILY: 'Tahoma', 'sans-serif'
-                        }
-
-                        SPAN.ttulo1char0 {
-                            FONT-FAMILY: 'Times New Roman', 'serif';
-                            FONT-WEIGHT: bold
-                        }
-
-                        SPAN.EstiloDeEmail24 {
-                            FONT-FAMILY: 'Calibri', 'sans-serif';
-                            COLOR: #1f497d
-                        }
-
-                        .MsoChpDefault {
-                            FONT-SIZE: 10pt
-                        }
-
-                    </style>
-                    <style id='owaParaStyle'>
-                        P {
-                            MARGIN-BOTTOM: 0px;
-                            MARGIN-TOP: 0px
-                        }
-
-                    </style>
-                </head>
-
-                <body style='width:100%;font-family:' open sans', 'helvetica neue' , helvetica, arial,
-                sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0;'>
-                <div class='es-wrapper-color' style='background-color:#EEEEEE;'>
-                    <!--[if gte mso 9]>
-                            <v:background xmlns:v='urn:schemas-microsoft-com:vml' fill='t'>
-                                <v:fill type='tile' color='#eeeeee'></v:fill>
-                            </v:background>
-                        <![endif]-->
-                    <table width='100%' cellspacing='0' cellpadding='0'
-                    style=border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top;'>
-                    <tr style='border-collapse:collapse;'>
-                        <td valign='top' style='padding:0;Margin:0;'>
-                        <table cellspacing='0' cellpadding='0' align='center'
-                            style=border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;'>
-                            <tr style='border-collapse:collapse;'>
-                            </tr>
-                            <tr style='border-collapse:collapse;'>
-                            <td align='center' style='padding:0;Margin:0;'>
-                                <table 
-                                style=border-collapse:collapse;border-spacing:0px;background-color:transparent;'
-                                width='600' cellspacing='0' cellpadding='0' align='center'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td align='left'
-                                    style='Margin:0;padding-left:10px;padding-right:10px;padding-top:15px;padding-bottom:15px;'>
-                                    <!--[if mso]><table width='580' cellpadding='0' cellspacing='0'><tr><td width='282' valign='top'><![endif]-->
-                                    <table class='es-left' cellspacing='0' cellpadding='0' align='left'
-                                        style=border-collapse:collapse;border-spacing:0px;float:left;'>
-                                        <tr style='border-collapse:collapse;'>
-                                        <td width='282' align='left' style='padding:0;Margin:0;'>
-                                            <table width='100%' cellspacing='0' cellpadding='0'
-                                            style=border-collapse:collapse;border-spacing:0px;'>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td class='es-infoblock es-m-txt-c' align='left'
-                                                style='padding:0;Margin:0;line-height:14px;font-size:12px;color:rgb(134, 134, 134);'>
-                                                <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:12px;font-family:arial, '
-                                                    helvetica neue', helvetica, sans-serif;line-height:14px;color:#CCCCCC;'>Sistema de Solicitações e Práticas ISO's<br></p>
-                                                </td>
-                                            </tr>
-                                            </table>
-                                        </td>
-                                        </tr>
-                                    </table>
-                                    <!--[if mso]></td><td width='20'></td><td width='278' valign='top'><![endif]-->
-                                    <table class='es-right' cellspacing='0' cellpadding='0' align='right'
-                                        style=border-collapse:collapse;border-spacing:0px;float:right;'>
-                                        <tr style='border-collapse:collapse;'>
-                                        <td width='278' align='left' style='padding:0;Margin:0;'>
-                                            <table width='100%' cellspacing='0' cellpadding='0'
-                                            style=border-collapse:collapse;border-spacing:0px;'>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td class='es-infoblock es-m-txt-c' align='right'
-                                                style='padding:0;Margin:0;line-height:14px;font-size:12px;color:#CCCCCC;'>
-                                                <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:12px;font-family:'
-                                                    open sans', 'helvetica neue' , helvetica, arial,
-                                                    sans-serif;line-height:14px;color:#CCCCCC;'><a href='http://#' target='_blank'
-                                                    style='-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, '
-                                                    helvetica neue', helvetica,
-                                                    sans-serif;font-size:12px;text-decoration:none;color:#CCCCCC;'>View in
-                                                    browser</a><br></p>
-                                                </td>
-                                            </tr>
-                                            </table>
-                                        </td>
-                                        </tr>
-                                    </table>
-                                    <!--[if mso]></td></tr></table><![endif]-->
-                                    </td>
-                                </tr>
-                                </table>
-                            </td>
-                            </tr>
-                        </table>
-                        <table class='es-content' cellspacing='0' cellpadding='0' align='center'
-                            style=border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;'>
-                            <tr style='border-collapse:collapse;'>
-                            </tr>
-                            <tr style='border-collapse:collapse;'>
-                            <td align='center' style='padding:0;Margin:0;'>
-                                <table class='es-header-body'
-                                style=border-collapse:collapse;border-spacing:0px;background-color:#044767;'
-                                width='600' cellspacing='0' cellpadding='0' bgcolor='#044767' align='center'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td align='left'
-                                    style='Margin:0;padding-top:15px;padding-left:15px;padding-right:15px;padding-bottom:40px;'>
-                                    <table width='100%' cellspacing='0' cellpadding='0'
-                                        style=border-collapse:collapse;border-spacing:0px;'>
-                                        <tr style='border-collapse:collapse;'>
-                                        <td width='530' valign='top' align='center' style='padding:0;Margin:0;'>
-                                            <table width='100%' cellspacing='0' cellpadding='0'
-                                            style=border-collapse:collapse;border-spacing:0px;'>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td class='es-m-txt-c' align='center' style='padding:0;Margin:0;'>
-                                                <h1 style='Margin:0;line-height:36px;mso-line-height-rule:exactly;font-family:' open
-                                                    sans', 'helvetica neue' , helvetica, arial,
-                                                    sans-serif;font-size:36px;font-style:normal;font-weight:bold;color:#FFFFFF;'>Beretun
-                                                </h1>
-                                                </td>
-                                            </tr>
-                                            </table>
-                                        </td>
-                                        </tr>
-                                    </table>
-                                    </td>
-                                </tr>
-                                </table>
-                            </td>
-                            </tr>
-                        </table>
-                        <table class='es-content' cellspacing='0' cellpadding='0' align='center'
-                            style=border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;'>
-                            <tr style='border-collapse:collapse;'>
-                            <td align='center' style='padding:0;Margin:0;'>
-                                <table class='es-content-body' width='600' cellspacing='0' cellpadding='0' bgcolor='#ffffff'
-                                align='center'
-                                style=border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td align='left'
-                                    style='Margin:0;padding-bottom:25px;padding-top:35px;padding-left:35px;padding-right:35px;'>
-                                    <table width='100%' cellspacing='0' cellpadding='0'
-                                        style=border-collapse:collapse;border-spacing:0px;'>
-                                        <tr style='border-collapse:collapse;'>
-                                        <td width='530' valign='top' align='center' style='padding:0;Margin:0;'>
-                                            <table width='100%' cellspacing='0' cellpadding='0'
-                                            style=border-collapse:collapse;border-spacing:0px;'>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td align='left' style='padding:0;Margin:0;padding-bottom:5px;padding-top:20px;'>
-                                                <h3 style='Margin:0;line-height:22px;mso-line-height-rule:exactly;font-family:' open
-                                                    sans', 'helvetica neue' , helvetica, arial,
-                                                    sans-serif;font-size:18px;font-style:normal;font-weight:bold;color:#333333;'>Hello
-                                                    there,<br></h3>
-                                                </td>
-                                            </tr>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td align='left' style='padding:0;Margin:0;padding-bottom:10px;padding-top:15px;'>
-                                                <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:16px;font-family:'
-                                                    open sans', 'helvetica neue' , helvetica, arial,
-                                                    sans-serif;line-height:24px;color:#777777;'>Lorem ipsum dolor sit amet, consectetur
-                                                    adipisicing elit. Excepturi incidunt ducimus, assumenda. Vitae, dolorum
-                                                    perspiciatis.</p>
-                                                </td>
-                                            </tr>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td align='left' style='padding:0;Margin:0;padding-top:5px;padding-bottom:10px;'>
-                                                <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:16px;font-family:'
-                                                    open sans', 'helvetica neue' , helvetica, arial,
-                                                    sans-serif;line-height:24px;color:#777777;'>Lorem ipsum dolor sit amet, consectetur
-                                                    adipisicing elit. Itaque, voluptatibus necessitatibus, facilis voluptatum nobis
-                                                    tempora eum. Saepe praesentium non quaerat, deleniti, voluptatum aperiam fugit.
-                                                    Impedit ullam, itaque fuga, expedita, quam rem, magni voluptate vitae nulla vero
-                                                    sunt exercitationem quaerat nesciunt!</p>
-                                                </td>
-                                            </tr>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td align='left' style='padding:0;Margin:0;padding-top:5px;'>
-                                                <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:16px;font-family:'
-                                                    open sans', 'helvetica neue' , helvetica, arial,
-                                                    sans-serif;line-height:24px;color:#777777;'>Lorem ipsum dolor sit amet, consectetur
-                                                    adipisicing elit. Quaerat deleniti, sunt reprehenderit, quod temporibus voluptas
-                                                    corporis magni aperiam fugiat, doloremque consectetur provident ipsam! Aliquam,
-                                                    soluta.</p>
-                                                </td>
-                                            </tr>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td align='left' style='padding:0;Margin:0;padding-top:40px;'>
-                                                <h3 style='Margin:0;line-height:22px;mso-line-height-rule:exactly;font-family:' open
-                                                    sans', 'helvetica neue' , helvetica, arial,
-                                                    sans-serif;font-size:18px;font-style:normal;font-weight:bold;color:#333333;'>Clinton
-                                                    Wilmott</h3>
-                                                </td>
-                                            </tr>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td align='left' style='padding:0;Margin:0;'>
-                                                <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:16px;font-family:'
-                                                    open sans', 'helvetica neue' , helvetica, arial,
-                                                    sans-serif;line-height:24px;color:#777777;'>CEO, Beretun</p>
-                                                </td>
-                                            </tr>
-                                            </table>
-                                        </td>
-                                        </tr>
-                                    </table>
-                                    </td>
-                                </tr>
-                                </table>
-                            </td>
-                            </tr>
-                        </table>
-                        <table class='es-content' cellspacing='0' cellpadding='0' align='center'
-                            style=border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;'>
-                            <tr style='border-collapse:collapse;'>
-                            <td align='center' style='padding:0;Margin:0;'>
-                                <table class='es-content-body' width='600' cellspacing='0' cellpadding='0' bgcolor='#ffffff'
-                                align='center'
-                                style=border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td align='left' style='padding:0;Margin:0;padding-top:15px;padding-left:35px;padding-right:35px;'>
-                                    <table width='100%' cellspacing='0' cellpadding='0'
-                                        style=border-collapse:collapse;border-spacing:0px;'>
-                                        <tr style='border-collapse:collapse;'>
-                                        <td width='530' valign='top' align='center' style='padding:0;Margin:0;'>
-                                            <table width='100%' cellspacing='0' cellpadding='0'
-                                            style=border-collapse:collapse;border-spacing:0px;'>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td align='center' style='padding:0;Margin:0;'> <img
-                                                    src='https://znwvz.stripocdn.email/content/guids/CABINET_75694a6fc3c4633b3ee8e3c750851c02/images/18501522065897895.png'
-                                                    alt
-                                                    style='display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;'
-                                                    width='46' height='22'></td>
-                                            </tr>
-                                            </table>
-                                        </td>
-                                        </tr>
-                                    </table>
-                                    </td>
-                                </tr>
-                                </table>
-                            </td>
-                            </tr>
-                        </table>
-                        <table class='es-content' cellspacing='0' cellpadding='0' align='center'
-                            style=border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;'>
-                            <tr style='border-collapse:collapse;'>
-                            <td align='center' style='padding:0;Margin:0;'>
-                                <table class='es-content-body'
-                                style=border-collapse:collapse;border-spacing:0px;background-color:#1B9BA3;border-bottom:10px solid #48AFB5;'
-                                width='600' cellspacing='0' cellpadding='0' bgcolor='#1b9ba3' align='center'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td align='left' style='padding:0;Margin:0;'>
-                                    <table width='100%' cellspacing='0' cellpadding='0'
-                                        style=border-collapse:collapse;border-spacing:0px;'>
-                                        <tr style='border-collapse:collapse;'>
-                                        <td width='600' valign='top' align='center' style='padding:0;Margin:0;'>
-                                            <table width='100%' cellspacing='0' cellpadding='0'
-                                            style=border-collapse:collapse;border-spacing:0px;'>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td style='padding:0;Margin:0;'>
-                                                <table class='es-menu' width='40%' cellspacing='0' cellpadding='0' align='center'
-                                                    style=border-collapse:collapse;border-spacing:0px;'>
-                                                    <tr class='images' style='border-collapse:collapse;'>
-                                                    <td
-                                                        style='Margin:0;padding-left:5px;padding-right:5px;padding-top:35px;padding-bottom:30px;border:0;'
-                                                        id='esd-menu-id-2' width='100.00%' valign='top' bgcolor='transparent'
-                                                        align='center'> <a target='_blank'
-                                                        style='-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'
-                                                        open sans', 'helvetica neue' , helvetica, arial,
-                                                        sans-serif;font-size:20px;text-decoration:none;display:block;color:#FFFFFF;'
-                                                        href='https://viewstripo.email/'><img
-                                                            src='https://znwvz.stripocdn.email/content/guids/cab_pub_7cbbc409ec990f19c78c75bd1e06f215/images/Messaging_More_Ellipsis.png'
-                                                            alt='re' title='re' height='27' width='27'
-                                                            style='display:inline !important;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;'></a>
-                                                    </td>
-                                                    </tr>
-                                                </table>
-                                                </td>
-                                            </tr>
-                                            </table>
-                                        </td>
-                                        </tr>
-                                    </table>
-                                    </td>
-                                </tr>
-                                </table>
-                            </td>
-                            </tr>
-                        </table>
-                        <table class='es-footer' cellspacing='0' cellpadding='0' align='center'
-                            style=border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top;'>
-                            <tr style='border-collapse:collapse;'>
-                            <td align='center' style='padding:0;Margin:0;'>
-                                <table class='es-footer-body'
-                                style=border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;border-top:10px solid #48AFB5;'
-                                width='600' cellspacing='0' cellpadding='0' align='center'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td align='left'
-                                    style='Margin:0;padding-top:35px;padding-left:35px;padding-right:35px;padding-bottom:40px;'>
-                                    <table width='100%' cellspacing='0' cellpadding='0'
-                                        style=border-collapse:collapse;border-spacing:0px;'>
-                                        <tr style='border-collapse:collapse;'>
-                                        <td width='530' valign='top' align='center' style='padding:0;Margin:0;'>
-                                            <table width='100%' cellspacing='0' cellpadding='0'
-                                            style=border-collapse:collapse;border-spacing:0px;'>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td align='center' style='padding:0;Margin:0;padding-bottom:15px;'> <img
-                                                    src='https://znwvz.stripocdn.email/content/guids/CABINET_75694a6fc3c4633b3ee8e3c750851c02/images/12331522050090454.png'
-                                                    alt='Beretun logo'
-                                                    style='display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;'
-                                                    title='Beretun logo' width='37' height='37'></td>
-                                            </tr>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td align='center' style='padding:0;Margin:0;padding-bottom:35px;'>
-                                                <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:'
-                                                    open sans', 'helvetica neue' , helvetica, arial,
-                                                    sans-serif;line-height:21px;color:#333333;'><strong>675 Massachusetts Avenue
-                                                    </strong></p>
-                                                <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:'
-                                                    open sans', 'helvetica neue' , helvetica, arial,
-                                                    sans-serif;line-height:21px;color:#333333;'><strong>Cambridge, MA 02139</strong></p>
-                                                </td>
-                                            </tr>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td class='es-m-txt-c' esdev-links-color='#777777' align='left'
-                                                style='padding:0;Margin:0;padding-bottom:5px;'>
-                                                <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:'
-                                                    open sans', 'helvetica neue' , helvetica, arial,
-                                                    sans-serif;line-height:21px;color:#777777;'>If you didn't create an account using
-                                                    this email address, please ignore this email or&nbsp;<u><a target='_blank'
-                                                        style='-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'
-                                                        open sans', 'helvetica neue' , helvetica, arial,
-                                                        sans-serif;font-size:14px;text-decoration:none;color:#777777;'
-                                                        href>unsubscribe</a></u>.</p>
-                                                </td>
-                                            </tr>
-                                            </table>
-                                        </td>
-                                        </tr>
-                                    </table>
-                                    </td>
-                                </tr>
-                                </table>
-                            </td>
-                            </tr>
-                        </table>
-                        <table class='es-content' cellspacing='0' cellpadding='0' align='center'
-                            style=border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;'>
-                            <tr style='border-collapse:collapse;'>
-                            <td align='center' style='padding:0;Margin:0;'>
-                                <table class='es-content-body'
-                                style=border-collapse:collapse;border-spacing:0px;background-color:transparent;'
-                                width='600' cellspacing='0' cellpadding='0' align='center'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td align='left'
-                                    style='Margin:0;padding-left:20px;padding-right:20px;padding-top:30px;padding-bottom:30px;'>
-                                    <table width='100%' cellspacing='0' cellpadding='0'
-                                        style=border-collapse:collapse;border-spacing:0px;'>
-                                        <tr style='border-collapse:collapse;'>
-                                        <td width='560' valign='top' align='center' style='padding:0;Margin:0;'>
-                                            <table width='100%' cellspacing='0' cellpadding='0'
-                                            style=border-collapse:collapse;border-spacing:0px;'>
-                                            <tr style='border-collapse:collapse;'>
-                                                <td class='es-infoblock' align='center'
-                                                style='padding:0;Margin:0;line-height:14px;font-size:12px;color:#CCCCCC;'> <a
-                                                    target='_blank'
-                                                    href='http://viewstripo.email/?utm_source=templates&utm_medium=email&utm_campaign=accessory&utm_content=trigger_newsletter4'
-                                                    style='-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'
-                                                    open sans', 'helvetica neue' , helvetica, arial,
-                                                    sans-serif;font-size:12px;text-decoration:none;color:#CCCCCC;'> <img
-                                                    src='https://znwvz.stripocdn.email/content/guids/CABINET_9df86e5b6c53dd0319931e2447ed854b/images/64951510234941531.png'
-                                                    alt width='125' height='56'
-                                                    style='display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;'>
-                                                </a> </td>
-                                            </tr>
-                                            </table>
-                                        </td>
-                                        </tr>
-                                    </table>
-                                    </td>
-                                </tr>
-                                </table>
-                            </td>
-                            </tr>
-                        </table>
-                        </td>
-                    </tr>
-                    </table>
-                </div>
-                </body>
-
-                </html>";
-
-            $mail->Body = $msg;
+			$mail->Body = $msg;
             $mail->IsHTML(true); //enviar em HTML
 
             //send the message, check for errors
-            if (!$mail->send()) {
-                echo "ERROR: " . $mail->ErrorInfo;
-            }
-      
+			$mail->send();
+			
             return 'success';
 		} 
         return 'Falha ao finalizar a RNC';
