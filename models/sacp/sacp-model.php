@@ -649,11 +649,11 @@ class SacpModel extends MainModel
 									<img src='cid:relat2.png' align=center width='90' height='130'></p></th>
 							</tr>
 							<tr>
-								<th colspan='3' >Relatório de Não-Conformidade</th>
+								<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
 								<th colspan='1' >ID $idSacp </th>						
 							</tr>
 							<tr>
-								<td colspan='4' style='background-color: white; color: green;'><p align=center><b> ----> NOVO <---- </b></p></td>
+								<td colspan='4' style='background-color: white; color: blue;'><p align=center><b> ----> NOVO <---- </b></p></td>
 							</tr>
 							<tr>
 								<td colspan='4'><b> Setor Solicitante:</b> $setorOrigem </td>
@@ -668,10 +668,10 @@ class SacpModel extends MainModel
 								<td colspan='4' style='background-color: white;'><b> Número O.P:</b> $numero_op </td>
 							</tr>
 							<tr>
-								<td colspan='4'><b> Data Gerada:</b><b style='color:green;'> $dataGerada</b> - $horaGerada </td>
+								<td colspan='4'><b> Data Gerada:</b><b style='color:blue;'> $dataGerada</b>  </td>
 							</tr>
 							<tr>
-								<td colspan='4' style='background-color: white;'><b> Data Prazo:</b><b style='color:red;'> $dataPrazo</b> - $horaPrazo </td>
+								<td colspan='4' style='background-color: white;'><b> Data Prazo:</b><b style='color:red;'> $dataPrazo</b>  </td>
 							</tr>
 							<tr rowspan='4'>
 								<td colspan='4'><b> Descrição: </b> $descricao </td>
@@ -701,11 +701,11 @@ class SacpModel extends MainModel
             //send the message, check for errors
             $mail->send();
 				
-			return 'success';
-			
 			// Redireciona para a página de edit
 			echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
 			echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "'</script>";
+
+			return 'success';
 
 		}
 		return 'Erro ao inserir SACP no banco de dados';
@@ -944,11 +944,11 @@ class SacpModel extends MainModel
 									<img src='cid:relat2.png' align=center width='90' height='130'></p></th>
 							</tr>
 							<tr>
-								<th colspan='3' >Relatório de Não-Conformidade</th>
+								<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
 								<th colspan='1' >ID $idSacp </th>						
 							</tr>
 							<tr>
-								<td colspan='4' style='background-color: white; color: green;'><p align=center><b> ----> NOVO <---- </b></p></td>
+								<td colspan='4' style='background-color: white; color: #DAA520;'><p align=center><b> ----> ALTERADA <---- </b></p></td>
 							</tr>
 							<tr>
 								<td colspan='4'><b> Setor Solicitante:</b> $setorOrigem </td>
@@ -963,10 +963,10 @@ class SacpModel extends MainModel
 								<td colspan='4' style='background-color: white;'><b> Número O.P:</b> $numero_op </td>
 							</tr>
 							<tr>
-								<td colspan='4'><b> Data Gerada:</b><b style='color:green;'> $dataGerada</b> - $horaGerada </td>
+								<td colspan='4'><b> Data Gerada:</b><b style='color:blue;'> $dataGerada </b> </td>
 							</tr>
 							<tr>
-								<td colspan='4' style='background-color: white;'><b> Data Prazo:</b><b style='color:red;'> $dataPrazo</b> - $horaPrazo </td>
+								<td colspan='4' style='background-color: white;'><b> Data Prazo:</b><b style='color:red;'> $dataPrazo</b>  </td>
 							</tr>
 							<tr rowspan='4'>
 								<td colspan='4'><b> Descrição: </b> $descricao </td>
@@ -1019,6 +1019,100 @@ class SacpModel extends MainModel
 
 		// Executa a consulta
 		$query = $this->db->delete('sacp', 'id', $user_id);
+
+		if ($query) {
+            require ABSPATH . '/PHPMailer/PHPMailer.php';
+			require ABSPATH . '/PHPMailer/SMTP.php';
+			$url= HOME_URI;
+			
+			$mail = new PHPMailer;
+            $mail->isSMTP();
+            //$mail->SMTPSecure = 'ssl';
+            //$mail->SMTPAuth = true;
+            $mail->Host = 'nac.edelbra.com.br';
+            $mail->Port = 587;
+            $mail->Username = 'manutencao@edelbra.com.br';
+            $mail->Password = 'man@2015!';
+            $mail->setFrom('manutencao@edelbra.com.br');
+			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para Qualidade');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+            $mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+            $mail->Subject = 'RNC Excluída';
+			$msg = "<html dir='ltr'>
+				<head>
+					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+						<style>                   
+							#customers {
+							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+							border-collapse: collapse;
+							width: 100%;
+							}
+							#customers td, #customers th {
+							border: 1px solid #C0C0C0;
+							border-radius: 5px; 5px; 0px; 0px;
+							padding: 8px;
+							background-color: #E8E8E8;
+							}
+							#customers tr:nth-child(even){background-color: #E8E8E8;}
+							#customers th {
+							padding: 8px;
+							text-align: center;
+							background-color: #337AB7;
+							color: white;
+							display: inline-block;
+							}
+							body {background-color: gray;
+							}
+						</style>
+				</head>
+
+				<body align-self: center;>
+				<hr>
+				<br>
+					<table id='customers'>
+							<tr>
+								<th style='background-color: white; padding: 20px;' colspan='3'>
+									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+								<th style='background-color: white; colspan='1' >
+									<img src='cid:relat1.png' align=center width='90' height='130'></p></th>
+							</tr>
+							<tr>
+								<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
+								<th colspan='1' >ID $user_id </th>						
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white; color: red;'><p align=center><b>----> EXCUÍDO <---- </b></p></td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4' style='color: #E8E8E8;'><b>Justificativa:</b>  </td>
+							<br>
+							<br>
+							<br>
+							<br>
+								<p align=center> <a href='$url/sacp/'> 
+								<img src='cid:acessar.png' width='170' height='50'></a>
+								</p>
+								<p align=center> 
+								<img src='cid:linha.png' width='600' height='4'>
+								</p>
+					</table>
+				<br>
+				<hr>
+				<br>
+				</body>
+			</html>";
+
+			$mail->Body = $msg;
+			$mail->IsHTML(true); //enviar em HTML
+			
+			//send the message, check for errors
+			$mail->send();
+		}
 		
 		// Redireciona para a página Painel de visualização
 		echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/sacp/">';
@@ -1047,7 +1141,7 @@ class SacpModel extends MainModel
 				}
 			}
 		}
-
+		
 		/* Remove o campo finalizarSACP para não gerar problema com o PDO */
 		unset($_POST['finalizarSACP']);
 
@@ -1057,9 +1151,181 @@ class SacpModel extends MainModel
 
 		/* Atualiza os dados */
 		$query = $this->db->update('sacp', 'id', $id, array('status' => 3, 'data_finalizada' => $dataFinalizada));
+
+		//traz os dados para o e-mail
+		$query = $this->db->query('SELECT * FROM sacp WHERE id = ?', [$id]);
+		while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+			$setor_origem 	= $valor['setor_origem'];
+			$setor_destino 	= $valor['setor_destino'];
+			$numero_op 		= $valor['numero_op'];
+			$origem 		= $valor['origem'];
+			$descricao 		= $valor['descricao'];
+			$proposito 		= $valor['proposito'];
+			$consequencia 	= $valor['consequencia'];
+			$brainstorming 	= $valor['brainstorming'];
+			$dataGerada		= date('d/m/Y', strtotime($valor['data_gerada']));
+			$dataPrazo		= date('d/m/Y', strtotime($valor['data_prazo']));
+			$dataFinalizada	= date('d/m/Y', strtotime($valor['data_finalizada']));
+
+		}
+
+		//traz os setores para o e-mail
+		$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$setor_origem]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+			$setorOrigem = $valor['nome'];
+		}
+
+		//traz os setores para o e-mail
+		$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$setor_destino]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+			$setorDestino = $valor['nome'];
+		}
+
+		//traz os id participantes
+		$query = $this->db->query('SELECT id_participante FROM sacp_participantes WHERE id_sacp = ?', [$id]);
+		while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+			$participantes[] = $valor['id_participante'];
+		}		
+
+		// busca o id dos participantes
+		foreach ($participantes as $key) {
+		
+			//traz os dados do usuário origem para o e-mail
+			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$key]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$userOrigem		= $valor['nome'];
+				$emailOrigem	= $valor['email'];
+			}			
+		$listaUser[] = $userOrigem;
+		$listaEmail[] = $emailOrigem;
+		}
+
+		//muda os participantes pra uma variável única 
+		$listaUser = implode($listaUser, ', ');	
 		
 		/* Verifica a consulta */
 		if ($query) {
+
+		//chama a classe responsável por construir o e-mail
+			require ABSPATH . '/PHPMailer/PHPMailer.php';
+			require ABSPATH . '/PHPMailer/SMTP.php';
+			$url= HOME_URI;
+
+			$mail = new PHPMailer;
+			$mail->isSMTP();
+			//$mail->SMTPSecure = 'ssl';
+			//$mail->SMTPAuth = true;
+			$mail->Host = 'nac.edelbra.com.br';
+			$mail->Port = 587;
+			$mail->Username = 'manutencao@edelbra.com.br';
+			$mail->Password = 'man@2015!';
+			$mail->setFrom('manutencao@edelbra.com.br');
+				foreach ($listaEmail as $key) {
+					$mail->addAddress($key);
+				}		
+			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para Qualidade');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+			$mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+			$mail->Subject = 'SACP Finalizada';
+			$msg =	"<html dir='ltr'>
+					<head>
+					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+						<style>                   
+							#customers {
+							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+							border-collapse: collapse;
+							width: 100%;
+							}
+							#customers td, #customers th {
+							border: 1px solid #C0C0C0;
+							border-radius: 5px; 5px; 0px; 0px;
+							padding: 8px;
+							background-color: #E8E8E8;
+							}
+							#customers tr:nth-child(even){background-color: #E8E8E8;}
+							#customers th {
+							padding: 8px;
+							text-align: center;
+							background-color: #337AB7;
+							color: white;
+							display: inline-block;
+							}
+							body {background-color: gray;
+							}
+						</style>
+					</head>
+
+				<body align-self: center;>
+				<hr>
+				<br>
+					<table id='customers'>
+							<tr>
+								<th style='background-color: white; padding: 20px;' colspan='3'>
+									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+								<th style='background-color: white; colspan='1' >
+									<img src='cid:relat2.png' align=center width='90' height='130'></p></th>
+							</tr>
+							<tr>
+								<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
+								<th colspan='1' >ID $id </th>						
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white; color: green;'><p align=center><b> ----> FINALIZADA <---- </b></p></td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> Setor Solicitante:</b> $setorOrigem </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b> Setor Destino:</b> $setorDestino </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> Participantes:</b> $listaUser </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b> Número O.P:</b> $numero_op </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> Data Gerada:</b><b style='color:blue;'> $dataGerada </b> </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b> Data Prazo:</b><b style='color:red;'> $dataPrazo</b>  </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> Data Finalizada:</b><b style='color:green;'> $dataFinalizada </b>  </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4' style='background-color: white;'><b> Descrição: </b> $descricao </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4' style='background-color: white; color: white;'><b>Justificativa:</b>  </td>
+							</tr>
+							<br>
+							<br>
+							<br>
+							<br>
+								<p align=center> <a href='$url/sacp/'> 
+								<img src='cid:acessar.png' width='170' height='50'></a>
+								</p>
+								<p align=center> 
+								<img src='cid:linha.png' width='600' height='4'>
+								</p>
+					</table>
+				<br>			
+				<hr>
+				<br>
+				</body>
+			</html>";
+			$mail->Body = $msg;
+            $mail->IsHTML(true); //enviar em HTML
+
+            //send the message, check for errors
+			$mail->send();
+			
 			return 'success';
 		}
 		return 'Falha ao finalizar a SACP';
@@ -1224,8 +1490,147 @@ class SacpModel extends MainModel
 		$_POST['id_tipo_plano'] = $dados[1];
 
 		$query = $this->db->insert('planos_acao', $_POST);
+		$idPlano = $this->db->last_id;
 
 		if ($query) {
+
+			$query = $this->db->query('SELECT * FROM planos_acao WHERE id = ?', [$idPlano]);
+				while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$o_que 			= $valor['o_que'];
+				$como		 	= $valor['como'];
+				$quem	 		= $valor['quem'];
+				$onde			= $valor['onde'];
+				$idSacp			= $valor['id_sacp'];
+				$quando			= date('d/m/Y', strtotime($valor['quando']));
+				}
+
+			//traz os dados do usuário destino para o e-mail
+			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$quem]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$quem		= $valor['nome'];
+				$quemEmail	= $valor['email'];
+			}	
+
+			//traz os dados do setor destino para o e-mail
+			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$onde]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$onde		= $valor['nome'];				
+			}
+
+			$dataGerada = new DateTime('now');
+			$dataGerada = $dataGerada->format('d-m-Y');
+
+
+			//chama a classe responsável por construir o e-mail
+			require ABSPATH . '/PHPMailer/PHPMailer.php';
+			require ABSPATH . '/PHPMailer/SMTP.php';
+			$url= HOME_URI;
+
+			$mail = new PHPMailer;
+			$mail->isSMTP();
+			//$mail->SMTPSecure = 'ssl';
+			//$mail->SMTPAuth = true;
+			$mail->Host = 'nac.edelbra.com.br';
+			$mail->Port = 587;
+			$mail->Username = 'manutencao@edelbra.com.br';
+			$mail->Password = 'man@2015!';
+			$mail->setFrom('manutencao@edelbra.com.br');
+			$mail->addAddress($quemEmail); //email destino
+			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para Qualidade');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+			$mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+			$mail->Subject = 'Plano de Ação - Novo';
+			$msg =
+				"<html dir='ltr'>
+					<head>
+					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+						<style>                   
+							#customers {
+							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+							border-collapse: collapse;
+							width: 100%;
+							}
+							#customers td, #customers th {
+							border: 1px solid #C0C0C0;
+							border-radius: 5px; 5px; 0px; 0px;
+							padding: 8px;
+							background-color: #E8E8E8;
+							}
+							#customers tr:nth-child(even){background-color: #E8E8E8;}
+							#customers th {
+							padding: 8px;
+							text-align: center;
+							background-color: #337AB7;
+							color: white;
+							display: inline-block;
+							}
+							body {background-color: gray;
+							}
+						</style>
+					</head>
+
+				<body align-self: center;>
+				<hr>
+				<br>
+					<table id='customers'>
+							<tr>
+								<th style='background-color: white; padding: 20px;' colspan='3'>
+									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+								<th style='background-color: white; colspan='1' >
+									<img src='cid:relat2.png' align=center width='90' height='130'></p></th>
+							</tr>
+							<tr>
+								<th colspan='3' >Plano de Ação - SACP</th>
+								<th colspan='1' >ID $idSacp </th>						
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white; color: blue;'><p align=center><b> ----> NOVO <---- </b></p></td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> O que Fazer:</b> $o_que </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b> Como fazer:</b> $como </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> Quem:</b> $quem </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b> Onde:</b> $onde </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> Quando:</b><b style='color:red;'> $quando </b>  </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4' style='background-color: white; color: white;'><b>Justificativa:</b>  </td>
+							</tr>
+							<br>
+							<br>
+							<br>
+							<br>
+								<p align=center> <a href='$url/sacp/editar/$idSacp'> 
+								<img src='cid:acessar.png' width='170' height='50'></a>
+								</p>
+								<p align=center> 
+								<img src='cid:linha.png' width='600' height='4'>
+								</p>
+					</table>
+				<br>			
+				<hr>
+				<br>
+				</body>
+			</html>";
+			$mail->Body = $msg;
+            $mail->IsHTML(true); //enviar em HTML
+
+            //send the message, check for errors
+            $mail->send();
+
 			return 'success';
 		}
 		return 'Falha ao inserir no banco de dados';
@@ -1247,6 +1652,144 @@ class SacpModel extends MainModel
 		$query = $this->db->update('planos_acao', 'id', $id, $_POST);
 
 		if ($query) {
+
+			$query = $this->db->query('SELECT * FROM planos_acao WHERE id = ?', [$id]);
+				while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$o_que 			= $valor['o_que'];
+				$como		 	= $valor['como'];
+				$quem	 		= $valor['quem'];
+				$onde			= $valor['onde'];
+				$idSacp			= $valor['id_sacp'];
+				$quando			= date('d/m/Y', strtotime($valor['quando']));
+				}
+
+			//traz os dados do usuário destino para o e-mail
+			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$quem]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$quem		= $valor['nome'];
+				$quemEmail	= $valor['email'];
+			}	
+
+			//traz os dados do setor destino para o e-mail
+			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$onde]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$onde		= $valor['nome'];				
+			}
+
+			$dataGerada = new DateTime('now');
+			$dataGerada = $dataGerada->format('d-m-Y');
+
+
+			//chama a classe responsável por construir o e-mail
+			require ABSPATH . '/PHPMailer/PHPMailer.php';
+			require ABSPATH . '/PHPMailer/SMTP.php';
+			$url= HOME_URI;
+
+			$mail = new PHPMailer;
+			$mail->isSMTP();
+			//$mail->SMTPSecure = 'ssl';
+			//$mail->SMTPAuth = true;
+			$mail->Host = 'nac.edelbra.com.br';
+			$mail->Port = 587;
+			$mail->Username = 'manutencao@edelbra.com.br';
+			$mail->Password = 'man@2015!';
+			$mail->setFrom('manutencao@edelbra.com.br');
+			$mail->addAddress($quemEmail); //email destino
+			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para Qualidade');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+			$mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+			$mail->Subject = 'Plano de Ação - Editado';
+			$msg =
+				"<html dir='ltr'>
+					<head>
+					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+						<style>                   
+							#customers {
+							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+							border-collapse: collapse;
+							width: 100%;
+							}
+							#customers td, #customers th {
+							border: 1px solid #C0C0C0;
+							border-radius: 5px; 5px; 0px; 0px;
+							padding: 8px;
+							background-color: #E8E8E8;
+							}
+							#customers tr:nth-child(even){background-color: #E8E8E8;}
+							#customers th {
+							padding: 8px;
+							text-align: center;
+							background-color: #337AB7;
+							color: white;
+							display: inline-block;
+							}
+							body {background-color: gray;
+							}
+						</style>
+					</head>
+
+				<body align-self: center;>
+				<hr>
+				<br>
+					<table id='customers'>
+							<tr>
+								<th style='background-color: white; padding: 20px;' colspan='3'>
+									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+								<th style='background-color: white; colspan='1' >
+									<img src='cid:relat2.png' align=center width='90' height='130'></p></th>
+							</tr>
+							<tr>
+								<th colspan='3' >Plano de Ação - SACP</th>
+								<th colspan='1' >ID $idSacp </th>						
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white; color: #DAA520;'><p align=center><b> ----> EDITADO <---- </b></p></td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> O que Fazer:</b> $o_que </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b> Como fazer:</b> $como </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> Quem:</b> $quem </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b> Onde:</b> $onde </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> Quando:</b><b style='color:red;'> $quando </b>  </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4' style='background-color: white; color: white;'><b>Justificativa:</b>  </td>
+							</tr>
+							<br>
+							<br>
+							<br>
+							<br>
+								<p align=center> <a href='$url/sacp/editar/$idSacp'> 
+								<img src='cid:acessar.png' width='170' height='50'></a>
+								</p>
+								<p align=center> 
+								<img src='cid:linha.png' width='600' height='4'>
+								</p>
+					</table>
+				<br>			
+				<hr>
+				<br>
+				</body>
+			</html>";
+			$mail->Body = $msg;
+            $mail->IsHTML(true); //enviar em HTML
+
+            //send the message, check for errors
+            $mail->send();
+
 			return 'success';
 		}
 		return 'Falha ao inserir no banco de dados';
@@ -1278,6 +1821,101 @@ class SacpModel extends MainModel
 
 		// Executa a consulta
 		$query = $this->db->delete('planos_acao', 'id', $idPlano);
+
+		if ($query) {
+            require ABSPATH . '/PHPMailer/PHPMailer.php';
+			require ABSPATH . '/PHPMailer/SMTP.php';
+			$url= HOME_URI;
+			
+			$mail = new PHPMailer;
+            $mail->isSMTP();
+            //$mail->SMTPSecure = 'ssl';
+            //$mail->SMTPAuth = true;
+            $mail->Host = 'nac.edelbra.com.br';
+            $mail->Port = 587;
+            $mail->Username = 'manutencao@edelbra.com.br';
+            $mail->Password = 'man@2015!';
+            $mail->setFrom('manutencao@edelbra.com.br');
+			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para Qualidade');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+            $mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+            $mail->Subject = 'Plano de Ação - Excuído';
+			$msg = "<html dir='ltr'>
+				<head>
+					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+						<style>                   
+							#customers {
+							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+							border-collapse: collapse;
+							width: 100%;
+							}
+							#customers td, #customers th {
+							border: 1px solid #C0C0C0;
+							border-radius: 5px; 5px; 0px; 0px;
+							padding: 8px;
+							background-color: #E8E8E8;
+							}
+							#customers tr:nth-child(even){background-color: #E8E8E8;}
+							#customers th {
+							padding: 8px;
+							text-align: center;
+							background-color: #337AB7;
+							color: white;
+							display: inline-block;
+							}
+							body {background-color: gray;
+							}
+						</style>
+				</head>
+
+				<body align-self: center;>
+				<hr>
+				<br>
+					<table id='customers'>
+							<tr>
+								<th style='background-color: white; padding: 20px;' colspan='3'>
+									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+								<th style='background-color: white; colspan='1' >
+									<img src='cid:relat1.png' align=center width='90' height='130'></p></th>
+							</tr>
+							<tr>
+								<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
+								<th colspan='1' >ID $idSacp </th>						
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white; color: red;'><p align=center><b>----> EXCUÍDO <---- </b></p></td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4' style='color: #E8E8E8;'><b>Justificativa:</b>  </td>
+							<br>
+							<br>
+							<br>
+							<br>
+								<p align=center> <a href='$url/sacp/'> 
+								<img src='cid:acessar.png' width='170' height='50'></a>
+								</p>
+								<p align=center> 
+								<img src='cid:linha.png' width='600' height='4'>
+								</p>
+					</table>
+				<br>
+				<hr>
+				<br>
+				</body>
+			</html>";
+
+			$mail->Body = $msg;
+			$mail->IsHTML(true); //enviar em HTML
+			
+			//send the message, check for errors
+			$mail->send();
+			
+			}
 		
 		// Redireciona para a página de edit
 		echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
@@ -1309,7 +1947,144 @@ class SacpModel extends MainModel
 		echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
 		echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "'</script>";
 
-		if ($query) {
+	if ($query) {
+
+			$query = $this->db->query('SELECT * FROM planos_acao WHERE id = ?', [$id]);
+				while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$o_que 			= $valor['o_que'];
+				$como		 	= $valor['como'];
+				$quem	 		= $valor['quem'];
+				$onde			= $valor['onde'];
+				$idSacp			= $valor['id_sacp'];
+				$quando			= date('d/m/Y', strtotime($valor['quando']));
+				}
+
+			//traz os dados do usuário destino para o e-mail
+			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$quem]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$quem		= $valor['nome'];
+				$quemEmail	= $valor['email'];
+			}	
+
+			//traz os dados do setor destino para o e-mail
+			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$onde]);
+			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
+				$onde		= $valor['nome'];				
+			}
+
+			$dataGerada = new DateTime('now');
+			$dataGerada = $dataGerada->format('d-m-Y');
+
+
+			//chama a classe responsável por construir o e-mail
+			require ABSPATH . '/PHPMailer/PHPMailer.php';
+			require ABSPATH . '/PHPMailer/SMTP.php';
+			$url= HOME_URI;
+
+			$mail = new PHPMailer;
+			$mail->isSMTP();
+			//$mail->SMTPSecure = 'ssl';
+			//$mail->SMTPAuth = true;
+			$mail->Host = 'nac.edelbra.com.br';
+			$mail->Port = 587;
+			$mail->Username = 'manutencao@edelbra.com.br';
+			$mail->Password = 'man@2015!';
+			$mail->setFrom('manutencao@edelbra.com.br');
+			$mail->addAddress($quemEmail); //email destino
+			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para Qualidade');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+			$mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+			$mail->Subject = 'Plano de Ação - Finalizado';
+			$msg =
+				"<html dir='ltr'>
+					<head>
+					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+						<style>                   
+							#customers {
+							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+							border-collapse: collapse;
+							width: 100%;
+							}
+							#customers td, #customers th {
+							border: 1px solid #C0C0C0;
+							border-radius: 5px; 5px; 0px; 0px;
+							padding: 8px;
+							background-color: #E8E8E8;
+							}
+							#customers tr:nth-child(even){background-color: #E8E8E8;}
+							#customers th {
+							padding: 8px;
+							text-align: center;
+							background-color: #337AB7;
+							color: white;
+							display: inline-block;
+							}
+							body {background-color: gray;
+							}
+						</style>
+					</head>
+
+				<body align-self: center;>
+				<hr>
+				<br>
+					<table id='customers'>
+							<tr>
+								<th style='background-color: white; padding: 20px;' colspan='3'>
+									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+								<th style='background-color: white; colspan='1' >
+									<img src='cid:relat2.png' align=center width='90' height='130'></p></th>
+							</tr>
+							<tr>
+								<th colspan='3' >Plano de Ação - SACP</th>
+								<th colspan='1' >ID $idSacp </th>						
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white; color: green;'><p align=center><b> ----> FINALIZADO <---- </b></p></td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> O que Fazer:</b> $o_que </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b> Como fazer:</b> $como </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> Quem:</b> $quem </td>
+							</tr>
+							<tr>
+								<td colspan='4' style='background-color: white;'><b> Onde:</b> $onde </td>
+							</tr>
+							<tr>
+								<td colspan='4'><b> Quando:</b><b style='color:red;'> $quando </b>  </td>
+							</tr>
+							<tr rowspan='4'>
+								<td colspan='4' style='background-color: white; color: white;'><b>Justificativa:</b>  </td>
+							</tr>
+							<br>
+							<br>
+							<br>
+							<br>
+								<p align=center> <a href='$url/sacp/editar/$idSacp'> 
+								<img src='cid:acessar.png' width='170' height='50'></a>
+								</p>
+								<p align=center> 
+								<img src='cid:linha.png' width='600' height='4'>
+								</p>
+					</table>
+				<br>			
+				<hr>
+				<br>
+				</body>
+			</html>";
+			$mail->Body = $msg;
+            $mail->IsHTML(true); //enviar em HTML
+
+            //send the message, check for errors
+            $mail->send();
 			return 'success';
 
 		}

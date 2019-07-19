@@ -31,8 +31,19 @@ class RncController extends MainController
 	{
         $modelo = $this->load_model('rnc/rnc-model');
         echo $modelo->paginacao();
-    }
+	}
+	
+	public function ajax() 
+	{	
+		
+		$modelo = $this->load_model('rnc/rnc-model');
+		$retorno = $modelo->importarAjax();
 
+		/** Carrega os arquivos do view **/
+        require ABSPATH . '/views/_includes/header.php';
+        require ABSPATH . '/views/rnc/teste-rnc.php';
+        require ABSPATH . '/views/_includes/footer.php';
+	}
 
 	public function inserir() 
 	{
@@ -56,8 +67,8 @@ class RncController extends MainController
 
 		$usuarios = $modelo->listarUsuarios();
 		$setorAtual = $modelo->buscaSetor($this->userdata['setor']);
-        $retorno = $modelo->inserirRNC();
-
+		$retorno = $modelo->inserirRNC();
+		
         if ($retorno == 'success') {
 			$this->modal_notification = MainModel::openNotification('Sucesso', 'RNC gerada com sucesso.', 'success');
 		} elseif (!empty($retorno)) {

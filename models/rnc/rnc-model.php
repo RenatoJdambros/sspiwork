@@ -173,6 +173,40 @@ class RncModel extends MainModel
 		return $setor['nome'];
 	}
 
+	public function importarAJAX()
+	{	
+
+		/* Verifica se algo foi postado e se está vindo do form que tem o campo
+		inserirRNC. */
+		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['inserirRNC'])) {
+			return;
+		}
+
+		$arquivo 	= $_FILES["file"]["tmp_name"];
+        $nome 		= $_FILES["file"]["name"];
+        $tamanho 	= $_FILES["file"]["size"];
+
+        $fp = fopen($arquivo,"rb");//Abro o arquivo que está no $temp   
+    	$documento = fread($fp, $tamanho);//Leio o binario do arquivo
+    	fclose($fp);//fecho o arquivo
+
+		$dados = bin2hex($documento);
+
+		$dataGerada = new DateTime('now');
+		$dataGerada = $dataGerada->format('Y-m-d H:i:s');
+
+		$_POST = array(
+			'nome' 		=> $nome,
+			'tamanho'	=> $tamanho,
+			'conteúdo'	=> $dados,
+			'data'		=> $dataGerada,
+		);
+
+		print_r($arquivo);
+
+		$query = $this->db->insert('arquivos', $_POST);
+
+	}
 
     public function listarUsuarios() 
 	{
@@ -232,8 +266,7 @@ class RncModel extends MainModel
 
 		// Salva na $_POST e deleta a variavel desnecessária
 		$_POST['data_gerada'] = $dataGerada;
-		unset($dataGerada);
-
+	
 		/* query */
         $query = $this->db->insert('rnc', $_POST);
         $id = $this->db->last_id;
@@ -332,7 +365,7 @@ class RncModel extends MainModel
 								<th colspan='1' >ID $id </th>						
 							</tr>
 							<tr>
-								<td colspan='4' style='background-color: white; color: green;'><p align=center><b> ----> NOVO <---- </b></p></td>
+								<td colspan='4' style='background-color: white; color: blue;'><p align=center><b> ----> NOVO <---- </b></p></td>
 							</tr>
 							<tr>
 								<td colspan='4'><b>Origem:</b> $userOrigem </td>
@@ -478,7 +511,7 @@ class RncModel extends MainModel
 							#customers th {
 							padding: 8px;
 							text-align: center;
-							background-color: #337AB7;
+							background-color: #DAA520;
 							color: white;
 							display: inline-block;
 							}
@@ -502,7 +535,7 @@ class RncModel extends MainModel
 								<th colspan='1' >ID $id </th>						
 							</tr>
 							<tr>
-								<td colspan='4' style='background-color: white; color: #DAA520;'><p align=center><b> ----> EDITADO <---- </b></p></td>
+								<td colspan='4' style='background-color: white; color: #DAA520;'><p align=center><b> ----> ALTERADO <---- </b></p></td>
 							</tr>
 							<tr>
 								<td colspan='4'><b>Origem:</b> $userOrigem </td>
@@ -615,7 +648,7 @@ class RncModel extends MainModel
 							#customers th {
 							padding: 8px;
 							text-align: center;
-							background-color: #337AB7;
+							background-color: #DAA520;
 							color: white;
 							display: inline-block;
 							}
@@ -647,7 +680,7 @@ class RncModel extends MainModel
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/rnc/inserir/'> 
+								<p align=center> <a href='$url/rnc/'> 
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
 								<p align=center> 
@@ -773,7 +806,7 @@ class RncModel extends MainModel
 							#customers th {
 							padding: 8px;
 							text-align: center;
-							background-color: #337AB7;
+							background-color: #DAA520;
 							color: white;
 							display: inline-block;
 							}

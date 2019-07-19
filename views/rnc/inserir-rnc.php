@@ -53,7 +53,7 @@
                     <textarea class="form-control rounded-0" id="descricao" name="descricao" rows="4" 
                     placeholder="Descreva a não-conformidade encontrada..." required></textarea>
                 </div>
-                <br>
+               
                 <!--botão Dados de Clientes-->
                 <div id="accordion">
                 <button style="background-color: #FAF6DC;" class="btn btn-basic" data-toggle="collapse" href="#collapseOne">
@@ -98,6 +98,9 @@
                                 </div> <!-- end form-row -->
                             </div> <!-- end collapseOne -->
                         </div> <!-- end accordion -->
+                    <button type="button" id="mulitplefileuploader">Importar arquivo(s)</button>
+                <br>
+
                 <div class="form-group row"> <!-- form destino -->
                     <div class="form-group col-md-12">
                         <br>
@@ -135,3 +138,39 @@
                 </div><!-- Fim div row -->               
             </form><!-- end form -->
             <!-- Fim conteúdo página-->
+            
+
+<script type="text/javascript">
+$(document).ready(function()
+     {
+    
+     var settings = {
+        url: "<?= HOME_URI ?>/rnc/ajax",
+        method: "POST",
+        allowedTypes:"pdf",
+        fileName: "file",
+        multiple: true,
+        
+        onSuccess:function(files,data,xhr)
+        {
+           //faz alguma coisa
+
+        },
+     
+         afterUploadAll:function()
+         {
+            $(".upload-bar").css("animation-play-state","paused");
+            
+         },
+        onError: function(files,status,errMsg)
+        {       
+          
+            alert(errMsg);
+        }
+
+        
+     }
+     $("#mulitplefileuploader").uploadFile(settings);
+        
+     });
+</script>

@@ -138,6 +138,10 @@
 
   <script src="<?=HOME_URI?>/views/_js/scripts.js"></script>
 
+  <script src="<?=HOME_URI?>/views/_vendors/upload_ajax/JS/jquery.fileuploadmulti.min.js"></script>
+
+  
+
     <!--  POPUP MODAL -->
     <?php if (isset($this->modal_message['title'])) { ?>
         <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="modal-popup">
