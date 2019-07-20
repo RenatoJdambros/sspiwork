@@ -2,11 +2,11 @@
 class SacpModel extends MainModel
 {
 
-	public function __construct($db = false, $controller = null) 
+	public function __construct($db = false, $controller = null)
 	{
 		// Configura o DB (PDO)
 		$this->db = $db;
-		
+
 		// Configura o controlador
 		$this->controller = $controller;
 
@@ -16,11 +16,24 @@ class SacpModel extends MainModel
 		// Configura os dados do usuário
 		$this->userdata = $this->controller->userdata;
     }
-    
+
 
 	public function paginacao()
     {
+		if (!empty($_POST['dataFilter'])) {
+            $dataSelected = $_POST['dataFilter'];
+        }
+
+        if (!empty($_POST['dataMin'])) {
+            $dataMin = $_POST['dataMin'];
+        }
+
+        if (!empty($_POST['dataMax'])) {
+            $dataMax = $_POST['dataMax'];
+		}
+
         if ($this->userdata['tipo_usuario'] == 3) {
+			// usuario comum
 			$query = $this->db->query('SELECT id_sacp FROM sacp_participantes WHERE id_participante = ?', array($this->userdata['id']));
 			$sacpPresente = $query->fetchAll(PDO::FETCH_COLUMN, 0);
 
@@ -30,14 +43,27 @@ class SacpModel extends MainModel
 				$sacpPresente = 0;
 			}
 
-			$sql = 'SELECT * FROM sacp';
+			$sql = 'SELECT * FROM sacp_dados_fk';
 			$where = "id IN ($sacpPresente)";
 
+			if (!empty($_POST['dataMin']) && !empty($_POST['dataMax'])) {
+                $where .= " AND $dataSelected BETWEEN '$dataMin' AND '$dataMax'";
+            }
+
 			$columns = $this->formatar_colunas();
-			$page = DataTable::complex($_POST, $this->db->pdo, 'sacp', 'id', $columns, $sql, null, $where);
+			$page = DataTable::complex($_POST, $this->db->pdo, 'sacp_dados_fk', 'id', $columns, $sql, null, $where);
 		} else {
+			// admin-qualidade
+			$sql = 'SELECT * FROM sacp_dados_fk';
+
+			if (!empty($_POST['dataMin']) && !empty($_POST['dataMax'])) {
+                $where = "$dataSelected BETWEEN '$dataMin' AND '$dataMax'";
+            } else {
+                $where = null;
+            }
+
 			$columns = $this->formatar_colunas();
-			$page = DataTable::simple($_POST, $this->db->pdo, 'sacp', 'id', $columns);
+			$page = DataTable::complex($_POST, $this->db->pdo, 'sacp_dados_fk', 'id', $columns, $sql, null, $where);
 		}
 
         return json_encode($page);
@@ -48,53 +74,40 @@ class SacpModel extends MainModel
     {
         return array(
             ['dt' => 0, 'db' => 'id'],
-            ['dt' => 1, 'db' => 'setor_origem', 'formatter' => function($d) 
+            ['dt' => 1, 'db' => 'setor_origem'],
+            ['dt' => 2, 'db' => 'setor_destino'],
+            ['dt' => 3, 'db' => 'status', 'formatter' => function($d)
             {
-                $query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$d]);
-				$result = $query->fetch();
-				
-				if (empty($result)) {
-					return "Não encontrado";	
-				}
-                return $result['nome'];
+                $return = "<span class='label label-";
+
+                if ($d == 'Novo') {
+					$return .= "primary";
+				} elseif ($d == 'Em progresso') {
+					$return .= "warning";
+				} elseif ($d == 'Finalizado') {
+					$return .= "success";
+				} else {
+					$return .= "default";
+                }
+                $return .= "'>$d</span>";
+
+                return $return;
             }],
-            ['dt' => 2, 'db' => 'setor_destino', 'formatter' => function($d) 
-            {
-                $query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$d]);
-				$result = $query->fetch();
-				
-				if (empty($result)) {
-					return "Não encontrado";	
-				}
-                return $result['nome'];
-            }],
-            ['dt' => 3, 'db' => 'status', 'formatter' => function($d) 
-            {
-                if ($d == 1) {
-					return "<span class='label label-primary'>Novo</span>";
-				} elseif ($d == 2) {
-					return "<span class='label label-warning'>Em progresso</span>";
-				} elseif ($d == 3) {
-					return "<span class='label label-success'>Finalizado</span>";
-				} elseif ($d == 4) {
-					return "<span class='label label-default'>Expirado</span>";
-				}
-            }],
-			['dt' => 4, 'db' => 'numero_op', 'formatter' => function($d) 
+			['dt' => 4, 'db' => 'numero_op', 'formatter' => function($d)
             {
 				if (!empty($d)) {
 					return $d;
 				}
 				return 'Não';
 			}],
-			['dt' => 5, 'db' => 'id_rnc', 'formatter' => function($d) 
+			['dt' => 5, 'db' => 'id_rnc', 'formatter' => function($d)
             {
 				if (!empty($d)) {
 					return $d;
 				}
 				return 'Não';
 			}],
-			['dt' => 6, 'db' => 'data_gerada', 'formatter' => function($d) 
+			['dt' => 6, 'db' => 'data_gerada', 'formatter' => function($d)
             {
 				if ($d !== null) {
 					$data = new DateTime($d);
@@ -102,7 +115,7 @@ class SacpModel extends MainModel
 				}
 				return "";
 			}],
-			['dt' => 7, 'db' => 'data_prazo', 'formatter' => function($d) 
+			['dt' => 7, 'db' => 'data_prazo', 'formatter' => function($d)
             {
 				if ($d !== null) {
 					$data = new DateTime($d);
@@ -110,7 +123,7 @@ class SacpModel extends MainModel
 				}
 				return "";
             }],
-			['dt' => 8, 'db' => 'data_finalizada', 'formatter' => function($d) 
+			['dt' => 8, 'db' => 'data_finalizada', 'formatter' => function($d)
             {
 				if ($d !== null) {
 					$data = new DateTime($d);
@@ -118,7 +131,7 @@ class SacpModel extends MainModel
 				}
 				return "";
             }],
-            ['dt' => 9, 'db' => 'id', 'formatter' => function($d) 
+            ['dt' => 9, 'db' => 'id', 'formatter' => function($d)
             {
 				$query = $this->db->query('SELECT status FROM sacp WHERE id = ?', array($d));
 				$status = $query->fetch(PDO::FETCH_COLUMN, 0);
@@ -145,12 +158,14 @@ class SacpModel extends MainModel
 										<a href="<?= HOME_URI ?>/sacp/finalizar/<?= $d ?>"><i class="fa fa-check"></i> Finalizar</a>
 									</li>
 								<?php } ?>
+								<?php if ($this->controller->check_permissions('sacp', 'editar', $this->userdata['user_permissions'])) { ?>
+									<li>
+										<a href="<?= HOME_URI ?>/sacp/avaliar/<?= $d ?>"><i class="fa fa-check"></i> Avaliar</a>
+									</li>
+								<?php } ?>
 								<?php if ($this->controller->check_permissions('sacp', 'excluir', $this->userdata['user_permissions'])) { ?>
 									<li>
 										<a href="<?= HOME_URI ?>/sacp/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
-										<div style="display:none">
-											<button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
-										</div>
 									</li>
 								<?php } ?>
                         </ul>
@@ -182,7 +197,41 @@ class SacpModel extends MainModel
 	}
 
 
-    public function listarUsuarios() 
+	public function avaliaSACP($id)
+	{
+		/* Verifica se algo foi postado e se está vindo do form que tem o campo
+		inserirSACP. */
+		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['inserirAvaliacao'])) {
+			return;
+		}
+
+		/* Remove o campo inserirSACP para não gerar problema com o PDO */
+		unset($_POST['inserirAvaliacao']);
+
+		$query = $this->db->update(
+			'sacp',
+			'id',
+			$id[0],
+			array('avaliacao' => $_POST['avaliacao'])
+		);
+		if ($query) {
+			return 'success';
+		}
+		return 'Falha ao inserir avaliação';
+	}
+
+
+	public function retornaAvaliacao($id)
+	{
+		$query = $this->db->query(
+			'SELECT avaliacao FROM sacp WHERE id = ?',
+			array($id[0])
+		);
+		return $query->fetch(PDO::FETCH_COLUMN, 0);
+	}
+
+
+    public function listarUsuarios()
 	{
 		// Busca os usuários fora o admin
 		$query = $this->db->query('SELECT * FROM usuarios WHERE tipo_usuario != 1');
@@ -193,7 +242,7 @@ class SacpModel extends MainModel
 			$result = $query->fetch(PDO::FETCH_ASSOC);
 			$usuarios[$key]['nomeSetor'] = $result['nome'];
 		}
-		
+
 		// Sorteia a array ordem crescente por setor
 		usort($usuarios, function($a, $b) {
 			return $a['nomeSetor'] <=> $b['nomeSetor'];
@@ -201,9 +250,9 @@ class SacpModel extends MainModel
 
 		return $usuarios;
     }
-	
-	
-	public function consultaRNC($id) 
+
+
+	public function consultaRNC($id)
 	{
 		$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', $id);
 		$rnc = $query->fetch(PDO::FETCH_ASSOC);
@@ -212,7 +261,7 @@ class SacpModel extends MainModel
 	}
 
 
-	public function consultaParticipantes($id) 
+	public function consultaParticipantes($id)
 	{
 		$participantes = implode(",", $id);
 		$query = $this->db->query("SELECT id, nome, setor, email FROM usuarios WHERE id IN ($participantes)");
@@ -223,7 +272,7 @@ class SacpModel extends MainModel
 			$result = $query->fetch(PDO::FETCH_ASSOC);
 			$resultado[$key]['nomeSetor'] = $result['nome'];
 		}
-		
+
 		// Sorteia a array ordem crescente por setor
 		usort($resultado, function($a, $b) {
 			return $a['nomeSetor'] <=> $b['nomeSetor'];
@@ -242,18 +291,18 @@ class SacpModel extends MainModel
 
 			$query = $this->db->query("SELECT id FROM sacp WHERE id IN ($sacpPresente)");
 			$resultado = $query->fetchAll(PDO::FETCH_COLUMN, 0);
-			
+
 			return $resultado;
 		}
 		return array();
 	}
 
 
-	public function consultaSACP($id) 
+	public function consultaSACP($id)
 	{
 		$query = $this->db->query('SELECT * FROM sacp WHERE id = ?', $id);
 		$sacp = $query->fetch(PDO::FETCH_ASSOC);
-		
+
 		$query = $this->db->query('SELECT id_participante FROM sacp_participantes WHERE id_sacp = ?', $id);
 		$sacp['participantes'] = $query->fetchAll(PDO::FETCH_COLUMN, 0);
 
@@ -324,7 +373,7 @@ class SacpModel extends MainModel
 			$result = $query->fetch(PDO::FETCH_ASSOC);
 
 			$sacp['medida'][$key]['nomeSetor'] = $result['nome'];
-			
+
 			$query = $this->db->query('SELECT nome FROM status WHERE id = ?', array($value['status']));
 			$status = $query->fetch(PDO::FETCH_COLUMN, 0);
 
@@ -415,8 +464,8 @@ class SacpModel extends MainModel
 		return $sacp;
 	}
 
-    
-    public function inserirSACP() 
+
+    public function inserirSACP()
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		inserirSACP. */
@@ -443,7 +492,7 @@ class SacpModel extends MainModel
 		$dataPrazo = new DateTime($dataGerada . '+ 30 days');
 		$dataPrazo = $dataPrazo->format('Y-m-d H:i:s');
 
-		
+
 
 		// Salva na $dados e deleta a variavel desnecessária
 		$dados['data_gerada'] 	= $dataGerada;
@@ -457,7 +506,7 @@ class SacpModel extends MainModel
 		$dados['consequencia']  = $_POST['consequencia'];
 		$dados['brainstorming'] = $_POST['brainstorming'];
 
-		
+
 		/* query */
 		$query = $this->db->insert('sacp', $dados);
 
@@ -474,20 +523,20 @@ class SacpModel extends MainModel
 
 			// busca o id dos participantes
 			foreach ($participantes as $key) {
-			
+
 				//traz os dados do usuário origem para o e-mail
 				$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$key]);
 				while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
 					$userOrigem		= $valor['nome'];
 					$emailOrigem	= $valor['email'];
-				}			
+				}
 			$listaUser[] = $userOrigem;
 			$listaEmail[] = $emailOrigem;
 			}
-			
-			//muda os participantes pra uma variável única 
-			$listaUser = implode($listaUser, ', ');			
-			
+
+			//muda os participantes pra uma variável única
+			$listaUser = implode($listaUser, ', ');
+
 				//traz os setores para o e-mail
 				$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$_POST['setor_origem']]);
 			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -515,7 +564,7 @@ class SacpModel extends MainModel
 				$horaPrazo		= date('H:i', strtotime($valor['data_prazo']));
 				$dataPrazo		= date('d/m/Y', strtotime($valor['data_prazo']));
 			}
-	
+
 			// Prepara a variavel _POST para o insert na espinha de peixe
 			unset($_POST['setor_origem']);
 			unset($_POST['setor_destino']);
@@ -560,24 +609,24 @@ class SacpModel extends MainModel
 						$plano = $query->fetch(PDO::FETCH_COLUMN, 0);
 
 						$query = $this->db->insert(
-							'espinha_peixe', 
+							'espinha_peixe',
 							[
-								'id_sacp' => $idSacp, 
-								'id_tipo_plano_acao' => $plano, 
+								'id_sacp' => $idSacp,
+								'id_tipo_plano_acao' => $plano,
 								'descricao' => $dado
 							]
 						);
 					}
 				} else {
-					
+
 					$query = $this->db->query('SELECT id FROM tipo_plano_acao WHERE nome = ?', ['Descrição']);
 					$plano = $query->fetch(PDO::FETCH_COLUMN, 0);
 
 					$query = $this->db->insert(
-						'espinha_peixe', 
+						'espinha_peixe',
 						[
-							'id_sacp' => $idSacp, 
-							'id_tipo_plano_acao' => $plano, 
+							'id_sacp' => $idSacp,
+							'id_tipo_plano_acao' => $plano,
 							'descricao' => $dadoPeixe
 						]
 					);
@@ -599,9 +648,9 @@ class SacpModel extends MainModel
 			$mail->setFrom('manutencao@edelbra.com.br');
 			foreach ($listaEmail as $key) {
 				$mail->addAddress($key);
-			}		
+			}
 			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para administradores');
 			//$mail->addAddress('e-mail para Qualidade');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
@@ -613,7 +662,7 @@ class SacpModel extends MainModel
 				"<html dir='ltr'>
 					<head>
 					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>                   
+						<style>
 							#customers {
 							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
 							border-collapse: collapse;
@@ -650,7 +699,7 @@ class SacpModel extends MainModel
 							</tr>
 							<tr>
 								<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
-								<th colspan='1' >ID $idSacp </th>						
+								<th colspan='1' >ID $idSacp </th>
 							</tr>
 							<tr>
 								<td colspan='4' style='background-color: white; color: blue;'><p align=center><b> ----> NOVO <---- </b></p></td>
@@ -683,14 +732,14 @@ class SacpModel extends MainModel
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/sacp/editar/$idSacp'> 
+								<p align=center> <a href='$url/sacp/editar/$idSacp'>
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
-								<p align=center> 
+								<p align=center>
 								<img src='cid:linha.png' width='600' height='4'>
 								</p>
 					</table>
-				<br>			
+				<br>
 				<hr>
 				<br>
 				</body>
@@ -700,7 +749,7 @@ class SacpModel extends MainModel
 
             //send the message, check for errors
             $mail->send();
-				
+
 			// Redireciona para a página de edit
 			echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
 			echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "'</script>";
@@ -711,8 +760,8 @@ class SacpModel extends MainModel
 		return 'Erro ao inserir SACP no banco de dados';
 	} // insert
 
-	
-	public function editarSACP($id) 
+
+	public function editarSACP($id)
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		editarSACP. */
@@ -745,9 +794,9 @@ class SacpModel extends MainModel
 
 		/* query */
 		$query = $this->db->update('sacp', 'id', $id[0], $dados);
-		
+
 		//seta o ID da sacp pro e-mail
-		$idSacp = implode($id);	
+		$idSacp = implode($id);
 
 		/* Verifica a consulta */
 		if ($query) {
@@ -773,19 +822,19 @@ class SacpModel extends MainModel
 
 			// busca o id dos participantes
 			foreach ($participantes as $key) {
-			
+
 				//traz os dados do usuário origem para o e-mail
 				$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$key]);
 				while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
 					$userOrigem		= $valor['nome'];
 					$emailOrigem	= $valor['email'];
-				}			
+				}
 			$listaUser[] = $userOrigem;
 			$listaEmail[] = $emailOrigem;
 			}
-			
-			//muda os participantes pra uma variável única 
-			$listaUser = implode($listaUser, ', ');	
+
+			//muda os participantes pra uma variável única
+			$listaUser = implode($listaUser, ', ');
 
 			//traz os dados para o e-mail
 			$query = $this->db->query('SELECT * FROM sacp WHERE id = ?', [$idSacp]);
@@ -803,7 +852,7 @@ class SacpModel extends MainModel
 				$horaPrazo		= date('H:i', strtotime($valor['data_prazo']));
 				$dataPrazo		= date('d/m/Y', strtotime($valor['data_prazo']));
 			}
-		
+
 			// Prepara a variavel _POST para o insert na espinha de peixe
 			unset($_POST['setor_origem']);
 			unset($_POST['setor_destino']);
@@ -851,24 +900,24 @@ class SacpModel extends MainModel
 						$plano = $query->fetch(PDO::FETCH_COLUMN, 0);
 
 						$query = $this->db->insert(
-							'espinha_peixe', 
+							'espinha_peixe',
 							[
-								'id_sacp' => $id[0], 
-								'id_tipo_plano_acao' => $plano, 
+								'id_sacp' => $id[0],
+								'id_tipo_plano_acao' => $plano,
 								'descricao' => $dado
 							]
 						);
 					}
 				} else {
-					
+
 					$query = $this->db->query('SELECT id FROM tipo_plano_acao WHERE nome = ?', ['Descrição']);
 					$plano = $query->fetch(PDO::FETCH_COLUMN, 0);
 
 					$query = $this->db->insert(
-						'espinha_peixe', 
+						'espinha_peixe',
 						[
-							'id_sacp' => $id[0], 
-							'id_tipo_plano_acao' => $plano, 
+							'id_sacp' => $id[0],
+							'id_tipo_plano_acao' => $plano,
 							'descricao' => $dadoPeixe
 						]
 					);
@@ -894,9 +943,9 @@ class SacpModel extends MainModel
 			$mail->setFrom('manutencao@edelbra.com.br');
 				foreach ($listaEmail as $key) {
 					$mail->addAddress($key);
-				}		
+				}
 			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para administradores');
 			//$mail->addAddress('e-mail para Qualidade');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
@@ -908,7 +957,7 @@ class SacpModel extends MainModel
 				"<html dir='ltr'>
 					<head>
 					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>                   
+						<style>
 							#customers {
 							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
 							border-collapse: collapse;
@@ -945,7 +994,7 @@ class SacpModel extends MainModel
 							</tr>
 							<tr>
 								<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
-								<th colspan='1' >ID $idSacp </th>						
+								<th colspan='1' >ID $idSacp </th>
 							</tr>
 							<tr>
 								<td colspan='4' style='background-color: white; color: #DAA520;'><p align=center><b> ----> ALTERADA <---- </b></p></td>
@@ -978,14 +1027,14 @@ class SacpModel extends MainModel
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/sacp/editar/$idSacp'> 
+								<p align=center> <a href='$url/sacp/editar/$idSacp'>
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
-								<p align=center> 
+								<p align=center>
 								<img src='cid:linha.png' width='600' height='4'>
 								</p>
 					</table>
-				<br>			
+				<br>
 				<hr>
 				<br>
 				</body>
@@ -1002,7 +1051,7 @@ class SacpModel extends MainModel
 	} // update
 
 
-	public function excluirSACP() 
+	public function excluirSACP()
 	{
 		// O segundo parâmetro deverá ser um ID numérico
 		if (!is_numeric(chk_array($this->parametros, 0))) {
@@ -1011,7 +1060,7 @@ class SacpModel extends MainModel
 
 		// Para excluir, o terceiro parâmetro deverá ser "confirma"
 		if (chk_array($this->parametros, 1) != 'confirma') {
-			return;	
+			return;
 		}
 
 		// Configura o ID SACP
@@ -1024,7 +1073,7 @@ class SacpModel extends MainModel
             require ABSPATH . '/PHPMailer/PHPMailer.php';
 			require ABSPATH . '/PHPMailer/SMTP.php';
 			$url= HOME_URI;
-			
+
 			$mail = new PHPMailer;
             $mail->isSMTP();
             //$mail->SMTPSecure = 'ssl';
@@ -1035,7 +1084,7 @@ class SacpModel extends MainModel
             $mail->Password = 'man@2015!';
             $mail->setFrom('manutencao@edelbra.com.br');
 			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para administradores');
 			//$mail->addAddress('e-mail para Qualidade');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
@@ -1046,7 +1095,7 @@ class SacpModel extends MainModel
 			$msg = "<html dir='ltr'>
 				<head>
 					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>                   
+						<style>
 							#customers {
 							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
 							border-collapse: collapse;
@@ -1083,7 +1132,7 @@ class SacpModel extends MainModel
 							</tr>
 							<tr>
 								<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
-								<th colspan='1' >ID $user_id </th>						
+								<th colspan='1' >ID $user_id </th>
 							</tr>
 							<tr>
 								<td colspan='4' style='background-color: white; color: red;'><p align=center><b>----> EXCUÍDO <---- </b></p></td>
@@ -1094,10 +1143,10 @@ class SacpModel extends MainModel
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/sacp/'> 
+								<p align=center> <a href='$url/sacp/'>
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
-								<p align=center> 
+								<p align=center>
 								<img src='cid:linha.png' width='600' height='4'>
 								</p>
 					</table>
@@ -1109,18 +1158,18 @@ class SacpModel extends MainModel
 
 			$mail->Body = $msg;
 			$mail->IsHTML(true); //enviar em HTML
-			
+
 			//send the message, check for errors
 			$mail->send();
 		}
-		
+
 		// Redireciona para a página Painel de visualização
 		echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/sacp/">';
 		echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/sacp/";</script>';
 	} // delete
 
 
-	public function finalizarSACP($id) 
+	public function finalizarSACP($id)
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		finalizarSACP. */
@@ -1131,7 +1180,7 @@ class SacpModel extends MainModel
 		// Busca os status de todos os planos de ação da SACP
 		$query = $this->db->query('SELECT status FROM planos_acao WHERE id_sacp = ?', array($id));
 		$planos = $query->fetchAll(PDO::FETCH_COLUMN, 0);
-		
+
 		// Percorre a array retornada do banco de dados, e caso algum plano não estiver como status 3(finalizado)
 		// retorna error
 		if (!empty($planos)) {
@@ -1141,7 +1190,7 @@ class SacpModel extends MainModel
 				}
 			}
 		}
-		
+
 		/* Remove o campo finalizarSACP para não gerar problema com o PDO */
 		unset($_POST['finalizarSACP']);
 
@@ -1185,24 +1234,24 @@ class SacpModel extends MainModel
 		$query = $this->db->query('SELECT id_participante FROM sacp_participantes WHERE id_sacp = ?', [$id]);
 		while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
 			$participantes[] = $valor['id_participante'];
-		}		
+		}
 
 		// busca o id dos participantes
 		foreach ($participantes as $key) {
-		
+
 			//traz os dados do usuário origem para o e-mail
 			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$key]);
 			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
 				$userOrigem		= $valor['nome'];
 				$emailOrigem	= $valor['email'];
-			}			
+			}
 		$listaUser[] = $userOrigem;
 		$listaEmail[] = $emailOrigem;
 		}
 
-		//muda os participantes pra uma variável única 
-		$listaUser = implode($listaUser, ', ');	
-		
+		//muda os participantes pra uma variável única
+		$listaUser = implode($listaUser, ', ');
+
 		/* Verifica a consulta */
 		if ($query) {
 
@@ -1222,9 +1271,9 @@ class SacpModel extends MainModel
 			$mail->setFrom('manutencao@edelbra.com.br');
 				foreach ($listaEmail as $key) {
 					$mail->addAddress($key);
-				}		
+				}
 			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para administradores');
 			//$mail->addAddress('e-mail para Qualidade');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
@@ -1235,7 +1284,7 @@ class SacpModel extends MainModel
 			$msg =	"<html dir='ltr'>
 					<head>
 					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>                   
+						<style>
 							#customers {
 							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
 							border-collapse: collapse;
@@ -1272,7 +1321,7 @@ class SacpModel extends MainModel
 							</tr>
 							<tr>
 								<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
-								<th colspan='1' >ID $id </th>						
+								<th colspan='1' >ID $id </th>
 							</tr>
 							<tr>
 								<td colspan='4' style='background-color: white; color: green;'><p align=center><b> ----> FINALIZADA <---- </b></p></td>
@@ -1308,14 +1357,14 @@ class SacpModel extends MainModel
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/sacp/'> 
+								<p align=center> <a href='$url/sacp/'>
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
-								<p align=center> 
+								<p align=center>
 								<img src='cid:linha.png' width='600' height='4'>
 								</p>
 					</table>
-				<br>			
+				<br>
 				<hr>
 				<br>
 				</body>
@@ -1325,14 +1374,14 @@ class SacpModel extends MainModel
 
             //send the message, check for errors
 			$mail->send();
-			
+
 			return 'success';
 		}
 		return 'Falha ao finalizar a SACP';
 	}
 
 
-	public function gerarSACPdeRNC($id) 
+	public function gerarSACPdeRNC($id)
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		editarSACP. */
@@ -1378,12 +1427,12 @@ class SacpModel extends MainModel
 
 		/* query */
 		$query = $this->db->insert('sacp', $dados);
-		
+
 		/* Verifica a consulta */
 		if ($query) {
 			// Seta o id da SACP
 			$idSacp = $this->db->last_id;
-	
+
 			// Insere os participantes
 			foreach ($participantes as $key => $participante) {
 				$query = $this->db->insert('sacp_participantes', ['id_sacp' => $idSacp, 'id_participante' => $participante]);
@@ -1433,30 +1482,30 @@ class SacpModel extends MainModel
 						$plano = $query->fetch(PDO::FETCH_COLUMN, 0);
 
 						$query = $this->db->insert(
-							'espinha_peixe', 
+							'espinha_peixe',
 							[
-								'id_sacp' => $idSacp, 
-								'id_tipo_plano_acao' => $plano, 
+								'id_sacp' => $idSacp,
+								'id_tipo_plano_acao' => $plano,
 								'descricao' => $dado
 							]
 						);
 					}
 				} else {
-					
+
 					$query = $this->db->query('SELECT id FROM tipo_plano_acao WHERE nome = ?', ['Descrição']);
 					$plano = $query->fetch(PDO::FETCH_COLUMN, 0);
 
 					$query = $this->db->insert(
-						'espinha_peixe', 
+						'espinha_peixe',
 						[
-							'id_sacp' => $idSacp, 
-							'id_tipo_plano_acao' => $plano, 
+							'id_sacp' => $idSacp,
+							'id_tipo_plano_acao' => $plano,
 							'descricao' => $dadoPeixe
 						]
 					);
 				}
 			}
-			
+
 			// Redireciona para a página de edit
 			echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
 			echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "'</script>";
@@ -1471,7 +1520,7 @@ class SacpModel extends MainModel
 		$resultado = $query->fetch(PDO::FETCH_ASSOC);
 
 		$data = new DateTime($resultado['quando']);
-		$resultado['quando'] = $data->format('Y-m-d'); 
+		$resultado['quando'] = $data->format('Y-m-d');
 		return $resultado;
 	}
 
@@ -1483,7 +1532,7 @@ class SacpModel extends MainModel
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['inserirPlano'])) {
 			return;
 		}
-		
+
 		unset($_POST['inserirPlano']);
 
 		$_POST['id_sacp'] = $dados[0];
@@ -1509,12 +1558,12 @@ class SacpModel extends MainModel
 			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
 				$quem		= $valor['nome'];
 				$quemEmail	= $valor['email'];
-			}	
+			}
 
 			//traz os dados do setor destino para o e-mail
 			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$onde]);
 			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
-				$onde		= $valor['nome'];				
+				$onde		= $valor['nome'];
 			}
 
 			$dataGerada = new DateTime('now');
@@ -1537,7 +1586,7 @@ class SacpModel extends MainModel
 			$mail->setFrom('manutencao@edelbra.com.br');
 			$mail->addAddress($quemEmail); //email destino
 			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para administradores');
 			//$mail->addAddress('e-mail para Qualidade');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
@@ -1549,7 +1598,7 @@ class SacpModel extends MainModel
 				"<html dir='ltr'>
 					<head>
 					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>                   
+						<style>
 							#customers {
 							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
 							border-collapse: collapse;
@@ -1586,7 +1635,7 @@ class SacpModel extends MainModel
 							</tr>
 							<tr>
 								<th colspan='3' >Plano de Ação - SACP</th>
-								<th colspan='1' >ID $idSacp </th>						
+								<th colspan='1' >ID $idSacp </th>
 							</tr>
 							<tr>
 								<td colspan='4' style='background-color: white; color: blue;'><p align=center><b> ----> NOVO <---- </b></p></td>
@@ -1613,14 +1662,14 @@ class SacpModel extends MainModel
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/sacp/editar/$idSacp'> 
+								<p align=center> <a href='$url/sacp/editar/$idSacp'>
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
-								<p align=center> 
+								<p align=center>
 								<img src='cid:linha.png' width='600' height='4'>
 								</p>
 					</table>
-				<br>			
+				<br>
 				<hr>
 				<br>
 				</body>
@@ -1644,7 +1693,7 @@ class SacpModel extends MainModel
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['editarPlano'])) {
 			return;
 		}
-		
+
 		unset($_POST['editarPlano']);
 
 		$_POST['status'] = 2;
@@ -1668,12 +1717,12 @@ class SacpModel extends MainModel
 			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
 				$quem		= $valor['nome'];
 				$quemEmail	= $valor['email'];
-			}	
+			}
 
 			//traz os dados do setor destino para o e-mail
 			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$onde]);
 			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
-				$onde		= $valor['nome'];				
+				$onde		= $valor['nome'];
 			}
 
 			$dataGerada = new DateTime('now');
@@ -1696,7 +1745,7 @@ class SacpModel extends MainModel
 			$mail->setFrom('manutencao@edelbra.com.br');
 			$mail->addAddress($quemEmail); //email destino
 			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para administradores');
 			//$mail->addAddress('e-mail para Qualidade');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
@@ -1708,7 +1757,7 @@ class SacpModel extends MainModel
 				"<html dir='ltr'>
 					<head>
 					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>                   
+						<style>
 							#customers {
 							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
 							border-collapse: collapse;
@@ -1745,7 +1794,7 @@ class SacpModel extends MainModel
 							</tr>
 							<tr>
 								<th colspan='3' >Plano de Ação - SACP</th>
-								<th colspan='1' >ID $idSacp </th>						
+								<th colspan='1' >ID $idSacp </th>
 							</tr>
 							<tr>
 								<td colspan='4' style='background-color: white; color: #DAA520;'><p align=center><b> ----> EDITADO <---- </b></p></td>
@@ -1772,14 +1821,14 @@ class SacpModel extends MainModel
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/sacp/editar/$idSacp'> 
+								<p align=center> <a href='$url/sacp/editar/$idSacp'>
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
-								<p align=center> 
+								<p align=center>
 								<img src='cid:linha.png' width='600' height='4'>
 								</p>
 					</table>
-				<br>			
+				<br>
 				<hr>
 				<br>
 				</body>
@@ -1810,7 +1859,7 @@ class SacpModel extends MainModel
 
 		// Para excluir, o terceiro parâmetro deverá ser "confirma"
 		if (chk_array($this->parametros, 2) != 'confirma') {
-			return;	
+			return;
 		}
 
 		// Seta o id da sacp
@@ -1826,7 +1875,7 @@ class SacpModel extends MainModel
             require ABSPATH . '/PHPMailer/PHPMailer.php';
 			require ABSPATH . '/PHPMailer/SMTP.php';
 			$url= HOME_URI;
-			
+
 			$mail = new PHPMailer;
             $mail->isSMTP();
             //$mail->SMTPSecure = 'ssl';
@@ -1837,7 +1886,7 @@ class SacpModel extends MainModel
             $mail->Password = 'man@2015!';
             $mail->setFrom('manutencao@edelbra.com.br');
 			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para administradores');
 			//$mail->addAddress('e-mail para Qualidade');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
@@ -1848,7 +1897,7 @@ class SacpModel extends MainModel
 			$msg = "<html dir='ltr'>
 				<head>
 					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>                   
+						<style>
 							#customers {
 							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
 							border-collapse: collapse;
@@ -1885,7 +1934,7 @@ class SacpModel extends MainModel
 							</tr>
 							<tr>
 								<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
-								<th colspan='1' >ID $idSacp </th>						
+								<th colspan='1' >ID $idSacp </th>
 							</tr>
 							<tr>
 								<td colspan='4' style='background-color: white; color: red;'><p align=center><b>----> EXCUÍDO <---- </b></p></td>
@@ -1896,10 +1945,10 @@ class SacpModel extends MainModel
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/sacp/'> 
+								<p align=center> <a href='$url/sacp/'>
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
-								<p align=center> 
+								<p align=center>
 								<img src='cid:linha.png' width='600' height='4'>
 								</p>
 					</table>
@@ -1911,12 +1960,12 @@ class SacpModel extends MainModel
 
 			$mail->Body = $msg;
 			$mail->IsHTML(true); //enviar em HTML
-			
+
 			//send the message, check for errors
 			$mail->send();
-			
+
 			}
-		
+
 		// Redireciona para a página de edit
 		echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
 		echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "'</script>";
@@ -1938,7 +1987,7 @@ class SacpModel extends MainModel
 
 		// Seta o id da sacp
 		$idSacp = (int)chk_array($this->parametros, 0);
-		
+
 		unset($_POST['finalizarPlano']);
 
 		$query = $this->db->update('planos_acao', 'id', $id, array('status' => 3));
@@ -1964,12 +2013,12 @@ class SacpModel extends MainModel
 			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
 				$quem		= $valor['nome'];
 				$quemEmail	= $valor['email'];
-			}	
+			}
 
 			//traz os dados do setor destino para o e-mail
 			$query = $this->db->query('SELECT nome FROM setores WHERE id = ?', [$onde]);
 			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
-				$onde		= $valor['nome'];				
+				$onde		= $valor['nome'];
 			}
 
 			$dataGerada = new DateTime('now');
@@ -1992,7 +2041,7 @@ class SacpModel extends MainModel
 			$mail->setFrom('manutencao@edelbra.com.br');
 			$mail->addAddress($quemEmail); //email destino
 			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para administradores');
 			//$mail->addAddress('e-mail para Qualidade');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
@@ -2004,7 +2053,7 @@ class SacpModel extends MainModel
 				"<html dir='ltr'>
 					<head>
 					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>                   
+						<style>
 							#customers {
 							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
 							border-collapse: collapse;
@@ -2041,7 +2090,7 @@ class SacpModel extends MainModel
 							</tr>
 							<tr>
 								<th colspan='3' >Plano de Ação - SACP</th>
-								<th colspan='1' >ID $idSacp </th>						
+								<th colspan='1' >ID $idSacp </th>
 							</tr>
 							<tr>
 								<td colspan='4' style='background-color: white; color: green;'><p align=center><b> ----> FINALIZADO <---- </b></p></td>
@@ -2068,14 +2117,14 @@ class SacpModel extends MainModel
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/sacp/editar/$idSacp'> 
+								<p align=center> <a href='$url/sacp/editar/$idSacp'>
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
-								<p align=center> 
+								<p align=center>
 								<img src='cid:linha.png' width='600' height='4'>
 								</p>
 					</table>
-				<br>			
+				<br>
 				<hr>
 				<br>
 				</body>

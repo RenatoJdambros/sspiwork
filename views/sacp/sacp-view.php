@@ -20,12 +20,49 @@
                     </div>
                     <p align="right" style="max-height: 2px; background: gray; margin-right: 35px; margin-top: 0px;">
                         <span style="margin-top: -18px; " class="badge">Painel de Visualização</span></p>
-            <div class="panel-body">                   
+            <div class="panel-body">
             <br>
-                    <table id="sacp" class="table table-striped table-bordered bulk_action server-side" style="width: 100%;">
+
+                    <table border="0" cellspacing="5" cellpadding="5">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Data Inicial:&nbsp;
+                                </td>
+                                <td>
+                                    <input type="date" id="min" name="min"
+                                    value="<//?= data('default', false, '- 2 week') ?>">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Data Final:&nbsp;
+                                </td>
+                                <td>
+                                    <input type="date" id="max" name="max"
+                                    value="<//?= data() ?>" max="<//?= data() ?>">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <input id="filterDataGeracao" type="radio" name="filterDate" value="data_gerada" checked>
+                    <label for="filterDataGeracao">Data Geração</label>
+
+                    <input id="filterDataPrazo" type="radio" name="filterDate" value="data_prazo">
+                    <label for="filterDataPrazo">Data Prazo</label>
+
+                    <input id="filterDataFinalizacao" type="radio" name="filterDate" value="data_finalizada">
+                    <label for="filterDataFinalizacao">Data Finalização</label>
+
+                    <br>
+
+                    <button id="confirmFilterDate" class="btn btn-primary">Filtrar</button>
+
+                    <table id="sacp" class="table table-striped table-bordered bulk_action" style="width: 100%;">
 
                         <thead>
-                        <tr>
+                            <tr>
                                 <th>ID</th>
                                 <th>Origem</th>
                                 <th>Destino</th>
@@ -44,7 +81,7 @@
                         </tbody>
 
                     </table>
-                    
+
                 </div>
             </div>
         </div>
@@ -52,6 +89,80 @@
 </div>
 <hr>
 <!-- /page content -->
-<script>
-    var controlador = 'sacp';
+<script type="text/javascript">
+    window.onload = function() {
+
+        var table = $('#sacp').DataTable({
+            "lengthMenu": [[20, 30, 50], [20, 30, 50]],
+            "processing": true,
+            "serverSide": true,
+            "stateSave": true,
+            "ajax": {
+                "url": "page",
+                "type": "POST",
+                "data": {
+                    "dataMin": $('#min').val(),
+                    "dataMax": $('#max').val()
+                }
+            },
+            "language": {
+                "paginate": {
+                    "first": "Primeira",
+                    "previous": "Voltar",
+                    "next": "Avançar"
+                },
+                "info": "Listando _START_ até _END_ de _TOTAL_ resultados",
+                "infoFiltered": " - Filtrados de _MAX_ resultados",
+                "infoEmpty": "Nenhum resultado encontrado.",
+                "emptyTable": "Nenhum resultado encontrado.",
+                "processing": "Carregando",
+                "lengthMenu": "Mostrar _MENU_ itens por página",
+                "search": "Buscar: "
+            }
+        });
+
+        // Event listener to the two range filtering inputs to redraw on input
+        $('#confirmFilterDate').click( function() {
+            var radioSelected = '';
+
+            if ($('#filterDataGeracao').is(':checked')) {
+                radioSelected = $('#filterDataGeracao').val();
+            } else if ($('#filterDataFinalizacao').is(':checked')) {
+                radioSelected = $('#filterDataFinalizacao').val();
+            } else if ($('#filterDataPrazo').is(':checked')) {
+                radioSelected = $('#filterDataPrazo').val();
+            }
+
+            table.destroy();
+            table = $('#sacp').DataTable({
+                "lengthMenu": [[20, 30, 50], [20, 30, 50]],
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "ajax": {
+                    "url": "page",
+                    "type": "POST",
+                    "data": {
+                        "dataMin": $('#min').val(),
+                        "dataMax": $('#max').val(),
+                        "dataFilter": radioSelected
+                    }
+                },
+                "language": {
+                    "paginate": {
+                        "first": "Primeira",
+                        "previous": "Voltar",
+                        "next": "Avançar"
+                    },
+                    "info": "Listando _START_ até _END_ de _TOTAL_ resultados",
+                    "infoFiltered": " - Filtrados de _MAX_ resultados",
+                    "infoEmpty": "Nenhum resultado encontrado.",
+                    "emptyTable": "Nenhum resultado encontrado.",
+                    "processing": "Carregando",
+                    "lengthMenu": "Mostrar _MENU_ itens por página",
+                    "search": "Buscar: "
+                }
+            });
+        });
+    }
 </script>

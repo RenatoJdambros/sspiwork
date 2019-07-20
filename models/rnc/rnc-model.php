@@ -2,11 +2,11 @@
 class RncModel extends MainModel
 {
 
-	public function __construct($db = false, $controller = null) 
+	public function __construct($db = false, $controller = null)
 	{
 		// Configura o DB (PDO)
 		$this->db = $db;
-		
+
 		// Configura o controlador
 		$this->controller = $controller;
 
@@ -16,21 +16,45 @@ class RncModel extends MainModel
 		// Configura os dados do usuário
 		$this->userdata = $this->controller->userdata;
     }
-    
+
 
 	public function paginacao()
     {
+        if (!empty($_POST['dataFilter'])) {
+            $dataSelected = $_POST['dataFilter'];
+        }
+
+        if (!empty($_POST['dataMin'])) {
+            $dataMin = $_POST['dataMin'];
+        }
+
+        if (!empty($_POST['dataMax'])) {
+            $dataMax = $_POST['dataMax'];
+        }
+
 		if ($this->userdata['tipo_usuario'] == 3) {
-            // $filter = ""; $_POST['checkbox'];
-            // $filter = " AND status != 3";
-			$sql = 'SELECT * FROM rnc';
-			$where = $this->userdata['id'] . " IN (id_origem, id_destino)";
+            // usuario comum
+			$sql = 'SELECT * FROM rnc_dados_fk';
+            $where = $this->userdata['id'] . " IN (id_origem, id_destino)";
+
+            if (!empty($_POST['dataMin']) && !empty($_POST['dataMax'])) {
+                $where .= " AND $dataSelected BETWEEN '$dataMin' AND '$dataMax'";
+            }
 
 			$columns = $this->formatar_colunas();
-			$page = DataTable::complex($_POST, $this->db->pdo, 'rnc', 'id', $columns, $sql, null, $where);
+			$page = DataTable::complex($_POST, $this->db->pdo, 'rnc_dados_fk', 'id', $columns, $sql, null, $where);
 		} else {
+            // admin-qualidade
+            $sql = 'SELECT * FROM rnc_dados_fk';
+
+            if (!empty($_POST['dataMin']) && !empty($_POST['dataMax'])) {
+                $where = "$dataSelected BETWEEN '$dataMin' AND '$dataMax'";
+            } else {
+                $where = null;
+            }
+
 			$columns = $this->formatar_colunas();
-			$page = DataTable::simple($_POST, $this->db->pdo, 'rnc', 'id', $columns);
+			$page = DataTable::complex($_POST, $this->db->pdo, 'rnc_dados_fk', 'id', $columns, $sql, $where);
 		}
         return json_encode($page);
     }
@@ -40,35 +64,28 @@ class RncModel extends MainModel
     {
         return array(
             ['dt' => 0, 'db' => 'id'],
-            ['dt' => 1, 'db' => 'id_origem', 'formatter' => function($d) 
+            ['dt' => 1, 'db' => 'nome_origem'],
+            ['dt' => 2, 'db' => 'nome_destino'],
+            ['dt' => 3, 'db' => 'status', 'formatter' => function($d)
             {
-                $query = $this->db->query('SELECT nome FROM usuarios WHERE id = ?', [$d]);
-				$result = $query->fetch(PDO::FETCH_COLUMN, 0);
+                $return = "<span class='label label-";
 
-                return $result;
-            }],
-            ['dt' => 2, 'db' => 'id_destino', 'formatter' => function($d) 
-            {
-                $query = $this->db->query('SELECT nome FROM usuarios WHERE id = ?', [$d]);
-				$result = $query->fetch(PDO::FETCH_COLUMN, 0);
+                if ($d == 'Novo') {
+					$return .= "primary";
+				} elseif ($d == 'Em progresso') {
+					$return .= "warning";
+				} elseif ($d == 'Finalizado') {
+					$return .= "success";
+				} else {
+					$return .= "default";
+                }
+                $return .= "'>$d</span>";
 
-                return $result;
-            }],
-            ['dt' => 3, 'db' => 'status', 'formatter' => function($d) 
-            {
-                if ($d == 1) {
-					return "<span class='label label-primary'>Novo</span>";
-				} elseif ($d == 2) {
-					return "<span class='label label-warning'>Em progresso</span>";
-				} elseif ($d == 3) {
-					return "<span class='label label-success'>Finalizado</span>";
-				} elseif ($d == 4) {
-					return "<span class='label label-default'>Expirado</span>";
-				}
+                return $return;
             }],
 			['dt' => 4, 'db' => 'numero_op'],
 			['dt' => 5, 'db' => 'sacp'],
-			['dt' => 6, 'db' => 'data_gerada', 'formatter' => function($d) 
+			['dt' => 6, 'db' => 'data_gerada', 'formatter' => function($d)
             {
 				if ($d !== null) {
 					$data = new DateTime($d);
@@ -76,7 +93,7 @@ class RncModel extends MainModel
 				}
 				return "";
             }],
-			['dt' => 7, 'db' => 'data_finalizada', 'formatter' => function($d) 
+			['dt' => 7, 'db' => 'data_finalizada', 'formatter' => function($d)
             {
 				if ($d !== null) {
 					$data = new DateTime($d);
@@ -84,11 +101,11 @@ class RncModel extends MainModel
 				}
 				return "";
             }],
-            ['dt' => 8, 'db' => 'id', 'formatter' => function($d) 
+            ['dt' => 8, 'db' => 'id', 'formatter' => function($d)
             {
                 $query = $this->db->query('SELECT status FROM rnc WHERE id = ?', array($d));
                 $status = $query->fetch(PDO::FETCH_COLUMN, 0);
-                
+
                 ob_start(); ?>
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"> Mais <span class="caret"></span> </button>
@@ -104,14 +121,14 @@ class RncModel extends MainModel
                                         <a href="<?= HOME_URI ?>/rnc/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
                                     </li>
                                 <?php } ?>
-                                <?php if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { 
+                                <?php if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) {
                                     $query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$d]);
                                     $rnc = $query->fetch(PDO::FETCH_ASSOC);
-                                    
+
                                     $query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$rnc['id_destino']]);
                                     $userDestino = $query->fetch(PDO::FETCH_ASSOC);
-                                    
-                                    if ($this->userdata['id'] == $userDestino['id'] 
+
+                                    if ($this->userdata['id'] == $userDestino['id']
                                     || $this->userdata['tipo_usuario'] == 1
                                     || $this->userdata['tipo_usuario'] == 2) { ?>
                                         <li>
@@ -131,14 +148,14 @@ class RncModel extends MainModel
                                         <a href="<?= HOME_URI ?>/rnc/editar/<?= $d ?>"><i class="fa fa-edit"></i> Editar</a>
                                     </li>
                                 <?php } ?>
-                                <?php if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) { 
+                                <?php if ($this->controller->check_permissions('rnc', 'editar', $this->userdata['user_permissions'])) {
                                     $query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$d]);
                                     $rnc = $query->fetch(PDO::FETCH_ASSOC);
-                                    
+
                                     $query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$rnc['id_destino']]);
                                     $userDestino = $query->fetch(PDO::FETCH_ASSOC);
-                                    
-                                    if ($this->userdata['id'] == $userDestino['id'] 
+
+                                    if ($this->userdata['id'] == $userDestino['id']
                                     || $this->userdata['tipo_usuario'] == 1
                                     || $this->userdata['tipo_usuario'] == 2) { ?>
                                         <li>
@@ -149,9 +166,6 @@ class RncModel extends MainModel
                             <?php if ($this->controller->check_permissions('rnc', 'excluir', $this->userdata['user_permissions'])) { ?>
                                 <li>
                                     <a href="<?= HOME_URI ?>/rnc/excluir/<?= $d ?>/"><i class="fa fa-remove"></i> Excluir</a>
-                                    <div style="display:none">
-                                        <button type="button" class="btn btn-primary" id="btn_modal" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
-                                    </div>
                                 </li>
                             <?php } ?>
                         </ul>
@@ -174,7 +188,7 @@ class RncModel extends MainModel
 	}
 
 	public function importarAJAX()
-	{	
+	{
 
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		inserirRNC. */
@@ -186,7 +200,7 @@ class RncModel extends MainModel
         $nome 		= $_FILES["file"]["name"];
         $tamanho 	= $_FILES["file"]["size"];
 
-        $fp = fopen($arquivo,"rb");//Abro o arquivo que está no $temp   
+        $fp = fopen($arquivo,"rb");//Abro o arquivo que está no $temp
     	$documento = fread($fp, $tamanho);//Leio o binario do arquivo
     	fclose($fp);//fecho o arquivo
 
@@ -208,7 +222,7 @@ class RncModel extends MainModel
 
 	}
 
-    public function listarUsuarios() 
+    public function listarUsuarios()
 	{
 		// Busca os usuários fora o usuário logado e atribui os nomes dos setores as suas arrays
 		$query = $this->db->query('SELECT * FROM usuarios WHERE id != ? AND tipo_usuario != 1', [$this->userdata['id']]);
@@ -219,7 +233,7 @@ class RncModel extends MainModel
 			$result = $query->fetch(PDO::FETCH_ASSOC);
 			$usuarios[$key]['nomeSetor'] = $result['nome'];
 		}
-		
+
 		// Sorteia a array ordem crescente por setor
 		usort($usuarios, function($a, $b) {
 		return $b['nome'] <= $a['nome'];
@@ -227,9 +241,9 @@ class RncModel extends MainModel
 
 		return $usuarios;
     }
-	
-	
-	public function consultaRNC($id) 
+
+
+	public function consultaRNC($id)
 	{
 		$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$id]);
 		$rnc = $query->fetch(PDO::FETCH_ASSOC);
@@ -243,8 +257,8 @@ class RncModel extends MainModel
 		return array('rnc' => $rnc, 'userOrigem' => $userOrigem, 'userDestino' => $userDestino);
 	}
 
-    
-    public function inserirRNC() 
+
+    public function inserirRNC()
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		inserirRNC. */
@@ -266,11 +280,11 @@ class RncModel extends MainModel
 
 		// Salva na $_POST e deleta a variavel desnecessária
 		$_POST['data_gerada'] = $dataGerada;
-	
+
 		/* query */
         $query = $this->db->insert('rnc', $_POST);
         $id = $this->db->last_id;
-		
+
 		/* Verifica a consulta */
 		if ($query) {
 
@@ -311,7 +325,7 @@ class RncModel extends MainModel
 			$mail->Password = 'man@2015!';
 			$mail->setFrom('manutencao@edelbra.com.br');
 			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para administradores');
 			//$mail->addAddress('e-mail para Qualidade');
 			$mail->addAddress($emailOrigem);
 			$mail->addAddress($emailDestino);
@@ -325,7 +339,7 @@ class RncModel extends MainModel
 				"<html dir='ltr'>
 					<head>
 					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>                   
+						<style>
 							#customers {
 							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
 							border-collapse: collapse;
@@ -362,7 +376,7 @@ class RncModel extends MainModel
 							</tr>
 							<tr>
 								<th colspan='3' >Relatório de Não-Conformidade</th>
-								<th colspan='1' >ID $id </th>						
+								<th colspan='1' >ID $id </th>
 							</tr>
 							<tr>
 								<td colspan='4' style='background-color: white; color: blue;'><p align=center><b> ----> NOVO <---- </b></p></td>
@@ -389,14 +403,14 @@ class RncModel extends MainModel
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/rnc/editar/$id'> 
+								<p align=center> <a href='$url/rnc/editar/$id'>
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
-								<p align=center> 
+								<p align=center>
 								<img src='cid:linha.png' width='600' height='4'>
 								</p>
 					</table>
-				<br>			
+				<br>
 				<hr>
 				<br>
 				</body>
@@ -406,14 +420,14 @@ class RncModel extends MainModel
 
             //send the message, check for errors
             $mail->send();
-				
+
 			return 'success';
 		}
 		return 'Erro ao inserir RNC no banco de dados';
 	} // insert
 
-	
-	public function editarRNC($id) 
+
+	public function editarRNC($id)
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		editarRNC. */
@@ -425,7 +439,7 @@ class RncModel extends MainModel
 		unset($_POST['editarRNC']);
 
         // Checa se o campo numero_op está vazio, caso esteja, seta pra null
-        if (isset($_POST['numero_op']) 
+        if (isset($_POST['numero_op'])
             && empty($_POST['numero_op'])) {
                 $_POST['numero_op'] = null;
         }
@@ -436,9 +450,9 @@ class RncModel extends MainModel
 
 		/* Atualiza os dados */
 		$query = $this->db->update('rnc', 'id', $id, $_POST);
-		
+
 		/* Verifica a consulta */
-		if ($query) { 
+		if ($query) {
 			//chama a classe para enviar e-mail
 			require ABSPATH . '/PHPMailer/PHPMailer.php';
 			require ABSPATH . '/PHPMailer/SMTP.php';
@@ -456,14 +470,14 @@ class RncModel extends MainModel
 
 			//traz os dados do usuário origem para o e-mail
 			$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$id]);
-			$rnc = $query->fetch(PDO::FETCH_ASSOC);	
+			$rnc = $query->fetch(PDO::FETCH_ASSOC);
 
 			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$rnc['id_origem']]);
 			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
 				$userOrigem		= $valor['nome'];
 				$emailOrigem	= $valor['email'];
 			}
-			
+
 			//traz os dados do usuário destino para o e-mail
 			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$rnc['id_destino']]);
 			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -481,7 +495,7 @@ class RncModel extends MainModel
 			$mail->Password = 'man@2015!';
 			$mail->setFrom('manutencao@edelbra.com.br');
 			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para administradores');
 			//$mail->addAddress('e-mail para Qualidade');
 			$mail->addAddress($emailOrigem);
 			$mail->addAddress($emailDestino);
@@ -495,7 +509,7 @@ class RncModel extends MainModel
 				"<html dir='ltr'>
 					<head>
 					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>                   
+						<style>
 							#customers {
 							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
 							border-collapse: collapse;
@@ -532,7 +546,7 @@ class RncModel extends MainModel
 							</tr>
 							<tr>
 								<th colspan='3' >Relatório de Não-Conformidade</th>
-								<th colspan='1' >ID $id </th>						
+								<th colspan='1' >ID $id </th>
 							</tr>
 							<tr>
 								<td colspan='4' style='background-color: white; color: #DAA520;'><p align=center><b> ----> ALTERADO <---- </b></p></td>
@@ -556,16 +570,16 @@ class RncModel extends MainModel
 								<td colspan='4' style='background-color: white;' ><b>Justificativa:</b> $justificativa </td>
 							</tr>
 							<tr rowspan='4'>
-								<td colspan='4'><b>Correção:</b> $correcao </td>								
+								<td colspan='4'><b>Correção:</b> $correcao </td>
 							</tr>
 							<br>
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/rnc/inserir/'> 
+								<p align=center> <a href='$url/rnc/inserir/'>
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
-								<p align=center> 
+								<p align=center>
 								<img src='cid:linha.png' width='600' height='4'>
 								</p>
 					</table>
@@ -580,14 +594,14 @@ class RncModel extends MainModel
 
             //send the message, check for errors
 			$mail->send();
-			
+
       		return 'success';
 		}
 		return 'Falha ao atualizar RNC';
 	} // update
 
 
-	public function excluirRNC() 
+	public function excluirRNC()
 	{
 		// O segundo parâmetro deverá ser um ID numérico
 		if (! is_numeric(chk_array($this->parametros, 0))) {
@@ -596,7 +610,7 @@ class RncModel extends MainModel
 
 		// Para excluir, o terceiro parâmetro deverá ser "confirma"
 		if (chk_array($this->parametros, 1) != 'confirma') {
-			return;	
+			return;
 		}
 
 		// Configura o ID RNC
@@ -605,12 +619,12 @@ class RncModel extends MainModel
 		// Executa a consulta
         $query = $this->db->delete('rnc', 'id', $user_id);
         $id = $this->db->last_id;
-        
+
          if ($query) {
             require ABSPATH . '/PHPMailer/PHPMailer.php';
 			require ABSPATH . '/PHPMailer/SMTP.php';
 			$url= HOME_URI;
-			
+
 			$mail = new PHPMailer;
             $mail->isSMTP();
             //$mail->SMTPSecure = 'ssl';
@@ -621,7 +635,7 @@ class RncModel extends MainModel
             $mail->Password = 'man@2015!';
             $mail->setFrom('manutencao@edelbra.com.br');
 			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para administradores');
 			//$mail->addAddress('e-mail para Qualidade');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
 			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
@@ -632,7 +646,7 @@ class RncModel extends MainModel
 			$msg = "<html dir='ltr'>
 				<head>
 					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>                   
+						<style>
 							#customers {
 							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
 							border-collapse: collapse;
@@ -669,7 +683,7 @@ class RncModel extends MainModel
 							</tr>
 							<tr>
 								<th colspan='3' >Relatório de Não-Conformidade</th>
-								<th colspan='1' >ID $user_id </th>						
+								<th colspan='1' >ID $user_id </th>
 							</tr>
 							<tr>
 								<td colspan='4' style='background-color: white; color: red;'><p align=center><b>----> EXCUÍDO <---- </b></p></td>
@@ -680,10 +694,10 @@ class RncModel extends MainModel
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/rnc/'> 
+								<p align=center> <a href='$url/rnc/'>
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
-								<p align=center> 
+								<p align=center>
 								<img src='cid:linha.png' width='600' height='4'>
 								</p>
 					</table>
@@ -695,19 +709,19 @@ class RncModel extends MainModel
 
 			$mail->Body = $msg;
 			$mail->IsHTML(true); //enviar em HTML
-			
+
 			//send the message, check for errors
 			$mail->send();
-						
+
 			//retorna para o painel de visualização
 			echo '<meta http-equiv="Refresh" content="0; url=' . HOME_URI . '/rnc/">';
 			echo '<script type="text/javascript">window.location.href = "' . HOME_URI . '/rnc/";</script>';
-		}		
+		}
 		return 'Falha ao excluir a RNC';
 	} // delete
 
 
-	public function finalizarRNC($id) 
+	public function finalizarRNC($id)
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		finalizarRNC. */
@@ -728,7 +742,7 @@ class RncModel extends MainModel
 
 		/* Atualiza os dados */
 		$query = $this->db->update('rnc', 'id', $id, $_POST);
-		
+
 		/* Verifica a consulta */
 		if ($query) {
             require ABSPATH . '/PHPMailer/PHPMailer.php';
@@ -751,14 +765,14 @@ class RncModel extends MainModel
 
 		//traz os dados do usuário origem para o e-mail
 			$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$id]);
-			$rnc = $query->fetch(PDO::FETCH_ASSOC);	
+			$rnc = $query->fetch(PDO::FETCH_ASSOC);
 
 			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$rnc['id_origem']]);
 			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
 				$userOrigem		= $valor['nome'];
 				$emailOrigem	= $valor['email'];
 			}
-			
+
 			//traz os dados do usuário destino para o e-mail
 			$query = $this->db->query('SELECT nome, email FROM usuarios WHERE id = ?', [$rnc['id_destino']]);
 			while ($valor = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -776,7 +790,7 @@ class RncModel extends MainModel
             $mail->Password = 'man@2015!';
             $mail->setFrom('manutencao@edelbra.com.br');
 			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores'); 
+			//$mail->addAddress('e-mail para administradores');
 			//$mail->addAddress('e-mail para Qualidade');
 			$mail->addAddress($emailOrigem);
 			$mail->addAddress($emailDestino);
@@ -790,7 +804,7 @@ class RncModel extends MainModel
 			"<html dir='ltr'>
 				<head>
 					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>                   
+						<style>
 							#customers {
 							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
 							border-collapse: collapse;
@@ -827,7 +841,7 @@ class RncModel extends MainModel
 							</tr>
 							<tr>
 								<th colspan='3' >Relatório de Não-Conformidade</th>
-								<th colspan='1' >ID $id </th>						
+								<th colspan='1' >ID $id </th>
 							</tr>
 							<tr>
 								<td colspan='4' style='background-color: white; color: green;'><p align=center><b> ----> FINALIZADO <---- </b></p></td>
@@ -854,16 +868,16 @@ class RncModel extends MainModel
 								<td colspan='4'><b>Justificativa:</b> $justificativa </td>
 							</tr>
 							<tr rowspan='4'>
-								<td colspan='4' style='background-color: white;'><b>Correção:</b> $correcao </td>								
+								<td colspan='4' style='background-color: white;'><b>Correção:</b> $correcao </td>
 							</tr>
 							<br>
 							<br>
 							<br>
 							<br>
-								<p align=center> <a href='$url/rnc/inserir/'> 
+								<p align=center> <a href='$url/rnc/inserir/'>
 								<img src='cid:acessar.png' width='170' height='50'></a>
 								</p>
-								<p align=center> 
+								<p align=center>
 								<img src='cid:linha.png' width='600' height='4'>
 								</p>
 					</table>
@@ -878,9 +892,9 @@ class RncModel extends MainModel
 
             //send the message, check for errors
 			$mail->send();
-			
+
             return 'success';
-		} 
+		}
         return 'Falha ao finalizar a RNC';
 	}
 

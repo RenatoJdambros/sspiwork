@@ -41,55 +41,50 @@
     <!-- starrr -->
     <link href="<?=HOME_URI?>/views/_vendors/starrr/dist/starrr.css" rel="stylesheet">
     <!-- bootstrap-daterangepicker -->
-    <link href="<?=HOME_URI?>/views/_vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet"> 
-    <link href="<?=HOME_URI?>/views/_css/style.css" rel="stylesheet"> 
+    <link href="<?=HOME_URI?>/views/_vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <link href="<?=HOME_URI?>/views/_css/style.css" rel="stylesheet">
 
     <!-- Dropzone.js -->
-    <link href="<?=HOME_URI?>/views/_vendors/dropzone/dist/dropzone.css" rel="stylesheet"> 
-    
+    <link href="<?=HOME_URI?>/views/_vendors/dropzone/dist/dropzone.css" rel="stylesheet">
+
     <link href="<?=HOME_URI?>/views/_vendors/filestyle/src/jquery-filestyle.css" rel="stylesheet" />
 
     <link href="<?=HOME_URI?>/views/_vendors/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet">
 
     <link href="<?=HOME_URI?>/views/_vendors/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
 
-    <!--AJAX-->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-			  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-			  crossorigin="anonymous"></script>
-
 <!-- The Modal -->
 <div class="modal" id="myModal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-      
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Informações</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        
+
         <!-- Modal body -->
         <div class="modal-body">
           <p>Hello world.</p>
           <p>RNC rncrncrnc.</p>
           <p>SACP sacpsacpsacp.</p>
       </div>
-        
+
         <!-- Modal footer -->
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
         </div>
-        
+
       </div>
     </div>
   </div>
-    
+
   </head>
 
-<body>  
-   
-    
+<body>
+
+
     <nav class="navbar navbar-inverse" style="border-color: rgb(108,117,125); background-color: rgb(108,117,125);">
   <div class="container-fluid">
   <div class="navbar-header">
@@ -117,7 +112,7 @@
         <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button"><span class="caret"></span> </button>
 
         <ul class="dropdown-menu dropdown-menu-right">
-        
+
 
           <li>
               <a data-toggle="modal" href="<?=HOME_URI?>/usuarios/">
@@ -134,7 +129,7 @@
           </li>
 
           <!-- <li>
-              <a href="<?=HOME_URI?>/home/"> 
+              <a href="<?=HOME_URI?>/home/">
                 <i class="fa fa-cog"></i>
                 Configurações
               </a>
@@ -165,11 +160,11 @@
       </div>
     <?php } ?>
   </div>
-</nav> 
+</nav>
 
 <div id=bordasFRONT class="cabecalho" style="margin-top: -21px; ">
       <div class="container-fluid ">
-        <img style="max-width: 200px; position: relative; 
+        <img style="max-width: 200px; position: relative;
         display: block; margin-left: auto; margin-right: auto;" src="<?=HOME_URI?>/views/_images/logofull.png"/>
       </div>
     </div>
