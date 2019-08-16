@@ -26,38 +26,34 @@
             <div class="panel-body">
             <br>
 
-                    <table border="0" cellspacing="5" cellpadding="5">
+            <table class='table'  cellspacing="0" cellpadding="0">
                         <tbody>
                             <tr>
-                                <td>
-                                    Data Inicial:&nbsp;
-                                </td>
-                                <td>
-                                    <input type="date" id="min" name="min"
-                                    value="<//?= data('default', false, '- 2 week') ?>">
-                                </td>
+                                <th style=" text-align: right;" scope="row">
+                                    <input id="filterDataGeracao" type="radio" name="filterDate" value="data_gerada" checked>
+                                    <label for="filterDataGeracao">Data Geração&nbsp; &nbsp;</label>
+
+                                    <input id="filterDataFinalizacao" type="radio" name="filterDate" value="data_finalizada">
+                                    <label for="filterDataFinalizacao">Data Finalização&nbsp; &nbsp;</label>
+                                </th>
                             </tr>
                             <tr>
-                                <td>
-                                    Data Final:&nbsp;
-                                </td>
-                                <td>
-                                    <input type="date" id="max" name="max"
-                                    value="<//?= data() ?>" max="<//?= data() ?>">
-                                </td>
+                                <th style=" text-align: right;" scope="row">
+                                    Data Inicial:&nbsp;
+                                    <input style="" type="date" id="min" name="min" value="<//?= data('default', false, '- 2 week') ?>">
+
+                                    &nbsp;&nbsp;&nbsp;&nbsp;Data Final:&nbsp;
+                                    <input type="date" id="max" name="max" value="<//?= data() ?>" max="<//?= data() ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                     <button style="float: right;" id="confirmFilterDate" class="btn btn-danger btn-sm">Filtrar</button>
+
+                            </tr>
+                            <tr>
+                                <th style=" text-align: right;" scope="row">
+
+                                </th>
                             </tr>
                         </tbody>
                     </table>
-
-                    <input id="filterDataGeracao" type="radio" name="filterDate" value="data_gerada" checked>
-                    <label for="filterDataGeracao">Data Geração</label>
-
-                    <input id="filterDataFinalizacao" type="radio" name="filterDate" value="data_finalizada">
-                    <label for="filterDataFinalizacao">Data Finalização</label>
-
-                    <br>
-
-                    <button id="confirmFilterDate" class="btn btn-warning">Filtrar</button>
 
                     <table id="rnc" class="table table-striped table-bordered bulk_action" style="width: 100%;">
                         <thead>

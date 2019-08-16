@@ -55,7 +55,13 @@ class SacpController extends MainController
 		$setores = $modelo->listaSetores();
 		//$setorSolicitante = $modelo->buscarSetor();
 		$participantes = $modelo->listarUsuarios();
-        $retorno = $modelo->inserirSACP();
+		$input = $modelo->inserefotos();
+
+		if ($input == 'erro'){
+			$this->modal_notification = MainModel::openNotification('Tipo de Arquivo inválido', 'Verifique os documentos anexados e tente novamente!', 'danger');
+		} else {
+			$retorno = $modelo->inserirSACP($input);
+		}
 
         if ($retorno == 'success') {
 			$this->modal_notification = MainModel::openNotification('Sucesso', 'SACP gerada com sucesso.', 'success');
@@ -70,7 +76,7 @@ class SacpController extends MainController
     } // inserir
 
 
-    public function editar()
+    public function editar($id)
 	{
 		$this->title = 'Editar SACP';
 
@@ -90,7 +96,7 @@ class SacpController extends MainController
 		$parametros = (func_num_args() >= 1) ? func_get_arg(0) : array();
 
 		// Carrega o método para editar uma SACP
-		$retorno = $modelo->editarSACP($parametros);
+		$input = $modelo->atualizafotos();
 
 		$sacpPresente = $modelo->listarSacpsPresentes();
 		$setores = $modelo->listaSetores();
@@ -107,8 +113,15 @@ class SacpController extends MainController
 			return;
 		}
 
+		if ($input == 'erro'){
+			$this->modal_notification = MainModel::openNotification('Tipo de Arquivo inválido', 'Verifique os documentos anexados e tente novamente!', 'danger');
+		} else {
+			$retorno = $modelo->editarSACP($parametros, $input);
+		}
+
 		if ($retorno == 'success') {
 			$this->modal_notification = MainModel::openNotification('Sucesso', 'SACP atualizada com sucesso.', 'success');
+			header("Refresh: 3");
 		} elseif (!empty($retorno)) {
 			$this->modal_notification = MainModel::openNotification('Erro', $retorno, 'error');
 		}

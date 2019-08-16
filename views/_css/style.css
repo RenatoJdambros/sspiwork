@@ -22,187 +22,193 @@
 
 .backgroundS{ background-color: #E0EDFE }
 
-#bordasRNC{  
+#bordasRNC{
   border:solid 2px;
   border-color:#FFD700;
   border-radius:150px;
   border-top-width: 0px;
 }
 
-#bordasAcao{  
+#bordasAcao{
   border:solid 2px;
   border-color:rgb(174, 188, 199);
-  border-radius:1px; 
+  border-radius:1px;
 }
 
-#bordasSACP{  
+#bordasSACP{
   border:solid 2px;
   border-color:rgb(0,110,255);
   border-radius: 150px;
   border-top-width: 0px;
 }
 
-#bordasFRONT{  
+#bordasFRONT{
   border:solid 1px;
   border-color:rgb(218, 221, 223);
   border-radius: 0px 0px 80px 80px;
   border-top-width: 0px;
 }
 
-.navbar-brand {
-  padding: 0px; /* firefox bug fix */
+@keyframes spin {
+  to { transform: rotate(360deg);}
 }
 
-.navbar-brand>img {
+.spinner {
+  border: 10px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #f38200;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  animation: spin 1.2s linear infinite;
+  align-content: center;
+  margin: 0px 0px 0px 0px;
+
+}
+
+/*! leafbox 1.00 | Daniel Abel - http://zkreations.com | Free to use under terms of MIT license */
+
+/*Para empezar, lbox necesita una posicion fija y ocupar todo su contenedor*/
+.lbox {
+  position: fixed;
+  display: block;
+  overflow: hidden;
+  background: rgba(0,0,0,0.8);
+  z-index: 9999;
+  -webkit-font-smoothing: antialiased;
+  visibility: hidden;
+}
+/*todas las transiciones (si tuviera más)*/
+.lbox.fade:target > img {
+  -webkit-transition: opacity 1s;
+     -moz-transition: opacity 1s;
+       -o-transition: opacity 1s;
+          transition: opacity 1s;
+}
+
+/*Para no repetir codigo, lo agrupamos aquí*/
+.lbox, .lbox > img, .lbox > div {top: 0;left: 0;right: 0;bottom: 0;}
+
+/*Al dar clic, el contenedor lbox que se encuentre "target" se mostrará*/
+.lbox {top: -100%;}
+.lbox:target {top: 0;visibility: visible;}
+
+/*y creamos un boton para cerrarlo*/
+.lbox > a {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 44px;
+  background: url(../_images/fechar.png) no-repeat center center rgba(255, 255, 255, 0);
+}
+
+/*tanto los videos como las imágenes necesitan una posicion absoluta*/
+.lbox > img, .lbox > div {
+  position: absolute;
+  margin: auto;
+  box-shadow: 0 3px 3px -1px rgba(0, 0, 0, 0.3), 0 1px 0px 0px rgba(0, 0, 0, 0.05);
+}
+
+/*Perto solo las imágenes tienen un maximo en alto y ancho*/
+.lbox > img {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+/*mientras que los videos tienen su propio ancho y alto*/
+.lbox > .vid {
+  max-width: 800px;
+  height: 450px;
+  width:100%;
+}
+
+/*y los textos tambien*/
+.lbox > .text {
+  max-width: 800px;
+  max-height: 90%;
+  top: 20%;
+  bottom: auto;
+  padding: 2em;
+  background: #fff;
+  color: #757575;
+  width:100%;
+}
+
+.lbox > .vid iframe, .lbox > .vid object, .lbox > .vid embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
-  padding: 8px 20px; /* firefox bug fix */
-  width: auto;
 }
 
-.upload-statusbar {
-width: auto;
-margin: 10px;
-}
-.upload-filename {
-width: 100%;
-height: auto;
-margin: 0 5px 5px 10px;
-font: 11px Verdana, Geneva, sans-serif;
+/*Pero aparecen según el efecto*/
 
+/*fade*/
+.lbox.fade > img, .lbox.fade > div {
+  opacity: 0;
 }
-.upload-progress {
-margin: 0 10px 5px 0px;
-position: relative;
-width: 600px;
-font-size:13px;
-padding: 1px;
-border-radius: 5px;
-display: inline-block
-}
-.upload-bar {
-float: left;
-    border-radius: 5px;
-    width: 0;
-    height: 100%;
-    font-size: 12px;
-    line-height: 20px;
-    color: #fff;
-    text-align: center;
-    background-color: #5BC0DE;
-    -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
-    box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
-    -webkit-transition: width .6s ease;
-    -o-transition: width .6s ease;
-    transition: width .6s ease;
-
-    background-image: -webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
-    background-image: -o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
-    background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
-    -webkit-background-size: 40px 40px;
-    background-size: 40px 40px;
-
-    -webkit-animation: progress-bar-stripes 2s linear infinite;
-    -o-animation: progress-bar-stripes 2s linear infinite;
-    animation: progress-bar-stripes 2s linear infinite;
-}
-.upload-percent {
-position: absolute;
-display: inline-block;
-top: 3px;
-
-}
-.upload-red {
-background: url(../_images/loading.gif);
-background-repeat: no-repeat;
-background-size: 25px;
-margin-top:-1px;
-display: inline-block;
-color: #fff;
-font-size: 14px;
-font-weight: normal;
-padding: 4px 10px;
-text-decoration: none;
-cursor: pointer;
-vertical-align: top;
-
-}
-.upload-green {
-background: url(../_images/ok.png);
-background-repeat: no-repeat;
-background-size: 18px;
-height: 18px;
-margin-top:2x;
-display: inline-block;
-color: #fff;
-font-size: 14px;
-font-weight: normal;
-padding: 4px 10px;
-text-decoration: none;
-cursor: pointer;
-vertical-align: top;
-
+.lbox.fade:target > img, .lbox.fade:target > div {
+  opacity: 1;
 }
 
-
-.upload {
-	background-color: rgb(255, 179, 38);
-    color: rgb(0, 0, 0);
-    border: none;
-    border-radius: 3px;
-    position: relative;
-    padding: 12px 30px;
-    margin: 10px 1px;
-    font-size: 12px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0;
-    will-change: box-shadow, transform;
-    transition: box-shadow 0.2s cubic-bezier(0.4, 0, 1, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    display: inline-block;
-    padding: 6px 12px;
-    margin-bottom: 0;
-    font-size: 11px;
-    font-weight: 400;
-    line-height: 1.42857143;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    -ms-touch-action: manipulation;
-    touch-action: manipulation;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    background-image: none;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    padding: 10px;
-  }
-  
-
-.upload:hover {
-    background-color:  rgb(216, 136, 25);
-    color: rgb(0, 0, 0);
-    opacity: 1;
+/*bounce*/
+@-webkit-keyframes bounce {
+  0% {-webkit-transform: scale(0)}
+  50% {-webkit-transform: scale(1.1)}
+  100% {-webkit-transform: scale(1)}
+}
+@-moz-keyframes bounce {
+  0% {-moz-transform: scale(0)}
+  50% {-moz-transform: scale(1.1)}
+  100% {-moz-transform: scale(1)}
+}
+@keyframes bounce {
+  0% {transform: scale(0)}
+  50% {transform: scale(1.1)}
+  100% {transform: scale(1)}
 }
 
-.ajax-upload-dragdrop
-{
-
-	box-shadow: 0 0 0 0;
-    border: 0 none;
-    outline: 0;
+.lbox.bounce:target > img, .lbox.bounce:target > div {
+  -webkit-animation: bounce 1s none;
+     -moz-animation: bounce 1s none;
+       -o-animation: bounce 1s none;
+          animation: bounce 1s none;
 }
 
+/*flip*/
+@-webkit-keyframes flip {
+  0% {-webkit-transform: perspective(600px) rotate3d(1, 0, 0, 20deg);opacity: 0;}
+  50% {-webkit-transform: perspective(600px) rotate3d(1, 0, 0, -5deg);opacity: 1;}
+  100% {-webkit-transform: perspective(600px) rotate3d(1, 0, 0, 0);opacity: 1;}
+}
+@-moz-keyframes flip {
+  0% {-moz-transform: perspective(600px) rotate3d(1, 0, 0, 20deg);opacity: 0;}
+  50% {-moz-transform: perspective(600px) rotate3d(1, 0, 0, -5deg);opacity: 1;}
+  100% {-moz-transform: perspective(600px) rotate3d(1, 0, 0, 0);opacity: 1;}
+}
+@keyframes flip {
+  0% {transform: perspective(600px) rotate3d(1, 0, 0, 20deg);opacity: 0;}
+  50% {transform: perspective(600px) rotate3d(1, 0, 0, -5deg);opacity: 1;}
+  100% {transform: perspective(600px) rotate3d(1, 0, 0, 0);opacity: 1;}
+}
 
-    
+.lbox.flip:target > img, .lbox.flip:target > div {
+  -webkit-animation: flip 1s none;
+     -moz-animation: flip 1s none;
+       -o-animation: flip 1s none;
+          animation: flip 1s none;
+}
 
-
-   
-
-
-
-
-
-
+/*Algunos estilos para videos según la resolución*/
+@media only screen and (max-width: 840px) {
+.lbox > .vid {height: 400px;}
+}
+@media only screen and (max-width: 730px) {
+.lbox > .vid {height: 350px;}
+}
+@media only screen and (max-width: 620px) {
+.cream-slider li.tab > div {display: none;}
+.lbox > .vid {height: 300px;}
+}

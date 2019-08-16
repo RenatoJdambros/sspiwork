@@ -1,11 +1,11 @@
-<?php 
-    if (!defined('ABSPATH')) exit; 
+<?php
+    if (!defined('ABSPATH')) exit;
 ?>
 
 <!-- page content -->
 
 <hr>
-        
+
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="container-fluid">
@@ -27,7 +27,7 @@
                     <p align="right" style="position: relative; max-height: 2px; background: gray; margin-right: 35px; margin-top: 0px;">
                             <span style="margin-top: -18px;" class="badge">Painel de Controle</span></p>
 
-                <div class="panel-body">                   
+                <div class="panel-body">
                 <br>
                 <table id="setores" class="table table-striped table-bordered bulk_action server-side" style="width: 100%;">
 
@@ -51,6 +51,79 @@
 </div>
 
 
-<script>
-  var controlador = "setores";
+<script type="text/javascript">
+    window.onload = function() {
+
+        var table = $('#setores').DataTable({
+            "lengthMenu": [[20, 30, 50], [20, 30, 50]],
+            "processing": true,
+            "serverSide": true,
+            "stateSave": true,
+            "ajax": {
+                "url": "page",
+                "type": "POST",
+                "data": {
+                    "dataMin": $('#min').val(),
+                    "dataMax": $('#max').val()
+                }
+            },
+            "language": {
+                "paginate": {
+                    "first": "Primeira",
+                    "previous": "Voltar",
+                    "next": "Avançar"
+                },
+                "info": "Listando _START_ até _END_ de _TOTAL_ resultados",
+                "infoFiltered": " - Filtrados de _MAX_ resultados",
+                "infoEmpty": "Nenhum resultado encontrado.",
+                "emptyTable": "Nenhum resultado encontrado.",
+                "processing": "Carregando",
+                "lengthMenu": "Mostrar _MENU_ itens por página",
+                "search": "Buscar: "
+            }
+        });
+
+        // Event listener to the two range filtering inputs to redraw on input
+        $('#confirmFilterDate').click( function() {
+            var radioSelected = '';
+
+            if ($('#filterDataGeracao').is(':checked')) {
+                radioSelected = $('#filterDataGeracao').val();
+            } else if ($('#filterDataFinalizacao').is(':checked')) {
+                radioSelected = $('#filterDataFinalizacao').val();
+            }
+
+            table.destroy();
+            table = $('#rnc').DataTable({
+                "lengthMenu": [[20, 30, 50], [20, 30, 50]],
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "ajax": {
+                    "url": "page",
+                    "type": "POST",
+                    "data": {
+                        "dataMin": $('#min').val(),
+                        "dataMax": $('#max').val(),
+                        "dataFilter": radioSelected
+                    }
+                },
+                "language": {
+                    "paginate": {
+                        "first": "Primeira",
+                        "previous": "Voltar",
+                        "next": "Avançar"
+                    },
+                    "info": "Listando _START_ até _END_ de _TOTAL_ resultados",
+                    "infoFiltered": " - Filtrados de _MAX_ resultados",
+                    "infoEmpty": "Nenhum resultado encontrado.",
+                    "emptyTable": "Nenhum resultado encontrado.",
+                    "processing": "Carregando",
+                    "lengthMenu": "Mostrar _MENU_ itens por página",
+                    "search": "Buscar: "
+                }
+            });
+        });
+    }
 </script>
+<hr>

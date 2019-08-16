@@ -2,6 +2,21 @@
   if (!defined('ABSPATH')) exit;
 ?>
 
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
+<!--MODAL de carregamento on.click.submit-->
+<div class="modal fade" id="modal-mensagem">
+    <div class="modal-dialog modal-sm">
+         <div class="modal-content">
+             <div class="modal-body">
+                 <div class=container4>
+                 <p style="font-size: 18px;" class="P.blocktext">Gerando SACP</p>
+                 <div class="spinner">&nbsp;</div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
+
 <hr>
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
@@ -17,12 +32,12 @@
                 <p align="right" style="position: relative; max-height: 2px; background: #337AB7; margin-right: 35px; margin-top: 0px;">
                         <span style="margin-top: -18px; background: #337AB7; " class="badge">Gerar</span></p>
 
-        <form method="post"> <!-- form -->
+          <form enctype="multipart/form-data" method="post"> <!-- form -->
             <input type="hidden" name="inserirSACP" value="1" />
 
-            <div style="position:absolut; margin-top: -12px;" class="panel-body backgroundS"> 
+            <div style="position:absolut; margin-top: -12px;" class="panel-body backgroundS">
                 <br>
-                
+
                 <div class="form-group row">
                     <div class="form-group col-md-5">
                         <label for="setor_origem">
@@ -47,16 +62,16 @@
     </div>
 
     <!-- validacao futura -->
-    <?php /* if (empty($_POST['setorSolicitante']) && empty($_POST['setorDestino'])) { 
+    <?php /* if (empty($_POST['setorSolicitante']) && empty($_POST['setorDestino'])) {
         echo "<button type='submit' class='btn btn-primary'>OK</button>";
     } else { */ ?>
-    
+
    <div class="form-group col-md-2">
       <label for="numero_op">Número O.P:</label>
       <input style="min-width: 20px; max-width: 178px;" type="number" class="form-control" id="numero_op" name="numero_op" >
     </div>
     </div>
-    
+
     <label for="participantes">Participantes:</label>
     <select class="js-example-basic-multiple form-group custom-select" id="participantes" name="participantes[]" style="width: 100%" multiple="multiple" required>
       <?php foreach ($participantes as $key => $participante) { ?>
@@ -92,7 +107,7 @@
     <div class="radio-inline">
       <input class="form-check-input origemRadio" type="radio" name="origem" id="radio6" value="riscos">
       <label class="form-check-label" for="radio6">Riscos</label>
-    </div>  
+    </div>
     <div class="radio-inline">
       <input class="form-check-input origemRadio" type="radio" name="origem" id="radio7" value="oportunidade">
       <label class="form-check-label" for="radio7">Oportunidade</label>
@@ -114,7 +129,7 @@
 </div>
     <br>
 
-          
+
    <div class="form-group">
     <label for="descricao">Descrição da mudança:</label>
     <textarea class="form-control rounded-0" id="descricao" rows="1" name="descricao" required></textarea>
@@ -123,28 +138,50 @@
   <div class="form-group">
     <label for="proposito">Propósito da mudança:</label>
     <textarea class="form-control rounded-0" id="proposito" rows="1" name="proposito" required></textarea>
-  </div> 
+  </div>
 
   <div class="form-group">
     <label for="consequencia">Consequências da mudança:</label>
     <textarea class="form-control rounded-0" id="consequencia" rows="1" name="consequencia" required></textarea>
     <span class="help-block">Obs: Verificar disponibilidade de recursos e responsabilidades. Atualizar matrizes de riscos do setor.</span>
-  </div>  
+  </div>
 
   <div class="form-group">
     <label for="brainstorming">Brainstorming / Alterações no SGI</label>
     <textarea class="form-control rounded-0" id="brainstorming" rows="1" name="brainstorming" required></textarea>
     <br>
+    <br>
+
+<!--botão FOTOS-->
+<div id="accordion">
+    <button style="background-color: #80BDFF;" class="btn btn-basic" data-toggle="collapse" href="#fotos">
+            Documentos
+            <small id="" class="form-text text-muted" style="color: #27408B;">
+            <span style="margin: 0 5px;"> | </span> Fotos, vídeos, documentos PDF ou do pacote Office
+            </small>
+        </button>
+        <!--Corpo Dados fotos-->
+    <div id="fotos" class="collapse" data-parent="#accordion">
+        <div class="container-fuid form-group row" style="background-color: #80BDFF;">
+            <div class="form-group col-xs-12">
+                <br>
+                <div class="file-loading">
+                <input id="file-4" type="file" class="file" multiple data-theme="fas" name="arquivos[]">
+            </div>
+            </div>
+        </div>
+    </div> <!-- end collapseOne -->
+</div> <!-- end accordion -->
+<br>
+
+
   <div id="accordion" style=" ">
     <button style="background-color: #80BDFF;"  class="btn btn-basic" data-toggle="collapse" href="#collapseOne">
       Diagrama de causa e efeito
-    <small id="" class="form-text">
+    <small id="" class="form-text" style="color: #27408B;">
         &nbsp;&nbsp;|&nbsp;&nbsp;6M
     </small>
               </button>
-                           
-
-
     <!--Corpo esp-peixe-->
     <div id="collapseOne" style="background-color: #80BDFF; margin-top: -2px;" class="collapse backgroundS" data-parent="#accordion">
         <div align="center"  class="form-group row">
@@ -152,7 +189,7 @@
                 <br>
     <!--Div esp-peixe-->
     <div style="width: 1151px; height: 438px;" class="row-fuid esp-peixe">
-        <p style="font-size: 10px;">&nbsp;&nbsp;</p> 
+        <p style="font-size: 10px;">&nbsp;&nbsp;</p>
 
                         <!--L1-->
                         <div style="z-index:8; position:relative" class="row">
@@ -239,29 +276,19 @@
                             <textarea class="form-control" name="descricaoPeixe" style="position:absolute; min-height: 32px; margin-left: 72.4%; margin-top: 2.5%; width:286px; height: 327px;" rows="1" placeholder="Adicione uma descrição:"></textarea>
                         </div>
                         <!--endDescr-->
-
-
-
-
-                    
-            
             </div>
             <!--endL8-->
 
             <!--end esp-peixe-->
-
-
-
-
       </div>
       </div>
     </div>
     </div>
 
-    </div> 
+    </div>
   </div>
   <div class="panel-footer">
-    <button type="submit" class="btn btn-primary">
+    <button type="submit" class="btn btn-primary"  data-toggle="modal" data-target="#modal-mensagem">
       Gerar SACP
     </button>
   </div>
@@ -271,7 +298,7 @@
 
 
   <!--Fim panel Body-->
-        
+
 
 
 </div>
@@ -279,3 +306,31 @@
 </div>
 
 <!-- /page content -->
+<script type="text/javascript">
+
+$("#file-4").fileinput({
+        theme: 'fas',
+        maxFileCount: 10,
+        initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+        initialPreviewFileType: 'image', // image is the default and can be overridden in config below
+        allowedFileTypes: ["image", "video", "pdf",],
+        purifyHtml: true,
+        uploadExtraData: {
+        img_key: "1000",
+        img_keywords: "happy, places"
+    }
+}).on('filesorted', function(e, params) {
+    console.log('File sorted params', params);
+}).on('fileuploaded', function(e, params) {
+    console.log('File uploaded params', params);
+});
+
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-58087941-1', 'auto');
+    ga('send', 'pageview');
+    ga('send', 'event', 'labs', 'spinner-loader');
+</script>

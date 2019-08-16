@@ -187,40 +187,86 @@ class RncModel extends MainModel
 		return $setor['nome'];
 	}
 
-	public function importarAJAX()
+	public function inserefotos()
 	{
-
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		inserirRNC. */
 		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['inserirRNC'])) {
 			return;
 		}
 
-		$arquivo 	= $_FILES["file"]["tmp_name"];
-        $nome 		= $_FILES["file"]["name"];
-        $tamanho 	= $_FILES["file"]["size"];
+		$tiposPermitidos = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/png', 'application/pdf', 'video/mp4', 'video/ogg', 'video/webm', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'video/x-sgi-movie', 'video/x-ms-asf', 'video/x-msvideo', 'video/quicktime', 'video/mpeg', 'text/xml', 'text/rtf', 'text/plain', 'image/tiff', 'image/png', 'image/gif', 'image/bmp', 'audio/x-wav', 'application/postscript',  'application/postscript', 'application/excel', 'application/msword');
+		$diretorio = UP_ABSPATH."/RNC/";
 
-        $fp = fopen($arquivo,"rb");//Abro o arquivo que está no $temp
-    	$documento = fread($fp, $tamanho);//Leio o binario do arquivo
-    	fclose($fp);//fecho o arquivo
+		foreach($_FILES['arquivos']['tmp_name'] as $key => $tmp_name){
+			$nomeimagem = $_FILES['arquivos']['name'][$key];
+			$ext = strrchr($nomeimagem, '.');
+			$imagem = time().uniqid(md5(time())).$ext;
+			$targetfile = $diretorio.$imagem;
+			$file_size =$_FILES['arquivos']['size'][$key];
+			$file_tmp = $_FILES['arquivos']['tmp_name'][$key];
+			$arqError =  $_FILES['arquivos']['error'][$key];
+			$arqType =  $_FILES['arquivos']['type'][$key];
 
-		$dados = bin2hex($documento);
+			if ($arqError == 0 && (array_search($arqType, $tiposPermitidos) === false) ) {
+				$validação = 0;
+				break;
+				// Não houveram erros, move o arquivo
+				} else {
+					move_uploaded_file($file_tmp, $targetfile);
+					$nomesBanco['nome_original'][] = $nomeimagem;
+					$nomesBanco['nome_codigo'][] = $imagem;
+					$validação = 1;
+				}
+		}
 
-		$dataGerada = new DateTime('now');
-		$dataGerada = $dataGerada->format('Y-m-d H:i:s');
-
-		$_POST = array(
-			'nome' 		=> $nome,
-			'tamanho'	=> $tamanho,
-			'conteúdo'	=> $dados,
-			'data'		=> $dataGerada,
-		);
-
-		print_r($arquivo);
-
-		$query = $this->db->insert('arquivos', $_POST);
-
+		if ($validação == 1){
+			return $nomesBanco;
+		} else {
+			return 'erro';
+			}
 	}
+
+	public function atualizafotos()
+	{
+		/* Verifica se algo foi postado e se está vindo do form que tem o campo
+		inserirRNC. */
+		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['editarRNC'])) {
+			return;
+		}
+
+		$tiposPermitidos = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/png', 'application/pdf', 'video/mp4', 'video/ogg', 'video/webm', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'video/x-sgi-movie', 'video/x-ms-asf', 'video/x-msvideo', 'video/quicktime', 'video/mpeg', 'text/xml', 'text/rtf', 'text/plain', 'image/tiff', 'image/png', 'image/gif', 'image/bmp', 'audio/x-wav', 'application/postscript',  'application/postscript', 'application/excel', 'application/msword');
+		$diretorio = UP_ABSPATH."/RNC/";
+
+		foreach($_FILES['arquivos']['tmp_name'] as $key => $tmp_name){
+			$nomeimagem = $_FILES['arquivos']['name'][$key];
+			$ext = strrchr($nomeimagem, '.');
+			$imagem = time().uniqid(md5(time())).$ext;
+			$targetfile = $diretorio.$imagem;
+			$file_size =$_FILES['arquivos']['size'][$key];
+			$file_tmp = $_FILES['arquivos']['tmp_name'][$key];
+			$arqError =  $_FILES['arquivos']['error'][$key];
+			$arqType =  $_FILES['arquivos']['type'][$key];
+
+			if ($arqError == 0 && (array_search($arqType, $tiposPermitidos) === false) ) {
+				$validação = 0;
+				break;
+				// Não houveram erros, move o arquivo
+				} else {
+					move_uploaded_file($file_tmp, $targetfile);
+					$nomesBanco['nome_original'][] = $nomeimagem;
+					$nomesBanco['nome_codigo'][] = $imagem;
+					$validação = 1;
+				}
+		}
+
+		if ($validação == 1){
+			return $nomesBanco;
+		} else {
+			return 'erro';
+			}
+	}
+
 
     public function listarUsuarios()
 	{
@@ -242,11 +288,13 @@ class RncModel extends MainModel
 		return $usuarios;
     }
 
-
 	public function consultaRNC($id)
 	{
 		$query = $this->db->query('SELECT * FROM rnc WHERE id = ?', [$id]);
 		$rnc = $query->fetch(PDO::FETCH_ASSOC);
+
+		$query = $this->db->query('SELECT * FROM documentos_rnc WHERE id_rnc = ?', [$id]);
+		$fotos_rnc = $query->fetchall(PDO::FETCH_ASSOC);
 
 		$query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$rnc['id_origem']]);
 		$userOrigem = $query->fetch(PDO::FETCH_ASSOC);
@@ -254,11 +302,11 @@ class RncModel extends MainModel
 		$query = $this->db->query('SELECT * FROM usuarios WHERE id = ?', [$rnc['id_destino']]);
 		$userDestino = $query->fetch(PDO::FETCH_ASSOC);
 
-		return array('rnc' => $rnc, 'userOrigem' => $userOrigem, 'userDestino' => $userDestino);
+		return array('rnc' => $rnc, 'userOrigem' => $userOrigem, 'userDestino' => $userDestino, 'fotos' => $fotos_rnc);
 	}
 
 
-    public function inserirRNC()
+    public function inserirRNC($nomesBanco)
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		inserirRNC. */
@@ -268,6 +316,9 @@ class RncModel extends MainModel
 
 		/* Remove o campo inserirRNC para não gerar problema com o PDO */
 		unset($_POST['inserirRNC']);
+
+		/* Remove o campo inserirRNC para não gerar problema com o PDO */
+		unset($_POST['fotos']);
 
 		// Checa se o campo numero_op está vazio, caso esteja, seta pra null
 		if (empty($_POST['numero_op'])) {
@@ -282,8 +333,20 @@ class RncModel extends MainModel
 		$_POST['data_gerada'] = $dataGerada;
 
 		/* query */
-        $query = $this->db->insert('rnc', $_POST);
-        $id = $this->db->last_id;
+		$query = $this->db->insert('rnc', $_POST);
+		$id = $this->db->last_id;
+
+		//insere o ID da RNC no array das informações
+		foreach ($nomesBanco['nome_original'] as $key => $value) {
+			$nomesBanco['id_rnc'][$key] = $id;
+		}
+
+		//junta as linhas em uma variável única pra ser gravada no DB
+		foreach ($nomesBanco['nome_original'] as $key => $value) {
+			$insert = array('nome_original' => $nomesBanco['nome_original'][$key],
+			'nome_codigo' => $nomesBanco['nome_codigo'][$key], 'id_rnc' => $nomesBanco['id_rnc'][$key]);
+			$query = $this->db->insert('documentos_rnc', $insert);
+		}
 
 		/* Verifica a consulta */
 		if ($query) {
@@ -315,111 +378,111 @@ class RncModel extends MainModel
 				$emailDestino		= $valor['email'];
 			}
 
-			$mail = new PHPMailer;
-			$mail->isSMTP();
-			//$mail->SMTPSecure = 'ssl';
-			//$mail->SMTPAuth = true;
-			$mail->Host = 'nac.edelbra.com.br';
-			$mail->Port = 587;
-			$mail->Username = 'manutencao@edelbra.com.br';
-			$mail->Password = 'man@2015!';
-			$mail->setFrom('manutencao@edelbra.com.br');
-			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores');
-			//$mail->addAddress('e-mail para Qualidade');
-			$mail->addAddress($emailOrigem);
-			$mail->addAddress($emailDestino);
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
-			$mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
-			$mail->Subject = 'RNC Novo';
-			$msg =
-				"<html dir='ltr'>
-					<head>
-					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>
-							#customers {
-							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
-							border-collapse: collapse;
-							width: 100%;
-							}
-							#customers td, #customers th {
-							border: 1px solid #C0C0C0;
-							border-radius: 5px; 5px; 0px; 0px;
-							padding: 8px;
-							background-color: #E8E8E8;
-							}
-							#customers tr:nth-child(even){background-color: #E8E8E8;}
-							#customers th {
-							padding: 8px;
-							text-align: center;
-							background-color: #DAA520;
-							color: white;
-							display: inline-block;
-							}
-							body {background-color: gray;
-							}
-						</style>
-					</head>
+			// $mail = new PHPMailer;
+			// $mail->isSMTP();
+			// //$mail->SMTPSecure = 'ssl';
+			// //$mail->SMTPAuth = true;
+			// $mail->Host = 'nac.edelbra.com.br';
+			// $mail->Port = 587;
+			// $mail->Username = 'manutencao@edelbra.com.br';
+			// $mail->Password = 'man@2015!';
+			// $mail->setFrom('manutencao@edelbra.com.br');
+			// $mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			// //$mail->addAddress('e-mail para administradores');
+			// //$mail->addAddress('e-mail para Qualidade');
+			// $mail->addAddress($emailOrigem);
+			// $mail->addAddress($emailDestino);
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+			// $mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+			// $mail->Subject = 'RNC Novo';
+			// $msg =
+			// 	"<html dir='ltr'>
+			// 		<head>
+			// 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+			// 			<style>
+			// 				#customers {
+			// 				font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+			// 				border-collapse: collapse;
+			// 				width: 100%;
+			// 				}
+			// 				#customers td, #customers th {
+			// 				border: 1px solid #C0C0C0;
+			// 				border-radius: 5px; 5px; 0px; 0px;
+			// 				padding: 8px;
+			// 				background-color: #E8E8E8;
+			// 				}
+			// 				#customers tr:nth-child(even){background-color: #E8E8E8;}
+			// 				#customers th {
+			// 				padding: 8px;
+			// 				text-align: center;
+			// 				background-color: #DAA520;
+			// 				color: white;
+			// 				display: inline-block;
+			// 				}
+			// 				body {background-color: gray;
+			// 				}
+			// 			</style>
+			// 		</head>
 
-				<body align-self: center;>
-				<hr>
-				<br>
-					<table id='customers'>
-							<tr>
-								<th style='background-color: white; padding: 20px;' colspan='3'>
-									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
-								<th style='background-color: white; colspan='1' >
-									<img src='cid:relat1.png' align=center width='90' height='130'></p></th>
-							</tr>
-							<tr>
-								<th colspan='3' >Relatório de Não-Conformidade</th>
-								<th colspan='1' >ID $id </th>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white; color: blue;'><p align=center><b> ----> NOVO <---- </b></p></td>
-							</tr>
-							<tr>
-								<td colspan='4'><b>Origem:</b> $userOrigem </td>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white;'><b>Destino:</b> $userDestino </td>
-							</tr>
-							<tr>
-								<td colspan='4'><b>Número O.P:</b> $numeroOp </td>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white;'><b>Data Gerada:</b> $gerada </td>
-							</tr>
-							<tr rowspan='4'>
-								<td colspan='4'><b>Descrição:</b> $descricao </td>
-							</tr>
-							<tr rowspan='4'>
-								<td colspan='4' style='background-color: white; color: white;'><b>Justificativa:</b>  </td>
-							</tr>
-							<br>
-							<br>
-							<br>
-							<br>
-								<p align=center> <a href='$url/rnc/editar/$id'>
-								<img src='cid:acessar.png' width='170' height='50'></a>
-								</p>
-								<p align=center>
-								<img src='cid:linha.png' width='600' height='4'>
-								</p>
-					</table>
-				<br>
-				<hr>
-				<br>
-				</body>
-			</html>";
-			$mail->Body = $msg;
-            $mail->IsHTML(true); //enviar em HTML
+			// 	<body align-self: center;>
+			// 	<hr>
+			// 	<br>
+			// 		<table id='customers'>
+			// 				<tr>
+			// 					<th style='background-color: white; padding: 20px;' colspan='3'>
+			// 						<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+			// 					<th style='background-color: white; colspan='1' >
+			// 						<img src='cid:relat1.png' align=center width='90' height='130'></p></th>
+			// 				</tr>
+			// 				<tr>
+			// 					<th colspan='3' >Relatório de Não-Conformidade</th>
+			// 					<th colspan='1' >ID $id </th>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white; color: blue;'><p align=center><b> ----> NOVO <---- </b></p></td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4'><b>Origem:</b> $userOrigem </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white;'><b>Destino:</b> $userDestino </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4'><b>Número O.P:</b> $numeroOp </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white;'><b>Data Gerada:</b> $gerada </td>
+			// 				</tr>
+			// 				<tr rowspan='4'>
+			// 					<td colspan='4'><b>Descrição:</b> $descricao </td>
+			// 				</tr>
+			// 				<tr rowspan='4'>
+			// 					<td colspan='4' style='background-color: white; color: white;'><b>Justificativa:</b>  </td>
+			// 				</tr>
+			// 				<br>
+			// 				<br>
+			// 				<br>
+			// 				<br>
+			// 					<p align=center> <a href='$url/rnc/editar/$id'>
+			// 					<img src='cid:acessar.png' width='170' height='50'></a>
+			// 					</p>
+			// 					<p align=center>
+			// 					<img src='cid:linha.png' width='600' height='4'>
+			// 					</p>
+			// 		</table>
+			// 	<br>
+			// 	<hr>
+			// 	<br>
+			// 	</body>
+			// </html>";
+			// $mail->Body = $msg;
+            // $mail->IsHTML(true); //enviar em HTML
 
-            //send the message, check for errors
-            $mail->send();
+            // //send the message, check for errors
+            // $mail->send();
 
 			return 'success';
 		}
@@ -427,7 +490,7 @@ class RncModel extends MainModel
 	} // insert
 
 
-	public function editarRNC($id)
+	public function editarRNC($id, $input)
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		editarRNC. */
@@ -438,11 +501,27 @@ class RncModel extends MainModel
 		/* Remove o campo editarRNC para não gerar problema com o PDO */
 		unset($_POST['editarRNC']);
 
+		unset($_POST['arquivos']);
+
         // Checa se o campo numero_op está vazio, caso esteja, seta pra null
         if (isset($_POST['numero_op'])
             && empty($_POST['numero_op'])) {
                 $_POST['numero_op'] = null;
-        }
+		}
+
+		$nomesBanco = $input;
+
+		//insere o ID da RNC no array das informações
+		foreach ($nomesBanco['nome_original'] as $key => $value) {
+			$nomesBanco['id_rnc'][$key] = $id;
+		}
+
+		//junta as linhas em uma variável única pra ser gravada no DB
+		foreach ($nomesBanco['nome_original'] as $key => $value) {
+			$insert = array('nome_original' => $nomesBanco['nome_original'][$key],
+			'nome_codigo' => $nomesBanco['nome_codigo'][$key], 'id_rnc' => $nomesBanco['id_rnc'][$key]);
+			$query = $this->db->insert('documentos_rnc', $insert);
+		}
 
 		// if (empty($_POST['numero_op'])) {
 		// 	$_POST['numero_op'] = null;
@@ -485,115 +564,115 @@ class RncModel extends MainModel
 				$emailDestino		= $valor['email'];
 			}
 
-			$mail = new PHPMailer;
-			$mail->isSMTP();
-			//$mail->SMTPSecure = 'ssl';
-			//$mail->SMTPAuth = true;
-			$mail->Host = 'nac.edelbra.com.br';
-			$mail->Port = 587;
-			$mail->Username = 'manutencao@edelbra.com.br';
-			$mail->Password = 'man@2015!';
-			$mail->setFrom('manutencao@edelbra.com.br');
-			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores');
-			//$mail->addAddress('e-mail para Qualidade');
-			$mail->addAddress($emailOrigem);
-			$mail->addAddress($emailDestino);
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
-			$mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
-			$mail->Subject = 'RNC Editado';
-			$msg =
-				"<html dir='ltr'>
-					<head>
-					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>
-							#customers {
-							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
-							border-collapse: collapse;
-							width: 100%;
-							}
-							#customers td, #customers th {
-							border: 1px solid #C0C0C0;
-							border-radius: 5px; 5px; 0px; 0px;
-							padding: 8px;
-							background-color: #E8E8E8;
-							}
-							#customers tr:nth-child(even){background-color: #E8E8E8;}
-							#customers th {
-							padding: 8px;
-							text-align: center;
-							background-color: #DAA520;
-							color: white;
-							display: inline-block;
-							}
-							body {background-color: gray;
-							}
-						</style>
-					</head>
+			// $mail = new PHPMailer;
+			// $mail->isSMTP();
+			// //$mail->SMTPSecure = 'ssl';
+			// //$mail->SMTPAuth = true;
+			// $mail->Host = 'nac.edelbra.com.br';
+			// $mail->Port = 587;
+			// $mail->Username = 'manutencao@edelbra.com.br';
+			// $mail->Password = 'man@2015!';
+			// $mail->setFrom('manutencao@edelbra.com.br');
+			// $mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			// //$mail->addAddress('e-mail para administradores');
+			// //$mail->addAddress('e-mail para Qualidade');
+			// $mail->addAddress($emailOrigem);
+			// $mail->addAddress($emailDestino);
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat1.png', 'relat1', 'relat1.png');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+			// $mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+			// $mail->Subject = 'RNC Editado';
+			// $msg =
+			// 	"<html dir='ltr'>
+			// 		<head>
+			// 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+			// 			<style>
+			// 				#customers {
+			// 				font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+			// 				border-collapse: collapse;
+			// 				width: 100%;
+			// 				}
+			// 				#customers td, #customers th {
+			// 				border: 1px solid #C0C0C0;
+			// 				border-radius: 5px; 5px; 0px; 0px;
+			// 				padding: 8px;
+			// 				background-color: #E8E8E8;
+			// 				}
+			// 				#customers tr:nth-child(even){background-color: #E8E8E8;}
+			// 				#customers th {
+			// 				padding: 8px;
+			// 				text-align: center;
+			// 				background-color: #DAA520;
+			// 				color: white;
+			// 				display: inline-block;
+			// 				}
+			// 				body {background-color: gray;
+			// 				}
+			// 			</style>
+			// 		</head>
 
-				<body align-self: center;>
-				<hr>
-				<br>
-					<table id='customers'>
-							<tr>
-								<th style='background-color: white; padding: 20px;' colspan='3'>
-									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
-								<th style='background-color: white; colspan='1' >
-									<img src='cid:relat1.png' align=center width='90' height='130'></p></th>
-							</tr>
-							<tr>
-								<th colspan='3' >Relatório de Não-Conformidade</th>
-								<th colspan='1' >ID $id </th>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white; color: #DAA520;'><p align=center><b> ----> ALTERADO <---- </b></p></td>
-							</tr>
-							<tr>
-								<td colspan='4'><b>Origem:</b> $userOrigem </td>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white;'><b>Destino:</b> $userDestino </td>
-							</tr>
-							<tr>
-								<td colspan='4'><b>Número O.P:</b> $numeroOp </td>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white;'><b>Data Gerada:</b> $gerada </td>
-							</tr>
-							<tr rowspan='4'>
-								<td colspan='4'><b>Descrição:</b> $descricao </td>
-							</tr>
-							<tr rowspan='4'>
-								<td colspan='4' style='background-color: white;' ><b>Justificativa:</b> $justificativa </td>
-							</tr>
-							<tr rowspan='4'>
-								<td colspan='4'><b>Correção:</b> $correcao </td>
-							</tr>
-							<br>
-							<br>
-							<br>
-							<br>
-								<p align=center> <a href='$url/rnc/inserir/'>
-								<img src='cid:acessar.png' width='170' height='50'></a>
-								</p>
-								<p align=center>
-								<img src='cid:linha.png' width='600' height='4'>
-								</p>
-					</table>
-				<br>
-				<hr>
-				<br>
-				</body>
-			</html>";
+			// 	<body align-self: center;>
+			// 	<hr>
+			// 	<br>
+			// 		<table id='customers'>
+			// 				<tr>
+			// 					<th style='background-color: white; padding: 20px;' colspan='3'>
+			// 						<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+			// 					<th style='background-color: white; colspan='1' >
+			// 						<img src='cid:relat1.png' align=center width='90' height='130'></p></th>
+			// 				</tr>
+			// 				<tr>
+			// 					<th colspan='3' >Relatório de Não-Conformidade</th>
+			// 					<th colspan='1' >ID $id </th>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white; color: #DAA520;'><p align=center><b> ----> ALTERADO <---- </b></p></td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4'><b>Origem:</b> $userOrigem </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white;'><b>Destino:</b> $userDestino </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4'><b>Número O.P:</b> $numeroOp </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white;'><b>Data Gerada:</b> $gerada </td>
+			// 				</tr>
+			// 				<tr rowspan='4'>
+			// 					<td colspan='4'><b>Descrição:</b> $descricao </td>
+			// 				</tr>
+			// 				<tr rowspan='4'>
+			// 					<td colspan='4' style='background-color: white;' ><b>Justificativa:</b> $justificativa </td>
+			// 				</tr>
+			// 				<tr rowspan='4'>
+			// 					<td colspan='4'><b>Correção:</b> $correcao </td>
+			// 				</tr>
+			// 				<br>
+			// 				<br>
+			// 				<br>
+			// 				<br>
+			// 					<p align=center> <a href='$url/rnc/inserir/'>
+			// 					<img src='cid:acessar.png' width='170' height='50'></a>
+			// 					</p>
+			// 					<p align=center>
+			// 					<img src='cid:linha.png' width='600' height='4'>
+			// 					</p>
+			// 		</table>
+			// 	<br>
+			// 	<hr>
+			// 	<br>
+			// 	</body>
+			// </html>";
 
-			$mail->Body = $msg;
-            $mail->IsHTML(true); //enviar em HTML
+			// $mail->Body = $msg;
+            // $mail->IsHTML(true); //enviar em HTML
 
-            //send the message, check for errors
-			$mail->send();
+            // //send the message, check for errors
+			// $mail->send();
 
       		return 'success';
 		}

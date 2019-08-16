@@ -15,7 +15,7 @@
         <div class="container-fluid">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <button type="button" class="btn btn-default" 
+                    <button type="button" class="btn btn-default"
                     onclick="window.location='<?= HOME_URI ?>/sacp/'">
                         Voltar
                     </button>
@@ -28,9 +28,9 @@
         <form method="post"> <!-- form -->
             <input type="hidden" name="finalizarSACP" value="1" />
 
-            <div style="position: absolut; margin-top: -12px;" class="panel-body backgroundS"> 
+            <div style="position: absolut; margin-top: -12px;" class="panel-body backgroundS">
                 <br>
-                
+
                 <div class="form-group row">
                     <div class="form-group col-md-5">
                         <label for="setor_origem">
@@ -39,13 +39,13 @@
                         <select id="setor_origem" name="setor_origem" class="form-control custom-select" disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
                             <option hidden disabled selected value> </option>
                             <?php foreach ($setores as $key => $setor) { ?>
-                                <option value="<?= $setor['id'] ?>" 
-                                <?php 
-                                    if (!empty($dados['setor_origem'])) { 
-                                        if($dados['setor_origem'] == $setor['id']) { 
-                                            echo 'selected'; 
+                                <option value="<?= $setor['id'] ?>"
+                                <?php
+                                    if (!empty($dados['setor_origem'])) {
+                                        if($dados['setor_origem'] == $setor['id']) {
+                                            echo 'selected';
                                         }
-                                    } 
+                                    }
                                 ?>>
                                     <?= $setor['nome'] ?>
                                 </option>
@@ -55,17 +55,17 @@
 
     <div class="form-group col-md-5">
         <label for="setor_destino">Setor Destino:</label>
-        <select id="setor_destino" name="setor_destino" class="form-control custom-select" 
+        <select id="setor_destino" name="setor_destino" class="form-control custom-select"
         disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
             <option hidden disabled selected value> </option>
             <?php foreach ($setores as $key => $setor) { ?>
-                <option value="<?= $setor['id'] ?>" 
-                <?php 
-                    if (!empty($dados['setor_destino'])) { 
-                        if($dados['setor_destino'] == $setor['id']) { 
-                            echo 'selected'; 
+                <option value="<?= $setor['id'] ?>"
+                <?php
+                    if (!empty($dados['setor_destino'])) {
+                        if($dados['setor_destino'] == $setor['id']) {
+                            echo 'selected';
                         }
-                    } 
+                    }
                 ?>>
                     <?= $setor['nome'] ?>
                 </option>
@@ -74,28 +74,28 @@
     </div>
 
     <!-- validacao futura -->
-    <?php /* if (empty($_POST['setorSolicitante']) && empty($_POST['setorDestino'])) { 
+    <?php /* if (empty($_POST['setorSolicitante']) && empty($_POST['setorDestino'])) {
         echo "<button type='submit' class='btn btn-primary'>OK</button>";
     } else { */ ?>
-    
+
    <div class="form-group col-md-2">
       <label for="numero_op">Número O.P:</label>
       <input style="min-width: 20px; max-width: 178px;" value="<?= $dados['numero_op'] ? $dados['numero_op'] : '' ?>"
       type="number" class="form-control" id="numero_op" name="numero_op" <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?> disabled>
     </div>
     </div>
-    
+
     <label for="participantes">Participantes:</label>
-    <select class="js-example-basic-multiple form-group custom-select" id="participantes" name="participantes[]" style="width: 100%" multiple="multiple" 
+    <select class="js-example-basic-multiple form-group custom-select" id="participantes" name="participantes[]" style="width: 100%" multiple="multiple"
     disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
-      <?php 
+      <?php
             foreach ($participantes as $key => $participante) { ?>
-                <option value="<?= $participante['id'] ?>" 
+                <option value="<?= $participante['id'] ?>"
                     <?php
                         if (!empty($dados['participantes'])) {
                             if (in_array($participante['id'], $dados['participantes'])) {
-                                echo 'selected'; 
-                            } 
+                                echo 'selected';
+                            }
                         }
                     ?>>
                         <?= $participante['nomeSetor'] . " - " . $participante['nome'] ?>
@@ -109,49 +109,49 @@
 <div class="container-fluid">
   <div class="form-group row">
     <div class="radio-inline">
-      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio1" value="relatorio" 
-      <?= $dados['origem'] == 'relatorio' ? 'checked' : '' ?> 
+      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio1" value="relatorio"
+      <?= $dados['origem'] == 'relatorio' ? 'checked' : '' ?>
       disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
       <label class="form-check-label" for="radio1">Relatório de Ação Corretiva</label>
     </div>
     <div class="radio-inline">
-      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio2" value="indicador" 
+      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio2" value="indicador"
       <?= $dados['origem'] == 'indicador' ? 'checked' : '' ?>
       disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
       <label class="form-check-label" for="radio2">Indicador</label>
     </div>
     <div class="radio-inline">
-      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio3" value="auditoria" 
+      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio3" value="auditoria"
       <?= $dados['origem'] == 'auditoria' ? 'checked' : '' ?>
       disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
       <label class="form-check-label" for="radio3">Auditoria (int./ext.)</label>
     </div>
     <div class="radio-inline">
-      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio4" value="recebida" 
+      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio4" value="recebida"
       <?= $dados['origem'] == 'recebida' ? 'checked' : '' ?>
       disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
       <label class="form-check-label" for="radio4">Recebida de cliente</label>
     </div>
     <div class="radio-inline">
-      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio5" value="acao" 
+      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio5" value="acao"
       <?= $dados['origem'] == 'acao' ? 'checked' : '' ?>
       disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
       <label class="form-check-label" for="radio5">Ação corretiva</label>
     </div>
     <div class="radio-inline">
-      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio6" value="riscos" 
+      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio6" value="riscos"
       <?= $dados['origem'] == 'riscos' ? 'checked' : '' ?>
       disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
       <label class="form-check-label" for="radio6">Riscos</label>
-    </div>  
+    </div>
     <div class="radio-inline">
-      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio7" value="oportunidade" 
+      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio7" value="oportunidade"
       <?= $dados['origem'] == 'oportunidade' ? 'checked' : '' ?>
       disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
       <label class="form-check-label" for="radio7">Oportunidade</label>
     </div>
     <div class="radio-inline">
-      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio8" value="necessidade" 
+      <input class="form-check-input origemRadio" type="radio" name="origem" id="radio8" value="necessidade"
       <?= $dados['origem'] == 'necessidade' ? 'checked' : '' ?>
       disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
       <label class="form-check-label" for="radio8">Necessidade de mudança</label>
@@ -164,8 +164,8 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <input id="origemText" type="text" class="form-control form-control-sm origemText" name="origem" placeholder="Outros..." 
-        value="<?php if (!in_array($dados['origem'], $radioOptions)) {echo $dados['origem'] . "\"";} else { ?>" <?php echo 'disabled'; } ?> 
+        <input id="origemText" type="text" class="form-control form-control-sm origemText" name="origem" placeholder="Outros..."
+        value="<?php if (!in_array($dados['origem'], $radioOptions)) {echo $dados['origem'] . "\"";} else { ?>" <?php echo 'disabled'; } ?>
         disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>>
       </div>
     </div>
@@ -173,36 +173,200 @@
 </div>
     <br>
 
-          
+
    <div class="form-group">
     <label for="descricao">Descrição da mudança:</label>
-    <textarea class="form-control rounded-0" id="descricao" rows="4" name="descricao" 
+    <textarea class="form-control rounded-0" id="descricao" rows="4" name="descricao"
     disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
     ><?= $dados['descricao'] ?></textarea>
   </div>
 
   <div class="form-group">
     <label for="proposito">Propósito da mudança:</label>
-    <textarea class="form-control rounded-0" id="proposito" rows="4" name="proposito" 
+    <textarea class="form-control rounded-0" id="proposito" rows="4" name="proposito"
     disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
     ><?= !empty($dados['proposito']) ? $dados['proposito'] : '' ?></textarea>
-  </div> 
+  </div>
 
   <div class="form-group">
     <label for="consequencia">Consequências da mudança:</label>
-    <textarea class="form-control rounded-0" id="consequencia" rows="4" name="consequencia" 
+    <textarea class="form-control rounded-0" id="consequencia" rows="4" name="consequencia"
     disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
     ><?= !empty($dados['consequencia']) ? $dados['consequencia'] : '' ?></textarea>
     <span class="help-block">Obs: Verificar disponibilidade de recursos e responsabilidades. Atualizar matrizes de riscos do setor.</span>
-  </div>  
+  </div>
 
   <div class="form-group">
     <label for="brainstorming">Brainstorming / Alterações no SGI</label>
-    <textarea class="form-control rounded-0" id="brainstorming" rows="4" name="brainstorming" 
+    <textarea class="form-control rounded-0" id="brainstorming" rows="4" name="brainstorming"
     disabled <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
     ><?= !empty($dados['brainstorming']) ? $dados['brainstorming'] : '' ?></textarea>
-  </div> 
-  
+  </div>
+  <br>
+
+
+<!--botão FOTOS-->
+<div id="accordion">
+    <button style="background-color: #80BDFF;" class="btn btn-basic" data-toggle="collapse" href="#fotos">
+            Documentos
+            <small id="" class="form-text text-muted" style="color: #27408B;">
+            <span style="margin: 0 5px;"> | </span> Fotos, vídeos, documentos PDF ou do pacote Office
+            </small>
+        </button>
+        <!--Corpo Dados fotos-->
+    <div id="fotos"  data-parent="#accordion"
+    <?php if (!empty($dados['fotos'])) {
+    echo "class='collapse show in'";
+    } else {
+     echo "class='collapse'";
+    } ?>>
+        <div class="container-fuid form-group row" style="background-color: #80BDFF;">
+        <br>
+
+        <div class="container-fluid">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#galeria">Galeria de Arquivos</a></li>
+                <li <?php {echo "style='display:none'";} ?>><a data-toggle="tab" href="#add">Adicionar novos Arquivos</a></li>
+            </ul>
+        </div>
+
+<div class="tab-content">
+  <div id="galeria" class="tab-pane fade in active">
+  <?php     $fotos = $dados['fotos'];
+            $imagem = array("gif", "jpeg", "pjpeg", "png", "tiff", "bmp", "jpg");
+            $pdf = array("pdf");
+            $video = array("mp4", "ogg", "webm", "x-sgi-movie", "x-ms-asf", "x-msvideo", "quicktime", "mpeg");
+            $texto = array("doc", "vnd.openxmlformats-officedocument.spreadsheetml.sheet", "vnd.openxmlformats-officedocument.wordprocessingml.document", "xml", "rtf", "plain", "postscript",  "postscript", "excel", "msword", "xlsx", "xls");
+    ?>
+            <?php foreach ($fotos as $key => $nome_original) { ?>
+            <?php   $str = $fotos[$key]['nome_codigo'];
+                    $info = pathinfo($str);
+                    $ext = $info['extension'];
+            ?>
+
+        <!-- VIDEO -->
+        <?php if (in_array($ext, $video) ) { ?>
+        <div class="col-md-3">
+        <br>
+        <a  style="margin-top: 10px;  margin-bottom: 20px;" href="#vid" class="thumbnail" align="center" data-toggle="tooltip" title="<?= $fotos[$key]['nome_original']?>">
+            <div align="center">
+                <video height="100" onclick="changevid(this)" src="/sspiwork/views/_uploads/SACP/<?= $fotos[$key]['nome_codigo']?>">
+            </div>
+        </a>
+        <div class="caption">
+        <p style="margin-top: -16px;" align="center" >
+            <a download href="/sspiwork/views/_uploads/SACP/<?= $fotos[$key]["nome_codigo"] ?>" class="btn btn-default btn-sm" role="button">
+            Download
+            </a>
+        </p>
+        </div>
+        </div>
+        <?php } ?>
+
+        <!-- FOTOS -->
+        <?php if (in_array($ext, $imagem) ) { ?>
+        <div class="col-md-3">
+        <br>
+        <a style="margin-top: 10px;  margin-bottom: 20px;" href="#img" class="thumbnail" data-toggle="tooltip" title="<?= $fotos[$key]['nome_original']?>">
+            <img style="height: 100px;" onclick="changeimg(this)" src="/sspiwork/views/_uploads/SACP/<?= $fotos[$key]['nome_codigo']?>" alt = "<?= $fotos[$key]['nome_original'] ?>">
+        </a>
+        <div class="caption">
+        <p style="margin-top: -16px;" align="center">
+            <a download href="/sspiwork/views/_uploads/SACP/<?= $fotos[$key]["nome_codigo"] ?>" class="btn btn-default btn-sm" role="button">
+            Download
+            </a>
+        </p>
+        </div>
+        </div>
+        <?php } ?>
+
+        <!-- PDF -->
+        <?php if ( in_array($ext, $pdf)  ) { ?>
+        <div class="col-md-3">
+            <br>
+                <a  style="margin-top: 10px;  margin-bottom: 20px;"  href="#text" class="thumbnail" data-toggle="tooltip" title="<?= $fotos[$key]['nome_original']?>">
+                    <img style="height: 100px;" onclick="changeIt(this)" src="<?= HOME_URI ?>/views/_images/ipdf.png" alt = "<?= $fotos[$key]['nome_original'] ?>">
+                </a>
+            <div class = "caption">
+                <p style="margin-top: -16px;" align="center">
+                    <a download href="/sspiwork/views/_uploads/SACP/<?= $fotos[$key]["nome_codigo"] ?>" class="btn btn-default btn-sm" role="button">
+                    Download
+                    </a>
+                </p>
+            </div>
+        </div>
+        <?php } ?>
+
+        <!-- OFFICE -->
+        <?php if (in_array($ext, $texto) ) { ?>
+        <div class="col-md-3" >
+            <br>
+            <a style="margin-top: 10px;  margin-bottom: 20px;" href="#text" class="thumbnail" data-toggle="tooltip" title="<?= $fotos[$key]['nome_original']?>">
+                <img style="height: 100px;" onclick="changeIt(this)" src="<?= HOME_URI ?>/views/_images/doc.png" alt = "<?= $fotos[$key]['nome_original'] ?>">
+            </a>
+            <div class = "caption">
+                <p style="margin-top: -16px;" align="center">
+                    <a download href="/sspiwork/views/_uploads/SACP/<?= $fotos[$key]["nome_codigo"] ?>" class="btn btn-default btn-sm" role="button">
+                    Download
+                    </a>
+                </p>
+            </div>
+        </div>
+        <?php } ?>
+
+
+    <?php } ?>
+
+    <figure id="vid" class="lbox flip">
+    <div class="vid">
+    <video id="video" height="450" controls="controls" autoplay="autoplay">
+        <source src="" type="video/mp4">
+    </video>
+    </div>
+    <a href="#_"></a>
+    </figure>
+
+    <figure id="img" class="lbox bounce">
+    <img id="valor" src=""/>
+    <a href="#_"></a>
+    </figure>
+
+    <figure id="text" class="lbox flip">
+    <div class="text">
+        <p>Este formato de arquivo não possui visualização!</p>
+    </div>
+    <a href="#_"></a>
+    </figure>
+  </div>
+
+
+  <div id="add" class="tab-pane fade">
+  <div class="form-group col-xs-12">
+        <br>
+        <div class="file-loading">
+        <input id="file-4" type="file" class="file" multiple data-theme="fas" name="arquivos[]">
+    </div>
+    </div>
+  </div>
+</div>
+
+                <br>
+
+
+        </div>
+    </div> <!-- end collapseOne -->
+
+</div> <!-- end accordion -->
+<br>
+
+
+
+
+
+
+
+
+
 <br>
   <div id="accordion" style=" ">
     <button style="background-color: #80BDFF;"  class="btn btn-basic" data-toggle="collapse" href="#collapseOne">
@@ -211,25 +375,30 @@
         &nbsp;&nbsp;|&nbsp;&nbsp;6M
     </small>
               </button>
-              
-                           
+
+
 
 
     <!--Corpo esp-peixe-->
-    <div id="collapseOne" style="background-color: #80BDFF; margin-top: -2px;" class="collapse backgroundS" data-parent="#accordion">
-        <div align="center"  class="form-group row">
+    <div id="collapseOne" style="background-color: #80BDFF; margin-top: -2px;" class=" backgroundS" data-parent="#accordion">
+        <div align="center"  class="form-group row"
+    <?php if (!empty($dados['espinhaPeixe'])) {
+    echo "class='collapse show in'";
+    } else {
+     echo "class='collapse'";
+    } ?>>
             <div class="form-group col-xs-12">
                 <br>
     <!--Div esp-peixe-->
     <div style="width: 1151px; height: 438px;" class="row-fuid esp-peixe">
-        <p style="font-size: 10px;">&nbsp;&nbsp;</p> 
+        <p style="font-size: 10px;">&nbsp;&nbsp;</p>
 
         <!--L1-->
         <div style="z-index:8; position:relative" class="row">
             <textarea class="form-control" name="medida[]" rows="1" placeholder=" 1 -"
             style="position:absolute; min-height: 33px; min-width:172px;  margin-left: 7.9%; margin-top: 2.4%; width:172px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 3) {
@@ -237,13 +406,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="metodo[]" rows="1" placeholder=" 1 -"
             style="position:absolute; min-height: 33px; min-width:167px; margin-left: 26%; margin-top: 2.4%;  width:167px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 2) {
@@ -251,13 +420,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="maodeobra[]" rows="1" placeholder=" 1 -"
             style="position:absolute; min-height: 33px; min-width:165px; margin-left: 43.6%; margin-top: 2.4%;  width:165px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 1) {
@@ -265,7 +434,7 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
         </div>
         <!--endL1-->
@@ -275,7 +444,7 @@
             <textarea class="form-control" name="medida[]" rows="1" placeholder=" 2 -"
             style="position:absolute; min-height: 33px; min-width:169px; margin-left: 9.6%; margin-top: 5.7%; width:169px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 3) {
@@ -283,13 +452,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="metodo[]" rows="1" placeholder=" 2 -"
             style="position:absolute; min-height: 33px; min-width:170px; margin-left: 27.2%; margin-top: 5.7%;  width:170px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 2) {
@@ -297,13 +466,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="maodeobra[]" rows="1" placeholder=" 2 -"
             style="position:absolute; min-height: 33px; min-width:168px; margin-left: 44.6%; margin-top: 5.7%;  width:168px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 1) {
@@ -311,7 +480,7 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
         </div>
         <!--endL2-->
@@ -319,9 +488,9 @@
         <!--L3-->
         <div style="z-index:6; position:relative" class="row">
             <textarea class="form-control" name="medida[]" rows="1" placeholder=" 3 -"
-            style="position:absolute; min-height: 33px; min-width:166px; margin-left: 11.3%; margin-top: 9%; width:166px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:166px; margin-left: 11.3%; margin-top: 9%; width:166px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 3) {
@@ -329,13 +498,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="metodo[]" rows="1" placeholder=" 3 -"
-            style="position:absolute; min-height: 33px; min-width:166px; margin-left: 28.7%; margin-top: 9%;  width:166px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:166px; margin-left: 28.7%; margin-top: 9%;  width:166px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 2) {
@@ -343,13 +512,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="maodeobra[]" rows="1" placeholder=" 3 -"
-            style="position:absolute; min-height: 33px; min-width:166px; margin-left: 46%; margin-top: 9%;  width:166px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:166px; margin-left: 46%; margin-top: 9%;  width:166px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 1) {
@@ -357,7 +526,7 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
         </div>
         <!--endL3-->
@@ -365,9 +534,9 @@
         <!--L4-->
         <div style="z-index:5; position:relative" class="row">
             <textarea class="form-control" name="medida[]" rows="1" placeholder=" 4 -"
-            style="position:absolute; min-height: 33px; min-width:164px; margin-left: 12.9%; margin-top: 12.4%; width:164px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:164px; margin-left: 12.9%; margin-top: 12.4%; width:164px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 3) {
@@ -375,13 +544,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="metodo[]" rows="1" placeholder=" 4 -"
-            style="position:absolute; min-height: 33px; min-width:163px; margin-left: 30%; margin-top: 12.4%;  width:163px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:163px; margin-left: 30%; margin-top: 12.4%;  width:163px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 2) {
@@ -389,13 +558,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="maodeobra[]" rows="1" placeholder=" 4 -"
-            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 47.1%; margin-top: 12.4%;  width:172px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 47.1%; margin-top: 12.4%;  width:172px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 1) {
@@ -403,7 +572,7 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
         </div>
         <!--endL4-->
@@ -411,9 +580,9 @@
         <!--L5-->
         <div style="z-index:4; position:relative" class="row">
             <textarea class="form-control" name="maquina[]" rows="1" placeholder=" 1 -"
-            style="position:absolute; min-height: 33px; min-width:164px; margin-left: 12.9%; margin-top: 17.4%; width:164px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:164px; margin-left: 12.9%; margin-top: 17.4%; width:164px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 6) {
@@ -421,13 +590,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="materiais[]" rows="1" placeholder=" 1 -"
-            style="position:absolute; min-height: 33px; min-width:163px; margin-left: 30%; margin-top: 17.4%;  width:163px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:163px; margin-left: 30%; margin-top: 17.4%;  width:163px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 5) {
@@ -435,13 +604,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="meioambiente[]" rows="1" placeholder=" 1 -"
-            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 47.1%; margin-top: 17.4%;  width:172px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 47.1%; margin-top: 17.4%;  width:172px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 4) {
@@ -449,7 +618,7 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
         </div>
         <!--endL5-->
@@ -457,9 +626,9 @@
         <!--L6-->
         <div style="z-index:3; position:relative" class="row">
             <textarea class="form-control" name="maquina[]" rows="1" placeholder=" 2 -"
-            style="position:absolute; min-height: 33px; min-width:172px;  margin-left: 11.3%; margin-top: 20.9%; width:172px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:172px;  margin-left: 11.3%; margin-top: 20.9%; width:172px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 6) {
@@ -467,13 +636,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="materiais[]" rows="1" placeholder=" 2 -"
-            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 28.7%; margin-top: 20.9%;  width:172px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 28.7%; margin-top: 20.9%;  width:172px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 5) {
@@ -481,13 +650,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="meioambiente[]" rows="1" placeholder=" 2 -"
-            style="position:absolute; min-height: 33px; min-width: 172px; margin-left: 46%; margin-top: 20.9%;  width:172px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width: 172px; margin-left: 46%; margin-top: 20.9%;  width:172px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 4) {
@@ -495,7 +664,7 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
         </div>
         <!--endL6-->
@@ -503,9 +672,9 @@
         <!--L7-->
         <div style="z-index:2; position:relative" class="row">
             <textarea class="form-control" name="maquina[]" rows="1" placeholder=" 3 -"
-            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 9.6%; margin-top: 24.2%; width:172px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 9.6%; margin-top: 24.2%; width:172px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 6) {
@@ -513,13 +682,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="materiais[]" rows="1" placeholder=" 3 -"
-            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 27.2%; margin-top: 24.2%;  width:172px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 27.2%; margin-top: 24.2%;  width:172px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 5) {
@@ -527,13 +696,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="meioambiente[]" rows="1" placeholder=" 3 -"
-            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 44.6%; margin-top: 24.2%;  width:172px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 44.6%; margin-top: 24.2%;  width:172px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 4) {
@@ -541,7 +710,7 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
         </div>
         <!--endL7-->
@@ -549,9 +718,9 @@
         <!--L8-->
         <div style="z-index:1; position:relative" class="row">
             <textarea class="form-control" name="maquina[]" rows="1" placeholder=" 4 -"
-            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 7.9%; margin-top: 27.7%; width:172px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 7.9%; margin-top: 27.7%; width:172px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 6) {
@@ -559,13 +728,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="materiais[]" rows="1" placeholder=" 4 -"
-            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 26%; margin-top: 27.7%;  width:172px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 26%; margin-top: 27.7%;  width:172px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 5) {
@@ -573,13 +742,13 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
 
             <textarea class="form-control" name="meioambiente[]" rows="1" placeholder=" 4 -"
-            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 43.6%; margin-top: 27.7%;  width:172px; height: 33px;" 
+            style="position:absolute; min-height: 33px; min-width:172px; margin-left: 43.6%; margin-top: 27.7%;  width:172px; height: 33px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
-            disabled><?php 
+            disabled><?php
             if (!empty($dados['espinhaPeixe'])) {
                 foreach ($dados["espinhaPeixe"] as $key => $dado) {
                     if ($dado['id_tipo_plano_acao'] == 4) {
@@ -587,19 +756,19 @@
                         unset($dados['espinhaPeixe'][$key]);
                         break;
                     }
-                } 
+                }
             } ?></textarea>
         </div>
         <!--endL8-->
         <!--Descrição-->
         <div style="z-index:1; position:relative" class="row">
             <textarea class="form-control" name="descricaoPeixe" rows="1" placeholder="Adicione uma descrição:"
-            style="position:absolute; min-height: 32px; margin-left: 72.4%; margin-top: 2.5%; width:286px; height: 327px;" 
+            style="position:absolute; min-height: 32px; margin-left: 72.4%; margin-top: 2.5%; width:286px; height: 327px;"
             <?php if ($this->userdata['tipo_usuario'] == 3) {echo 'readonly';} ?>
             disabled><?php
-                if (!empty($dados['espinhaPeixe'])) { 
-                    $dados['espinhaPeixe'] = array_values($dados['espinhaPeixe']); 
-                    echo $dados['espinhaPeixe'][0]['descricao']; 
+                if (!empty($dados['espinhaPeixe'])) {
+                    $dados['espinhaPeixe'] = array_values($dados['espinhaPeixe']);
+                    echo $dados['espinhaPeixe'][0]['descricao'];
                 }
             ?></textarea>
                 </div>
@@ -613,13 +782,15 @@
       </div>
       </div>
       </div>
-    
+
     <br>
     <br>
     <br>
-    
+
+
+
     <!-- planos de ação -->
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="background: rgb(108,117,125)">
         <div class="panel-heading">
             <h3 style="margin-top: 4px;" align="center">PLANOS DE AÇÃO</h3>
     </div>
@@ -628,7 +799,7 @@
   <h3 style="background-color: #f2f2f4 ">Mão de Obra
     </h3>
     <table id="maodeobra" class="table table-striped table-bordered bulk_action" style="width: 100%;">
-        
+
         <thead>
             <tr class="info">
                 <th>O que Fazer</th>
@@ -658,11 +829,11 @@
 
     <hr>
 
-    <div class="well" >                               
+    <div class="well" >
     <h3>Método
     </h3>
     <table id="metodo" class="table table-striped table-bordered bulk_action" style="width: 100%;">
-        
+
         <thead>
             <tr class="info">
                 <th>O que Fazer</th>
@@ -694,7 +865,7 @@
     <h3>Medida
     </h3>
     <table id="medida" class="table table-striped table-bordered bulk_action" style="width: 100%;">
-        
+
         <thead>
             <tr class="info">
                 <th>O que Fazer</th>
@@ -726,7 +897,7 @@
     <h3>Meio Ambiente
     </h3>
     <table id="meioambiente" class="table table-striped table-bordered bulk_action" style="width: 100%;">
-        
+
         <thead>
             <tr class="info">
                 <th>O que Fazer</th>
@@ -758,7 +929,7 @@
     <h3>Materiais
     </h3>
     <table id="materiais" class="table table-striped table-bordered bulk_action" style="width: 100%;">
-        
+
         <thead>
             <tr class="info">
                 <th>O que Fazer</th>
@@ -790,7 +961,7 @@
     <h3>Máquina
     </h3>
     <table id="maquina" class="table table-striped table-bordered bulk_action" style="width: 100%;">
-        
+
         <thead>
             <tr class="info">
                 <th>O que Fazer</th>
@@ -818,14 +989,14 @@
     </table>
 
     </div>
-</div>   
+</div>
     </div> <!--Fim panel Body-->
-    
-    
+
+
     </div>
 </div>
 
-    
+
 
   <div class="panel-footer">
     <button type="submit" class="btn btn-primary">

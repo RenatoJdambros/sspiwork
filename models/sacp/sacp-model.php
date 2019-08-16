@@ -303,6 +303,9 @@ class SacpModel extends MainModel
 		$query = $this->db->query('SELECT * FROM sacp WHERE id = ?', $id);
 		$sacp = $query->fetch(PDO::FETCH_ASSOC);
 
+		$query = $this->db->query('SELECT * FROM documentos_sacp WHERE id_sacp = ?', $id);
+		$sacp['fotos'] = $query->fetchAll(PDO::FETCH_ASSOC);
+
 		$query = $this->db->query('SELECT id_participante FROM sacp_participantes WHERE id_sacp = ?', $id);
 		$sacp['participantes'] = $query->fetchAll(PDO::FETCH_COLUMN, 0);
 
@@ -465,7 +468,88 @@ class SacpModel extends MainModel
 	}
 
 
-    public function inserirSACP()
+	public function inserefotos()
+	{
+		/* Verifica se algo foi postado e se está vindo do form que tem o campo
+		inserirRNC. */
+		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['inserirSACP'])) {
+			return;
+		}
+
+		$tiposPermitidos = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/png', 'application/pdf', 'video/mp4', 'video/ogg', 'video/webm', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'video/x-sgi-movie', 'video/x-ms-asf', 'video/x-msvideo', 'video/quicktime', 'video/mpeg', 'text/xml', 'text/rtf', 'text/plain', 'image/tiff', 'image/png', 'image/gif', 'image/bmp', 'audio/x-wav', 'application/postscript',  'application/postscript', 'application/excel', 'application/msword');
+		$diretorio = UP_ABSPATH."/SACP/";
+
+		foreach($_FILES['arquivos']['tmp_name'] as $key => $tmp_name){
+			$nomeimagem = $_FILES['arquivos']['name'][$key];
+			$ext = strrchr($nomeimagem, '.');
+			$imagem = time().uniqid(md5(time())).$ext;
+			$targetfile = $diretorio.$imagem;
+			$file_size =$_FILES['arquivos']['size'][$key];
+			$file_tmp = $_FILES['arquivos']['tmp_name'][$key];
+			$arqError =  $_FILES['arquivos']['error'][$key];
+			$arqType =  $_FILES['arquivos']['type'][$key];
+
+			if ($arqError == 0 && (array_search($arqType, $tiposPermitidos) === false) ) {
+				$validação = 0;
+				break;
+				// Não houveram erros, move o arquivo
+				} else {
+					move_uploaded_file($file_tmp, $targetfile);
+					$nomesBanco['nome_original'][] = $nomeimagem;
+					$nomesBanco['nome_codigo'][] = $imagem;
+					$validação = 1;
+				}
+		}
+
+		if ($validação == 1){
+			return $nomesBanco;
+		} else {
+			return 'erro';
+			}
+	}
+
+	public function atualizafotos()
+	{
+		/* Verifica se algo foi postado e se está vindo do form que tem o campo
+		inserirRNC. */
+		if ('POST' != $_SERVER['REQUEST_METHOD'] || empty($_POST['editarSACP'])) {
+			return;
+		}
+
+		$tiposPermitidos = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/png', 'application/pdf', 'video/mp4', 'video/ogg', 'video/webm', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'video/x-sgi-movie', 'video/x-ms-asf', 'video/x-msvideo', 'video/quicktime', 'video/mpeg', 'text/xml', 'text/rtf', 'text/plain', 'image/tiff', 'image/png', 'image/gif', 'image/bmp', 'audio/x-wav', 'application/postscript',  'application/postscript', 'application/excel', 'application/msword');
+		$diretorio = UP_ABSPATH."/SACP/";
+
+		foreach($_FILES['arquivos']['tmp_name'] as $key => $tmp_name){
+			$nomeimagem = $_FILES['arquivos']['name'][$key];
+			$ext = strrchr($nomeimagem, '.');
+			$imagem = time().uniqid(md5(time())).$ext;
+			$targetfile = $diretorio.$imagem;
+			$file_size =$_FILES['arquivos']['size'][$key];
+			$file_tmp = $_FILES['arquivos']['tmp_name'][$key];
+			$arqError =  $_FILES['arquivos']['error'][$key];
+			$arqType =  $_FILES['arquivos']['type'][$key];
+
+			if ($arqError == 0 && (array_search($arqType, $tiposPermitidos) === false) ) {
+				$validação = 0;
+				break;
+				// Não houveram erros, move o arquivo
+				} else {
+					move_uploaded_file($file_tmp, $targetfile);
+					$nomesBanco['nome_original'][] = $nomeimagem;
+					$nomesBanco['nome_codigo'][] = $imagem;
+					$validação = 1;
+				}
+		}
+
+		if ($validação == 1){
+			return $nomesBanco;
+		} else {
+			return 'erro';
+			}
+	}
+
+
+    public function inserirSACP($input)
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		inserirSACP. */
@@ -506,15 +590,28 @@ class SacpModel extends MainModel
 		$dados['consequencia']  = $_POST['consequencia'];
 		$dados['brainstorming'] = $_POST['brainstorming'];
 
-
 		/* query */
 		$query = $this->db->insert('sacp', $dados);
+
+		// Seta o id da SACP
+		$idSacp = $this->db->last_id;
+		$nomesBanco = $input;
+
+		//insere o ID da RNC no array das informações
+		foreach ($nomesBanco['nome_original'] as $key => $value) {
+			$nomesBanco['id_sacp'][$key] = $idSacp;
+		}
+
+		//junta as linhas em uma variável única pra ser gravada no DB
+		foreach ($nomesBanco['nome_original'] as $key => $value) {
+			$insert = array('nome_original' => $nomesBanco['nome_original'][$key],
+			'nome_codigo' => $nomesBanco['nome_codigo'][$key], 'id_sacp' => $nomesBanco['id_sacp'][$key]);
+			$query = $this->db->insert('documentos_sacp', $insert);
+		}
 
 		/* Verifica a consulta */
 		if ($query) {
 
-			// Seta o id da SACP
-			$idSacp = $this->db->last_id;
 
 			//traz os dados do usuário origem para o e-mail
 			foreach ($participantes as $key => $participante) {
@@ -637,122 +734,122 @@ class SacpModel extends MainModel
 			require ABSPATH . '/PHPMailer/SMTP.php';
 			$url= HOME_URI;
 
-			$mail = new PHPMailer;
-			$mail->isSMTP();
-			//$mail->SMTPSecure = 'ssl';
-			//$mail->SMTPAuth = true;
-			$mail->Host = 'nac.edelbra.com.br';
-			$mail->Port = 587;
-			$mail->Username = 'manutencao@edelbra.com.br';
-			$mail->Password = 'man@2015!';
-			$mail->setFrom('manutencao@edelbra.com.br');
-			foreach ($listaEmail as $key) {
-				$mail->addAddress($key);
-			}
-			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores');
-			//$mail->addAddress('e-mail para Qualidade');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
-			$mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
-			$mail->Subject = 'SACP Novo';
-			$msg =
-				"<html dir='ltr'>
-					<head>
-					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>
-							#customers {
-							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
-							border-collapse: collapse;
-							width: 100%;
-							}
-							#customers td, #customers th {
-							border: 1px solid #C0C0C0;
-							border-radius: 5px; 5px; 0px; 0px;
-							padding: 8px;
-							background-color: #E8E8E8;
-							}
-							#customers tr:nth-child(even){background-color: #E8E8E8;}
-							#customers th {
-							padding: 8px;
-							text-align: center;
-							background-color: #337AB7;
-							color: white;
-							display: inline-block;
-							}
-							body {background-color: gray;
-							}
-						</style>
-					</head>
+			// $mail = new PHPMailer;
+			// $mail->isSMTP();
+			// //$mail->SMTPSecure = 'ssl';
+			// //$mail->SMTPAuth = true;
+			// $mail->Host = 'nac.edelbra.com.br';
+			// $mail->Port = 587;
+			// $mail->Username = 'manutencao@edelbra.com.br';
+			// $mail->Password = 'man@2015!';
+			// $mail->setFrom('manutencao@edelbra.com.br');
+			// foreach ($listaEmail as $key) {
+			// 	$mail->addAddress($key);
+			// }
+			// $mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			// //$mail->addAddress('e-mail para administradores');
+			// //$mail->addAddress('e-mail para Qualidade');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+			// $mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+			// $mail->Subject = 'SACP Novo';
+			// $msg =
+			// 	"<html dir='ltr'>
+			// 		<head>
+			// 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+			// 			<style>
+			// 				#customers {
+			// 				font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+			// 				border-collapse: collapse;
+			// 				width: 100%;
+			// 				}
+			// 				#customers td, #customers th {
+			// 				border: 1px solid #C0C0C0;
+			// 				border-radius: 5px; 5px; 0px; 0px;
+			// 				padding: 8px;
+			// 				background-color: #E8E8E8;
+			// 				}
+			// 				#customers tr:nth-child(even){background-color: #E8E8E8;}
+			// 				#customers th {
+			// 				padding: 8px;
+			// 				text-align: center;
+			// 				background-color: #337AB7;
+			// 				color: white;
+			// 				display: inline-block;
+			// 				}
+			// 				body {background-color: gray;
+			// 				}
+			// 			</style>
+			// 		</head>
 
-				<body align-self: center;>
-				<hr>
-				<br>
-					<table id='customers'>
-							<tr>
-								<th style='background-color: white; padding: 20px;' colspan='3'>
-									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
-								<th style='background-color: white; colspan='1' >
-									<img src='cid:relat2.png' align=center width='90' height='130'></p></th>
-							</tr>
-							<tr>
-								<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
-								<th colspan='1' >ID $idSacp </th>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white; color: blue;'><p align=center><b> ----> NOVO <---- </b></p></td>
-							</tr>
-							<tr>
-								<td colspan='4'><b> Setor Solicitante:</b> $setorOrigem </td>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white;'><b> Setor Destino:</b> $setorDestino </td>
-							</tr>
-							<tr>
-								<td colspan='4'><b> Participantes:</b> $listaUser </td>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white;'><b> Número O.P:</b> $numero_op </td>
-							</tr>
-							<tr>
-								<td colspan='4'><b> Data Gerada:</b><b style='color:blue;'> $dataGerada</b>  </td>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white;'><b> Data Prazo:</b><b style='color:red;'> $dataPrazo</b>  </td>
-							</tr>
-							<tr rowspan='4'>
-								<td colspan='4'><b> Descrição: </b> $descricao </td>
-							</tr>
-							<tr rowspan='4'>
-								<td colspan='4' style='background-color: white; color: white;'><b>Justificativa:</b>  </td>
-							</tr>
-							<br>
-							<br>
-							<br>
-							<br>
-								<p align=center> <a href='$url/sacp/editar/$idSacp'>
-								<img src='cid:acessar.png' width='170' height='50'></a>
-								</p>
-								<p align=center>
-								<img src='cid:linha.png' width='600' height='4'>
-								</p>
-					</table>
-				<br>
-				<hr>
-				<br>
-				</body>
-			</html>";
-			$mail->Body = $msg;
-            $mail->IsHTML(true); //enviar em HTML
+			// 	<body align-self: center;>
+			// 	<hr>
+			// 	<br>
+			// 		<table id='customers'>
+			// 				<tr>
+			// 					<th style='background-color: white; padding: 20px;' colspan='3'>
+			// 						<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+			// 					<th style='background-color: white; colspan='1' >
+			// 						<img src='cid:relat2.png' align=center width='90' height='130'></p></th>
+			// 				</tr>
+			// 				<tr>
+			// 					<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
+			// 					<th colspan='1' >ID $idSacp </th>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white; color: blue;'><p align=center><b> ----> NOVO <---- </b></p></td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4'><b> Setor Solicitante:</b> $setorOrigem </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white;'><b> Setor Destino:</b> $setorDestino </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4'><b> Participantes:</b> $listaUser </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white;'><b> Número O.P:</b> $numero_op </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4'><b> Data Gerada:</b><b style='color:blue;'> $dataGerada</b>  </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white;'><b> Data Prazo:</b><b style='color:red;'> $dataPrazo</b>  </td>
+			// 				</tr>
+			// 				<tr rowspan='4'>
+			// 					<td colspan='4'><b> Descrição: </b> $descricao </td>
+			// 				</tr>
+			// 				<tr rowspan='4'>
+			// 					<td colspan='4' style='background-color: white; color: white;'><b>Justificativa:</b>  </td>
+			// 				</tr>
+			// 				<br>
+			// 				<br>
+			// 				<br>
+			// 				<br>
+			// 					<p align=center> <a href='$url/sacp/editar/$idSacp'>
+			// 					<img src='cid:acessar.png' width='170' height='50'></a>
+			// 					</p>
+			// 					<p align=center>
+			// 					<img src='cid:linha.png' width='600' height='4'>
+			// 					</p>
+			// 		</table>
+			// 	<br>
+			// 	<hr>
+			// 	<br>
+			// 	</body>
+			// </html>";
+			// $mail->Body = $msg;
+            // $mail->IsHTML(true); //enviar em HTML
 
-            //send the message, check for errors
-            $mail->send();
+            // //send the message, check for errors
+			// $mail->send();
 
 			// Redireciona para a página de edit
-			echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "'>";
-			echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "'</script>";
+			echo "<meta http-equiv='Refresh' content='0; url=" . HOME_URI . "/sacp/editar/" . $idSacp . "#go'>";
+			echo "<script type='text/javascript'>window.location.href = '" . HOME_URI . "/sacp/editar/" . $idSacp . "#go'</script>";
 
 			return 'success';
 
@@ -761,7 +858,7 @@ class SacpModel extends MainModel
 	} // insert
 
 
-	public function editarSACP($id)
+	public function editarSACP($id, $input)
 	{
 		/* Verifica se algo foi postado e se está vindo do form que tem o campo
 		editarSACP. */
@@ -790,13 +887,28 @@ class SacpModel extends MainModel
 		$dados['consequencia']  = $_POST['consequencia'];
 		$dados['brainstorming'] = $_POST['brainstorming'];
 		$dados['data_prazo']	= $_POST['data_prazo'];
-		$dados['status'] = 2;
+		$dados['status'] 		= 2;
+
 
 		/* query */
 		$query = $this->db->update('sacp', 'id', $id[0], $dados);
 
 		//seta o ID da sacp pro e-mail
 		$idSacp = implode($id);
+
+		$nomesBanco = $input;
+
+		//insere o ID da RNC no array das informações
+		foreach ($nomesBanco['nome_original'] as $key => $value) {
+			$nomesBanco['id_sacp'][$key] = $idSacp;
+		}
+
+		//junta as linhas em uma variável única pra ser gravada no DB
+		foreach ($nomesBanco['nome_original'] as $key => $value) {
+			$insert = array('nome_original' => $nomesBanco['nome_original'][$key],
+			'nome_codigo' => $nomesBanco['nome_codigo'][$key], 'id_sacp' => $nomesBanco['id_sacp'][$key]);
+			$query = $this->db->insert('documentos_sacp', $insert);
+		}
 
 		/* Verifica a consulta */
 		if ($query) {
@@ -862,6 +974,9 @@ class SacpModel extends MainModel
 			unset($_POST['proposito']);
 			unset($_POST['consequencia']);
 			unset($_POST['brainstorming']);
+			unset($_POST['data_prazo']);
+			unset($_POST['arquivos']);
+
 
 			$query = $this->db->delete('espinha_peixe', 'id_sacp', $id[0]);
 
@@ -932,118 +1047,118 @@ class SacpModel extends MainModel
 			require ABSPATH . '/PHPMailer/SMTP.php';
 			$url= HOME_URI;
 
-			$mail = new PHPMailer;
-			$mail->isSMTP();
-			//$mail->SMTPSecure = 'ssl';
-			//$mail->SMTPAuth = true;
-			$mail->Host = 'nac.edelbra.com.br';
-			$mail->Port = 587;
-			$mail->Username = 'manutencao@edelbra.com.br';
-			$mail->Password = 'man@2015!';
-			$mail->setFrom('manutencao@edelbra.com.br');
-				foreach ($listaEmail as $key) {
-					$mail->addAddress($key);
-				}
-			$mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
-			//$mail->addAddress('e-mail para administradores');
-			//$mail->addAddress('e-mail para Qualidade');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
-			$mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
-			$mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
-			$mail->Subject = 'SACP Alterada';
-			$msg =
-				"<html dir='ltr'>
-					<head>
-					<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-						<style>
-							#customers {
-							font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
-							border-collapse: collapse;
-							width: 100%;
-							}
-							#customers td, #customers th {
-							border: 1px solid #C0C0C0;
-							border-radius: 5px; 5px; 0px; 0px;
-							padding: 8px;
-							background-color: #E8E8E8;
-							}
-							#customers tr:nth-child(even){background-color: #E8E8E8;}
-							#customers th {
-							padding: 8px;
-							text-align: center;
-							background-color: #337AB7;
-							color: white;
-							display: inline-block;
-							}
-							body {background-color: gray;
-							}
-						</style>
-					</head>
+			// $mail = new PHPMailer;
+			// $mail->isSMTP();
+			// //$mail->SMTPSecure = 'ssl';
+			// //$mail->SMTPAuth = true;
+			// $mail->Host = 'nac.edelbra.com.br';
+			// $mail->Port = 587;
+			// $mail->Username = 'manutencao@edelbra.com.br';
+			// $mail->Password = 'man@2015!';
+			// $mail->setFrom('manutencao@edelbra.com.br');
+			// 	foreach ($listaEmail as $key) {
+			// 		$mail->addAddress($key);
+			// 	}
+			// $mail->addAddress('renato.dambros@edelbra.com.br'); //email teste DEV
+			// //$mail->addAddress('e-mail para administradores');
+			// //$mail->addAddress('e-mail para Qualidade');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\logofull.png', 'logo', 'logofull.png');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\relat2.png', 'relat2', 'relat2.png');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\acessar.png', 'acessar', 'acessar.png');
+			// $mail->AddEmbeddedImage('C:\wamp64\www\sspiwork\views\_images\linha.png', 'linha', 'linha.png');
+			// $mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+			// $mail->Subject = 'SACP Alterada';
+			// $msg =
+			// 	"<html dir='ltr'>
+			// 		<head>
+			// 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+			// 			<style>
+			// 				#customers {
+			// 				font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+			// 				border-collapse: collapse;
+			// 				width: 100%;
+			// 				}
+			// 				#customers td, #customers th {
+			// 				border: 1px solid #C0C0C0;
+			// 				border-radius: 5px; 5px; 0px; 0px;
+			// 				padding: 8px;
+			// 				background-color: #E8E8E8;
+			// 				}
+			// 				#customers tr:nth-child(even){background-color: #E8E8E8;}
+			// 				#customers th {
+			// 				padding: 8px;
+			// 				text-align: center;
+			// 				background-color: #337AB7;
+			// 				color: white;
+			// 				display: inline-block;
+			// 				}
+			// 				body {background-color: gray;
+			// 				}
+			// 			</style>
+			// 		</head>
 
-				<body align-self: center;>
-				<hr>
-				<br>
-					<table id='customers'>
-							<tr>
-								<th style='background-color: white; padding: 20px;' colspan='3'>
-									<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
-								<th style='background-color: white; colspan='1' >
-									<img src='cid:relat2.png' align=center width='90' height='130'></p></th>
-							</tr>
-							<tr>
-								<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
-								<th colspan='1' >ID $idSacp </th>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white; color: #DAA520;'><p align=center><b> ----> ALTERADA <---- </b></p></td>
-							</tr>
-							<tr>
-								<td colspan='4'><b> Setor Solicitante:</b> $setorOrigem </td>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white;'><b> Setor Destino:</b> $setorDestino </td>
-							</tr>
-							<tr>
-								<td colspan='4'><b> Participantes:</b> $listaUser </td>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white;'><b> Número O.P:</b> $numero_op </td>
-							</tr>
-							<tr>
-								<td colspan='4'><b> Data Gerada:</b><b style='color:blue;'> $dataGerada </b> </td>
-							</tr>
-							<tr>
-								<td colspan='4' style='background-color: white;'><b> Data Prazo:</b><b style='color:red;'> $dataPrazo</b>  </td>
-							</tr>
-							<tr rowspan='4'>
-								<td colspan='4'><b> Descrição: </b> $descricao </td>
-							</tr>
-							<tr rowspan='4'>
-								<td colspan='4' style='background-color: white; color: white;'><b>Justificativa:</b>  </td>
-							</tr>
-							<br>
-							<br>
-							<br>
-							<br>
-								<p align=center> <a href='$url/sacp/editar/$idSacp'>
-								<img src='cid:acessar.png' width='170' height='50'></a>
-								</p>
-								<p align=center>
-								<img src='cid:linha.png' width='600' height='4'>
-								</p>
-					</table>
-				<br>
-				<hr>
-				<br>
-				</body>
-			</html>";
-			$mail->Body = $msg;
-            $mail->IsHTML(true); //enviar em HTML
+			// 	<body align-self: center;>
+			// 	<hr>
+			// 	<br>
+			// 		<table id='customers'>
+			// 				<tr>
+			// 					<th style='background-color: white; padding: 20px;' colspan='3'>
+			// 						<img src='cid:logofull.png' align=center width='350' height='130'></<img></th>
+			// 					<th style='background-color: white; colspan='1' >
+			// 						<img src='cid:relat2.png' align=center width='90' height='130'></p></th>
+			// 				</tr>
+			// 				<tr>
+			// 					<th colspan='3' >Solicitação de Ação Corretiva ou Preventiva</th>
+			// 					<th colspan='1' >ID $idSacp </th>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white; color: #DAA520;'><p align=center><b> ----> ALTERADA <---- </b></p></td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4'><b> Setor Solicitante:</b> $setorOrigem </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white;'><b> Setor Destino:</b> $setorDestino </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4'><b> Participantes:</b> $listaUser </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white;'><b> Número O.P:</b> $numero_op </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4'><b> Data Gerada:</b><b style='color:blue;'> $dataGerada </b> </td>
+			// 				</tr>
+			// 				<tr>
+			// 					<td colspan='4' style='background-color: white;'><b> Data Prazo:</b><b style='color:red;'> $dataPrazo</b>  </td>
+			// 				</tr>
+			// 				<tr rowspan='4'>
+			// 					<td colspan='4'><b> Descrição: </b> $descricao </td>
+			// 				</tr>
+			// 				<tr rowspan='4'>
+			// 					<td colspan='4' style='background-color: white; color: white;'><b>Justificativa:</b>  </td>
+			// 				</tr>
+			// 				<br>
+			// 				<br>
+			// 				<br>
+			// 				<br>
+			// 					<p align=center> <a href='$url/sacp/editar/$idSacp'>
+			// 					<img src='cid:acessar.png' width='170' height='50'></a>
+			// 					</p>
+			// 					<p align=center>
+			// 					<img src='cid:linha.png' width='600' height='4'>
+			// 					</p>
+			// 		</table>
+			// 	<br>
+			// 	<hr>
+			// 	<br>
+			// 	</body>
+			// </html>";
+			// $mail->Body = $msg;
+            // $mail->IsHTML(true); //enviar em HTML
 
-            //send the message, check for errors
-            $mail->send();
+            // //send the message, check for errors
+			// $mail->send();
 
 			return 'success';
 		}

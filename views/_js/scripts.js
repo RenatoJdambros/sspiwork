@@ -2,7 +2,7 @@ $(document).ready(function () {
     $('.js-example-basic-multiple').select2();
 
 
-    
+
 
     /* $('.origemText').change(function() {
         $('.origemRadio').attr('checked', false);
@@ -31,7 +31,7 @@ $('.outros').click(function()
 {
     $('#origemText').removeAttr("disabled");
 });
-    
+
 $('.origemRadio').click(function()
 {
     //$('#origemText').val("");
@@ -39,3 +39,4 @@ $('.origemRadio').click(function()
 });
 
 // $("#cliente_telefone").mask("(00) 00000-0000");
+

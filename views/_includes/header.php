@@ -46,12 +46,16 @@
 
     <!-- Dropzone.js -->
     <link href="<?=HOME_URI?>/views/_vendors/dropzone/dist/dropzone.css" rel="stylesheet">
-
     <link href="<?=HOME_URI?>/views/_vendors/filestyle/src/jquery-filestyle.css" rel="stylesheet" />
-
     <link href="<?=HOME_URI?>/views/_vendors/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet">
-
     <link href="<?=HOME_URI?>/views/_vendors/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+
+    <!-- lightbox -->
+    <link href="<?=HOME_URI?>/views/_vendors/bootstrap-lightbox/bootstrap-lightbox.min.css" rel="stylesheet">
+
+
+ <!--Bootstrap fileInput -->
+    <link href="<?=HOME_URI?>/views/_vendors/Bootstrap-fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
 
 <!-- The Modal -->
 <div class="modal" id="myModal">
@@ -61,7 +65,6 @@
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Informações</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- Modal body -->
@@ -93,7 +96,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
          </button>
-        <a class="navbar-brand" href="<?=HOME_URI?>/home/"><img src="<?= HOME_URI ?>/views/_images/LogoEdelbra.png" width="155" height="40"></a>
+        <a class="navbar-brand" href="<?=HOME_URI?>/home/"><img style="margin-top: -10px;" src="<?= HOME_URI ?>/views/_images/LogoEdelbra.png" width="155" height="40"></a>
     </div>
     <span class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
@@ -137,7 +140,7 @@
 
           <li>
             <a href="<?=HOME_URI?>/login/sair/">
-              <i class="fa fa-sign-out"></i>
+              <i class="fa fa-times-circle"></i>
               Sair
             </a>
           </li>
@@ -153,7 +156,7 @@
         </li>
         <li>
             <a href="<?=HOME_URI?>/login/sair/">
-              <span class="fa fa-sign-out"></span>
+              <span class="fa fa-times-circle"></span>
               Sair
           </a>
         </li>

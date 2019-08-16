@@ -3,7 +3,7 @@
   <!-- footer content -->
   <footer>
     <div class="pull-right">
-     
+
     </div>
     <div class="clearfix"></div>
   </footer>
@@ -56,7 +56,7 @@
 
   <!-- jQuery Sparklines -->
   <!-- <script src="<?=HOME_URI?>/views/_vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script> -->
-  
+
   <!-- Datatables -->
   <script src="<?=HOME_URI?>/views/_vendors/datatables.net/js/jquery.dataTables.js"></script>
   <script src="<?=HOME_URI?>/views/_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
@@ -71,7 +71,7 @@
   <script src="<?=HOME_URI?>/views/_vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
   <script src="<?=HOME_URI?>/views/_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
   <script src="<?=HOME_URI?>/views/_vendors/datatables.net-scroller/js/datatables.scroller.min.js"></script>
-  
+
    <!-- jQuery Tags Input -->
   <script src="<?=HOME_URI?>/views/_vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
   <!-- Switchery -->
@@ -90,7 +90,7 @@
   <script src="<?=HOME_URI?>/views/_vendors/pnotify/dist/pnotify.js"></script>
   <script src="<?=HOME_URI?>/views/_vendors/pnotify/dist/pnotify.buttons.js"></script>
   <script src="<?=HOME_URI?>/views/_vendors/pnotify/dist/pnotify.nonblock.js"></script>
-  
+
   <!-- iCheck -->
   <!-- <script src="<?=HOME_URI?>/views/_vendors/iCheck/icheck.min.js"></script> -->
   <!-- bootstrap-daterangepicker -->
@@ -100,7 +100,7 @@
   <script src="<?=HOME_URI?>/views/_vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
   <script src="<?=HOME_URI?>/views/_vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
   <script src="<?=HOME_URI?>/views/_vendors/google-code-prettify/src/prettify.js"></script>
-  
+
   <!-- Dropzone.js -->
   <!-- <script src="<?=HOME_URI?>/views/_vendors/dropzone/dist/dropzone.js"></script> -->
 
@@ -108,14 +108,33 @@
   <script src="<?=HOME_URI?>/views/_vendors/raphael/raphael.min.js"></script>
   <script src="<?=HOME_URI?>/views/_vendors/morris.js/morris.min.js"></script>
 
-  <!-- Ion.RangeSlider -->
+  <!--Bootstrap inputFile -->
+  <!-- <script src="<?=HOME_URI?>/views/_vendors/Bootstrap-fileinput/js/plugins/sortable.js" type="text/javascript"></script> -->
+  <!-- <script src="<?=HOME_URI?>/views/_vendors/Bootstrap-fileinput/js/plugins/purify.min.js" crossorigin="anonymous"></script> -->
+  <script src="<?=HOME_URI?>/views/_vendors/Bootstrap-fileinput/js/fileinput.js" type="text/javascript"></script>
+  <!-- <script src="<?=HOME_URI?>/views/_vendors/Bootstrap-fileinput/js/plugins/piexif.js" type="text/javascript"></script> -->
+  <script src="<?=HOME_URI?>/views/_vendors/Bootstrap-fileinput/js/locales/pt-BR.js" type="text/javascript"></script>
+  <script src="<?=HOME_URI?>/views/_vendors/Bootstrap-fileinput/themes/fas/theme.js" type="text/javascript"></script>
+  <script src="<?=HOME_URI?>/views/_vendors/Bootstrap-fileinput/themes/explorer-fas/theme.js" type="text/javascript"></script>
+
+
+
+  <script src="<?=HOME_URI?>/views/_vendors/bootstrap-lightbox/bootstrap-lightbox.min.js"></script>
+
+
+
+
+
+
+
+<!-- Ion.RangeSlider -->
   <!-- <script src="<?=HOME_URI?>/views/_vendors/ion.rangeSlider/js/ion.rangeSlider.min.js"></script> -->
 
   <script src="<?=HOME_URI?>/views/_js/jquery.validate.min.js"></script>
   <script src="<?=HOME_URI?>/views/_js/jquery.mask.js"></script>
   <script src="<?=HOME_URI?>/views/_js/jquery.maskMoney.min.js"></script>
   <script src="<?=HOME_URI?>/views/_js/server-side-tables.js"></script>
-    
+
   <script src="<?=HOME_URI?>/views/ckeditor/ckeditor.js"></script>
   <script type="text/javascript">
     if (document.getElementById('editor') != null){
@@ -124,7 +143,7 @@
       });
     }
     if (document.getElementById('editor1') != null){
-      
+
       CKEDITOR.replace( 'editor1', {
       customConfig: 'config_conteudos.js',
       });
@@ -140,7 +159,7 @@
 
   <script src="<?=HOME_URI?>/views/_vendors/upload_ajax/JS/jquery.fileuploadmulti.min.js"></script>
 
-  
+
 
     <!--  POPUP MODAL -->
     <?php if (isset($this->modal_message['title'])) { ?>
@@ -161,7 +180,7 @@
                         <?=$this->modal_message['message']?>
                         </p>
                     </div>
-                    
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" onclick="window.history.back();" data-dismiss="modal">Cancelar</button>
                         <?=$this->modal_message['button']?>
@@ -170,17 +189,17 @@
                 </div>
             </div>
         </div>
-        
+
         <script type="text/javascript">
             $(document).ready(function() {
                 $('#modal-popup').modal('show');
             });
         </script>
     <?php } ?>
-    <!--  FIM POPUP MODAL -->  
-  
+    <!--  FIM POPUP MODAL -->
+
     <!---P NOTIFY ALERT--->
-    <?php if (isset($this->modal_notification['title'])) { ?>   
+    <?php if (isset($this->modal_notification['title'])) { ?>
         <script type='text/javascript'>
         $(document).ready(function() {
             new PNotify({
